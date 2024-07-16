@@ -6,9 +6,14 @@ import {
   Offcanvas,
   Form,
   Button,
+  InputGroup,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import {
+  faRightToBracket,
+  faUser,
+  faLock,
+} from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/logo.webp';
@@ -21,6 +26,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const handleShow = () => setShowOffcanvas(true);
+
   const handleClose = () => {
     setShowOffcanvas(false);
     setErrors({});
@@ -86,30 +92,40 @@ const NavBar = () => {
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicUsername" className="px-3">
             <Form.Label className="d-none">Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter username"
-              name="username"
-              value={signInData.username}
-              onChange={handleChange}
-              required
-              className="bg-dark mt-4"
-            />
+            <InputGroup className="mt-3">
+              <InputGroup.Text className="bg-secondary bg-opacity-10 text-white">
+                <FontAwesomeIcon icon={faUser} />
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={signInData.username}
+                onChange={handleChange}
+                required
+                className="bg-dark"
+              />
+            </InputGroup>
             {errors.username && (
               <div className="text-danger mt-1">{errors.username}</div>
             )}
           </Form.Group>
           <Form.Group controlId="formBasicPassword" className="mt-3 px-3">
             <Form.Label className="d-none">Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={signInData.password}
-              onChange={handleChange}
-              required
-              className="bg-dark"
-            />
+            <InputGroup>
+              <InputGroup.Text className="bg-secondary bg-opacity-10 text-white">
+                <FontAwesomeIcon icon={faLock} />
+              </InputGroup.Text>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={signInData.password}
+                onChange={handleChange}
+                required
+                className="bg-dark"
+              />
+            </InputGroup>
             {errors.password && (
               <div className="text-danger mt-1">{errors.password}</div>
             )}
