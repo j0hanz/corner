@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import {
+  faRightToBracket,
+  faCircleUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import logo from '../assets/logo.webp';
 import styles from './styles/NavBar.module.css';
 import Login from '../pages/auth/Login';
@@ -11,7 +16,6 @@ import {
   useCurrentUser,
   useSetCurrentUser,
 } from '../contexts/CurrentUserContext';
-import axios from 'axios';
 
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -20,16 +24,10 @@ const NavBar = () => {
   const setCurrentUser = useSetCurrentUser();
   const navigate = useNavigate();
 
-  const handleShow = () => setShowOffcanvas(true);
-  const handleClose = () => setShowOffcanvas(false);
+  const toggleOffcanvas = () => setShowOffcanvas(!showOffcanvas);
 
-  const handleSignUp = () => {
-    setShowLogin(false);
-  };
-
-  const handleLogin = () => {
-    setShowLogin(true);
-  };
+  const switchToSignUp = () => setShowLogin(false);
+  const switchToLogin = () => setShowLogin(true);
 
   const handleLogout = async () => {
     try {
@@ -60,8 +58,15 @@ const NavBar = () => {
           </NavLink>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Nav>
-            <Nav.Link as="div" onClick={handleShow} className={styles.navIcon}>
-              <FontAwesomeIcon className="fa-xl" icon={faRightToBracket} />
+            <Nav.Link
+              as="div"
+              onClick={toggleOffcanvas}
+              className={styles.navIcon}
+            >
+              <FontAwesomeIcon
+                className="fa-xl"
+                icon={currentUser ? faCircleUser : faRightToBracket}
+              />
             </Nav.Link>
           </Nav>
         </Container>
@@ -69,7 +74,7 @@ const NavBar = () => {
 
       <Offcanvas
         show={showOffcanvas}
-        onHide={handleClose}
+        onHide={toggleOffcanvas}
         placement="end"
         className="bg-dark text-light"
       >
@@ -90,9 +95,9 @@ const NavBar = () => {
         ) : (
           <>
             {showLogin ? (
-              <Login navigate={navigate} handleSignUp={handleSignUp} />
+              <Login navigate={navigate} handleSignUp={switchToSignUp} />
             ) : (
-              <Signup navigate={navigate} handleLogin={handleLogin} />
+              <Signup navigate={navigate} handleLogin={switchToLogin} />
             )}
             <hr />
           </>
