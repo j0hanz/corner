@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Container, Offcanvas } from 'react-bootstrap';
+import { Navbar, Nav, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -7,11 +7,17 @@ import logo from '../assets/logo.webp';
 import styles from './styles/NavBar.module.css';
 import Login from '../pages/auth/Login';
 import Signup from '../pages/auth/Signup';
+import {
+  useCurrentUser,
+  useSetCurrentUser,
+} from '../contexts/CurrentUserContext';
+import axios from 'axios';
 
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
-
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
   const navigate = useNavigate();
 
   const handleShow = () => setShowOffcanvas(true);
@@ -23,6 +29,16 @@ const NavBar = () => {
 
   const handleLogin = () => {
     setShowLogin(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/dj-rest-auth/logout/');
+      setCurrentUser(null);
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -50,6 +66,7 @@ const NavBar = () => {
           </Nav>
         </Container>
       </Navbar>
+
       <Offcanvas
         show={showOffcanvas}
         onHide={handleClose}
@@ -62,9 +79,24 @@ const NavBar = () => {
           </Offcanvas.Title>
         </Offcanvas.Header>
         <hr />
-        {showLogin && <Login navigate={navigate} handleSignUp={handleSignUp} />}
-        {!showLogin && <Signup navigate={navigate} handleLogin={handleLogin} />}
-        <hr />
+        {currentUser ? (
+          <Button
+            variant="outline-light"
+            onClick={handleLogout}
+            className="mx-auto"
+          >
+            Sign Out
+          </Button>
+        ) : (
+          <>
+            {showLogin ? (
+              <Login navigate={navigate} handleSignUp={handleSignUp} />
+            ) : (
+              <Signup navigate={navigate} handleLogin={handleLogin} />
+            )}
+            <hr />
+          </>
+        )}
       </Offcanvas>
     </>
   );
