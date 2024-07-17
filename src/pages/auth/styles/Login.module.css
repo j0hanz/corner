@@ -1,0 +1,12 @@
+.signupContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+::placeholder {
+  color: #ffffffb2 !important;
+  opacity: 1;
+}
