@@ -79,7 +79,7 @@ const NavBar = () => {
         <Offcanvas.Header
           closeButton
           closeVariant="white"
-          className="d-flex align-items-center justify-content-between w-100"
+          className="d-flex align-items-center justify-content-between w-100 pb-1"
         >
           {!currentUser ? (
             <img src={logo} alt="Logo" className={styles.logoCanvas} />
