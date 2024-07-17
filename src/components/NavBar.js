@@ -9,6 +9,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import logo from '../assets/logo.webp';
+import nobody from '../assets/nobody.webp';
 import styles from './styles/NavBar.module.css';
 import Login from '../pages/auth/Login';
 import Signup from '../pages/auth/Signup';
@@ -25,9 +26,6 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const toggleOffcanvas = () => setShowOffcanvas(!showOffcanvas);
-
-  const switchToSignUp = () => setShowLogin(false);
-  const switchToLogin = () => setShowLogin(true);
 
   const handleLogout = async () => {
     try {
@@ -78,10 +76,21 @@ const NavBar = () => {
         placement="end"
         className="bg-dark text-light"
       >
-        <Offcanvas.Header closeButton closeVariant="white">
-          <Offcanvas.Title>
+        <Offcanvas.Header
+          closeButton
+          closeVariant="white"
+          className="d-flex align-items-center justify-content-between w-100"
+        >
+          {!currentUser ? (
             <img src={logo} alt="Logo" className={styles.logoCanvas} />
-          </Offcanvas.Title>
+          ) : (
+            <div className="d-flex align-items-center">
+              <img src={nobody} alt="Profile" className={styles.profileImage} />
+              <span className={`ms-2 ${styles.username}`}>
+                {currentUser.username}
+              </span>
+            </div>
+          )}
         </Offcanvas.Header>
         <hr />
         {currentUser ? (
@@ -95,9 +104,15 @@ const NavBar = () => {
         ) : (
           <>
             {showLogin ? (
-              <Login navigate={navigate} handleSignUp={switchToSignUp} />
+              <Login
+                navigate={navigate}
+                handleSignUp={() => setShowLogin(false)}
+              />
             ) : (
-              <Signup navigate={navigate} handleLogin={switchToLogin} />
+              <Signup
+                navigate={navigate}
+                handleLogin={() => setShowLogin(true)}
+              />
             )}
             <hr />
           </>
