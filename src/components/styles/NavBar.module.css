@@ -43,7 +43,7 @@
 
 .profileImage {
   width: 42px;
-  height: auto;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 10px #000000;
