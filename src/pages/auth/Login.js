@@ -5,7 +5,7 @@ import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import styles from './styles/Login.module.css';
 
-const Login = ({ navigate, handleSignUp }) => {
+const Login = ({ handleSignUp }) => {
   const [signInData, setSignInData] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({});
 
@@ -18,7 +18,7 @@ const Login = ({ navigate, handleSignUp }) => {
     event.preventDefault();
     try {
       await axios.post('/dj-rest-auth/login/', signInData);
-      navigate('/');
+      window.location.reload();
     } catch (err) {
       setErrors(err.response?.data || {});
     }
@@ -39,7 +39,7 @@ const Login = ({ navigate, handleSignUp }) => {
               value={signInData.username}
               onChange={handleChange}
               required
-              className="bg-dark rounded-end"
+              className="bg-dark rounded-end text-white"
             />
           </InputGroup>
         </Form.Group>
@@ -55,7 +55,7 @@ const Login = ({ navigate, handleSignUp }) => {
               value={signInData.password}
               onChange={handleChange}
               required
-              className="bg-dark rounded-end"
+              className="bg-dark rounded-end text-white"
             />
           </InputGroup>
         </Form.Group>
