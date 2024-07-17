@@ -5,7 +5,7 @@ import { faUser, faKey } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import styles from './styles/Signup.module.css';
 
-const Signup = ({ navigate, handleLogin }) => {
+const Signup = ({ handleLogin }) => {
   const [signUpData, setSignUpData] = useState({
     username: '',
     password1: '',
@@ -22,7 +22,11 @@ const Signup = ({ navigate, handleLogin }) => {
     event.preventDefault();
     try {
       await axios.post('/dj-rest-auth/registration/', signUpData);
-      navigate('/signin');
+      await axios.post('/dj-rest-auth/login/', {
+        username: signUpData.username,
+        password: signUpData.password1,
+      });
+      window.location.reload();
     } catch (err) {
       setErrors(err.response?.data || {});
     }
@@ -42,7 +46,7 @@ const Signup = ({ navigate, handleLogin }) => {
             value={signUpData.username}
             onChange={handleChange}
             required
-            className="bg-dark rounded-end"
+            className="bg-dark rounded-end text-white"
           />
         </InputGroup>
       </Form.Group>
@@ -58,7 +62,7 @@ const Signup = ({ navigate, handleLogin }) => {
             value={signUpData.password1}
             onChange={handleChange}
             required
-            className="bg-dark rounded-end"
+            className="bg-dark rounded-end text-white"
           />
         </InputGroup>
       </Form.Group>
@@ -74,7 +78,7 @@ const Signup = ({ navigate, handleLogin }) => {
             value={signUpData.password2}
             onChange={handleChange}
             required
-            className="bg-dark rounded-end"
+            className="bg-dark rounded-end text-white"
           />
         </InputGroup>
       </Form.Group>
