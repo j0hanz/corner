@@ -1,54 +1,28 @@
 import React, { useState } from 'react';
-import {
-  Navbar,
-  Nav,
-  Container,
-  Offcanvas,
-  Form,
-  Button,
-  InputGroup,
-} from 'react-bootstrap';
+import { Navbar, Nav, Container, Offcanvas } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faRightToBracket,
-  faUser,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import logo from '../assets/logo.webp';
 import styles from './styles/NavBar.module.css';
+import Login from '../pages/auth/Login';
+import Signup from '../pages/auth/Signup';
 
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
-  const [signInData, setSignInData] = useState({ username: '', password: '' });
-  const [errors, setErrors] = useState({});
+  const [showLogin, setShowLogin] = useState(true);
+
   const navigate = useNavigate();
 
   const handleShow = () => setShowOffcanvas(true);
+  const handleClose = () => setShowOffcanvas(false);
 
-  const handleClose = () => {
-    setShowOffcanvas(false);
-    setErrors({});
-    setSignInData({ username: '', password: '' });
+  const handleSignUp = () => {
+    setShowLogin(false);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await axios.post('/dj-rest-auth/login/', signInData);
-      handleClose();
-      navigate('/');
-    } catch (err) {
-      setErrors(err.response?.data || {});
-    }
-  };
-
-  const handleSignUp = () => navigate('/signup');
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setSignInData((prevData) => ({ ...prevData, [name]: value }));
+  const handleLogin = () => {
+    setShowLogin(true);
   };
 
   return (
@@ -76,7 +50,6 @@ const NavBar = () => {
           </Nav>
         </Container>
       </Navbar>
-
       <Offcanvas
         show={showOffcanvas}
         onHide={handleClose}
@@ -89,67 +62,9 @@ const NavBar = () => {
           </Offcanvas.Title>
         </Offcanvas.Header>
         <hr />
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicUsername" className="px-3">
-            <Form.Label className="d-none">Username</Form.Label>
-            <InputGroup className="mt-3">
-              <InputGroup.Text className="bg-secondary bg-opacity-10 text-white">
-                <FontAwesomeIcon icon={faUser} />
-              </InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                name="username"
-                value={signInData.username}
-                onChange={handleChange}
-                required
-                className="bg-dark"
-              />
-            </InputGroup>
-            {errors.username && (
-              <div className="text-danger mt-1">{errors.username}</div>
-            )}
-          </Form.Group>
-          <Form.Group controlId="formBasicPassword" className="mt-3 px-3">
-            <Form.Label className="d-none">Password</Form.Label>
-            <InputGroup>
-              <InputGroup.Text className="bg-secondary bg-opacity-10 text-white">
-                <FontAwesomeIcon icon={faLock} />
-              </InputGroup.Text>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                name="password"
-                value={signInData.password}
-                onChange={handleChange}
-                required
-                className="bg-dark"
-              />
-            </InputGroup>
-            {errors.password && (
-              <div className="text-danger mt-1">{errors.password}</div>
-            )}
-          </Form.Group>
-          {errors.non_field_errors && (
-            <div className="text-danger mt-3">{errors.non_field_errors}</div>
-          )}
-          <div className="d-flex justify-content-center">
-            <Button variant="outline-primary text-white my-3" type="submit">
-              Login
-            </Button>
-          </div>
-        </Form>
+        {showLogin && <Login navigate={navigate} handleSignUp={handleSignUp} />}
+        {!showLogin && <Signup navigate={navigate} handleLogin={handleLogin} />}
         <hr />
-        <div className={styles.signupContainer}>
-          Don't have an account?{' '}
-          <Button
-            variant="outline-light d-block mx-auto mt-2"
-            onClick={handleSignUp}
-            className={styles.signupButton}
-          >
-            Sign up now!
-          </Button>
-        </div>
       </Offcanvas>
     </>
   );
