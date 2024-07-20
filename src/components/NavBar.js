@@ -84,7 +84,7 @@ const NavBar = () => {
             <img src={logo} alt="Logo" className={styles.logoCanvas} />
           ) : (
             <NavLink
-              to={`/profiles/${currentUser?.pk}/`}
+              to={`/users/${currentUser?.pk}/`}
               className="d-flex align-items-center"
             >
               <Avatar
