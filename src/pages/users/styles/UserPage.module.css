@@ -1,0 +1,34 @@
+.ProfileImage {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ProfileOwner {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.ProfileStats {
+  font-size: 1rem;
+  color: #727272;
+}
+
+@media (max-width: 768px) {
+  .ProfileImage {
+    width: 125px;
+    height: 125px;
+  }
+
+  .ProfileOwner {
+    font-size: 1rem;
+  }
+
+  .ProfileStats {
+    font-size: 0.8rem;
+  }
+}
