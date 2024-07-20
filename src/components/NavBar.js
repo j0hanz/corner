@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Container, Offcanvas, Button } from 'react-bootstrap';
+import { Navbar, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faRightToBracket,
@@ -17,6 +17,7 @@ import {
   useCurrentUser,
   useSetCurrentUser,
 } from '../contexts/CurrentUserContext';
+import Avatar from './Avatar';
 
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -25,7 +26,7 @@ const NavBar = () => {
   const setCurrentUser = useSetCurrentUser();
   const navigate = useNavigate();
 
-  const toggleOffcanvas = () => setShowOffcanvas(!showOffcanvas);
+  const toggleOffcanvas = () => setShowOffcanvas((prevState) => !prevState);
 
   const handleLogout = async () => {
     try {
@@ -39,7 +40,7 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark" className="fixed-top py-3">
         <Container
           fluid
           className="d-flex justify-content-between align-items-center"
@@ -55,18 +56,16 @@ const NavBar = () => {
             />
           </NavLink>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Nav>
-            <Nav.Link
-              as="div"
-              onClick={toggleOffcanvas}
-              className={styles.navIcon}
-            >
-              <FontAwesomeIcon
-                className="fa-xl"
-                icon={currentUser ? faCircleUser : faRightToBracket}
-              />
-            </Nav.Link>
-          </Nav>
+          <NavLink
+            as="div"
+            onClick={toggleOffcanvas}
+            className={styles.navIcon}
+          >
+            <FontAwesomeIcon
+              className="fa-xl"
+              icon={currentUser ? faCircleUser : faRightToBracket}
+            />
+          </NavLink>
         </Container>
       </Navbar>
 
@@ -84,12 +83,19 @@ const NavBar = () => {
           {!currentUser ? (
             <img src={logo} alt="Logo" className={styles.logoCanvas} />
           ) : (
-            <div className="d-flex align-items-center">
-              <img src={nobody} alt="Profile" className={styles.profileImage} />
+            <NavLink
+              to={`/profiles/${currentUser?.pk}/`}
+              className="d-flex align-items-center"
+            >
+              <Avatar
+                src={nobody}
+                alt="Profile"
+                className={styles.profileImage}
+              />
               <span className={`ms-2 ${styles.username}`}>
                 {currentUser.username}
               </span>
-            </div>
+            </NavLink>
           )}
         </Offcanvas.Header>
         <hr />
