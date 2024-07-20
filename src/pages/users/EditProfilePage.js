@@ -12,7 +12,7 @@ const EditProfilePage = () => {
   const { id } = useParams();
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-  const imageFile = useRef();
+  const imageFileRef = useRef();
   const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
@@ -37,7 +37,18 @@ const EditProfilePage = () => {
       if (currentUser?.id?.toString() === id) {
         try {
           const { data } = await axios.get(`/users/${id}/`);
-          const { first_name, last_name, bio, location, url_link, contact_email, image, favorite_movie_genre, favorite_music_genre, favorite_sport  } = data;
+          const {
+            first_name,
+            last_name,
+            bio,
+            location,
+            url_link,
+            contact_email,
+            image,
+            favorite_movie_genre,
+            favorite_music_genre,
+            favorite_sport,
+          } = data;
           setProfileData({
             first_name,
             last_name,
@@ -50,9 +61,9 @@ const EditProfilePage = () => {
             contact_email,
             image,
           });
-          setImagePreview(data.image);
-        } catch (err) {
-          console.error('Error fetching profile:', err);
+          setImagePreview(image);
+        } catch (error) {
+          console.error('Error fetching profile:', error);
         } finally {
           setLoading(false);
         }
@@ -65,10 +76,11 @@ const EditProfilePage = () => {
   }, [currentUser, id]);
 
   const handleChange = (e) => {
-    setProfileData({
-      ...profileData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setProfileData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -100,8 +112,8 @@ const EditProfilePage = () => {
         profile_image: data.image,
       }));
       navigate(`/users/${id}/`);
-    } catch (err) {
-      setErrors(err.response?.data || {});
+    } catch (error) {
+      setErrors(error.response?.data || {});
     }
   };
 
@@ -262,7 +274,7 @@ const EditProfilePage = () => {
           <Form.Control
             type="file"
             name="image"
-            ref={imageFile}
+            ref={imageFileRef}
             onChange={handleImageChange}
             isInvalid={!!errors.image}
           />
