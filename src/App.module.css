@@ -8,3 +8,7 @@ body {
   min-height: 100vh;
   background-image: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
 }
+
+a {
+  text-decoration: none;
+}
