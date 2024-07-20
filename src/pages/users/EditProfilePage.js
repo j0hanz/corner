@@ -33,41 +33,42 @@ const EditProfilePage = () => {
   const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
+    if (currentUser?.id?.toString() !== id) {
+      setLoading(false);
+      return;
+    }
+
     const fetchProfile = async () => {
-      if (currentUser?.id?.toString() === id) {
-        try {
-          const { data } = await axios.get(`/users/${id}/`);
-          const {
-            first_name,
-            last_name,
-            bio,
-            location,
-            url_link,
-            contact_email,
-            image,
-            favorite_movie_genre,
-            favorite_music_genre,
-            favorite_sport,
-          } = data;
-          setProfileData({
-            first_name,
-            last_name,
-            bio,
-            favorite_movie_genre: favorite_movie_genre.id || '',
-            favorite_music_genre: favorite_music_genre.id || '',
-            favorite_sport: favorite_sport.id || '',
-            location,
-            url_link,
-            contact_email,
-            image,
-          });
-          setImagePreview(image);
-        } catch (error) {
-          console.error('Error fetching profile:', error);
-        } finally {
-          setLoading(false);
-        }
-      } else {
+      try {
+        const { data } = await axios.get(`/users/${id}/`);
+        const {
+          first_name,
+          last_name,
+          bio,
+          location,
+          url_link,
+          contact_email,
+          image,
+          favorite_movie_genre,
+          favorite_music_genre,
+          favorite_sport,
+        } = data;
+        setProfileData({
+          first_name,
+          last_name,
+          bio,
+          favorite_movie_genre: favorite_movie_genre.id || '',
+          favorite_music_genre: favorite_music_genre.id || '',
+          favorite_sport: favorite_sport.id || '',
+          location,
+          url_link,
+          contact_email,
+          image,
+        });
+        setImagePreview(image);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
         setLoading(false);
       }
     };
