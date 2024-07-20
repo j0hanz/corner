@@ -6,7 +6,7 @@
 }
 
 .logoNav:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .navIcon {
@@ -14,6 +14,7 @@
   display: inline-block;
   transition: transform 0.2s ease;
   cursor: pointer;
+  color: #ffffffcb;
 }
 
 .navIcon::before {
@@ -28,12 +29,7 @@
 }
 
 .navIcon:hover {
-  transform: scale(1.05);
-}
-
-.navIcon:hover::before {
-  background-color: rgba(255, 255, 255, 0.062);
-  border-radius: 15%;
+  transform: scale(1.1);
 }
 
 .logoCanvas {
@@ -53,4 +49,8 @@
   font-weight: bold;
   font-size: 1.1rem;
   color: #ffffffcb;
+}
+
+a {
+  text-decoration: none;
 }
