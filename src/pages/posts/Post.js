@@ -100,7 +100,7 @@ const Post = ({
   };
 
   return (
-    <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
+    <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-2">
         <div className="d-flex align-items-center">
           <Avatar
