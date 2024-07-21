@@ -109,7 +109,7 @@ const Post = ({
       </Card.Body>
         <Card.Title>{title}</Card.Title>
         <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
-        <Card.Text>{content}</Card.Text>
+        <Card.Text className='text-center'>{content}</Card.Text>
         {image && <Image src={image} fluid />}
       <Card.Footer className="d-flex justify-content-between align-items-center">
         <div>
