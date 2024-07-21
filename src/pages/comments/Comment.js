@@ -12,7 +12,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import CommentEditForm from './CommentEditForm';
-import CustomDropdown from '../../components/Dropdown';
+import { EditDeleteDropdown } from '../../components/Dropdown';
 import styles from './styles/Comment.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -137,7 +137,7 @@ const Comment = ({
           </Link>
         </div>
         {isOwner && (
-          <CustomDropdown
+          <EditDeleteDropdown
             handleEdit={() => setShowEditForm(true)}
             handleDelete={handleShowModal}
           />
