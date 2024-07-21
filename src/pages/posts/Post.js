@@ -6,7 +6,8 @@ import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
-import defaultProfileImage from '../../assets/nobody.webp'; // Corrected import path
+import defaultProfileImage from '../../assets/nobody.webp';
+import CustomDropdown from '../../components/Dropdown'; // Import CustomDropdown
 
 const Post = ({
   id,
@@ -98,9 +99,9 @@ const Post = ({
 
   return (
     <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
-      <Card.Body className="d-flex justify-content-between align-items-center">
+      <Card.Body className="d-flex justify-content-between align-items-center p-1">
         <div className="d-flex align-items-center">
-          <Avatar src={profile.image || defaultProfileImage} height={40} />
+          <Avatar src={profile.image || defaultProfileImage} height={40} width={40} />
           <Link
             to={`/profiles/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
@@ -109,19 +110,10 @@ const Post = ({
           </Link>
         </div>
         {isOwner && (
-          <div>
-            <Button variant="outline-primary" size="sm" onClick={handleEdit}>
-              Edit
-            </Button>
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={handleShowConfirm}
-              className="ms-3"
-            >
-              Delete
-            </Button>
-          </div>
+          <CustomDropdown
+            handleEdit={handleEdit}
+            handleDelete={handleShowConfirm}
+          />
         )}
       </Card.Body>
       <Card.Title>{title}</Card.Title>
