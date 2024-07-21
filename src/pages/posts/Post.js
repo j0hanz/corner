@@ -99,7 +99,7 @@ const Post = ({
 
   return (
     <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
-      <Card.Body className="d-flex justify-content-between align-items-center p-0">
+      <Card.Body className="d-flex justify-content-between align-items-center p-2">
         <div className="d-flex align-items-center">
           <Avatar
             src={profile.image || defaultProfileImage}
@@ -124,7 +124,7 @@ const Post = ({
       <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
       <Card.Text className="text-center">{content}</Card.Text>
       {image && <Image src={image} fluid />}
-      <Card.Footer className="d-flex justify-content-between align-items-center">
+      <Card.Footer className="d-flex justify-content-between align-items-center bg-black p-0">
         <div>
           <Button
             variant="outline-primary"
