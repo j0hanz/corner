@@ -10,6 +10,7 @@ import defaultProfileImage from '../../assets/nobody.webp';
 import CustomDropdown from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
+import Comment from '../comments/Comment'; // Import Comment component
 
 const Post = ({
   id,
@@ -31,6 +32,7 @@ const Post = ({
   const [profile, setProfile] = useState({
     image: defaultProfileImage,
   });
+  const [comments, setComments] = useState({ results: [] }); // Initialize comments state
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -44,6 +46,19 @@ const Post = ({
 
     fetchProfile();
   }, [profile_id]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const { data } = await axiosRes.get(`/api/posts/${id}/comments/`);
+        setComments(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchComments();
+  }, [id]);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
@@ -174,6 +189,15 @@ const Post = ({
           </div>
         </Modal.Body>
       </Modal>
+      {/* Render comments */}
+      {comments.results?.map((comment) => (
+        <Comment
+          key={comment.id}
+          {...comment}
+          setPost={setPosts}
+          setComments={setComments}
+        />
+      ))}
     </Card>
   );
 };
