@@ -145,7 +145,6 @@ const Comment = (props) => {
           <span className="ms-2">{owner}</span>
           {likeButtonContent}
           <div className="flex-grow-1"></div>
-          <span className="text-muted me-2">{updated_at}</span>
           {is_owner && (
             <CustomDropdown
               handleEdit={() => setShowEditForm(true)}
@@ -154,7 +153,6 @@ const Comment = (props) => {
           )}
         </Col>
       </Row>
-
       <Row className="mt-2">
         <Col>
           {showEditForm ? (
@@ -170,7 +168,6 @@ const Comment = (props) => {
           )}
         </Col>
       </Row>
-
       {error && (
         <Row className="mt-3">
           <Col className="text-center">
@@ -180,7 +177,9 @@ const Comment = (props) => {
           </Col>
         </Row>
       )}
-
+      <small className="text-white-50 position-absolute bottom-0 end-0 m-2">
+        {updated_at}
+      </small>{' '}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header
           className="bg-dark text-white"
