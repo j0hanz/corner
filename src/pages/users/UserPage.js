@@ -97,7 +97,6 @@ const UserPage = () => {
           <Row className="text-center">
             <Col className="my-2">
               <h5 className="font-weight-bold">{`${user?.first_name} ${user?.last_name}`}</h5>
-              <div>{user?.country}</div>
             </Col>
           </Row>
           <hr />
@@ -107,17 +106,12 @@ const UserPage = () => {
               <p>{user?.bio}</p>
             </Col>
             <Col xs={12} sm={6} className="my-2">
-              <strong>First Name:</strong>
-              <p>{user?.first_name}</p>
-            </Col>
-            <Col xs={12} sm={6} className="my-2">
-              <strong>Last Name:</strong>
-              <p>{user?.last_name}</p>
-            </Col>
-            <Col xs={12} sm={6} className="my-2">
               <strong>Location:</strong>
               <p>{user?.location}</p>
             </Col>
+          </Row>
+          <hr />
+          <Row className="text-center">
             <Col xs={12} sm={6} className="my-2">
               <strong>URL Link:</strong>
               <p>{user?.url_link}</p>
@@ -127,6 +121,7 @@ const UserPage = () => {
               <p>{user?.contact_email}</p>
             </Col>
           </Row>
+          <hr />
         </Col>
       </Row>
     </Container>
