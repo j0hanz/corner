@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Spinner,
-  Alert,
-  Image,
-} from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import nobody from '../../assets/nobody.webp';
 import styles from './styles/UserPage.module.css';
+import { ProfileActionsDropdown } from '../../components/Dropdown';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -67,28 +60,39 @@ const UserPage = () => {
               e.target.src = nobody;
             }}
           />
+          <div className="mt-3">
+            {currentUser?.id === user.id && (
+              <ProfileActionsDropdown
+                handleEditProfile={() => navigate(`/users/${id}/edit`)}
+                handleChangeProfileImage={() =>
+                  navigate(`/users/${id}/change-profile-image`)
+                }
+                handleChangeUsername={() =>
+                  navigate(`/users/${id}/change-username`)
+                }
+                handleChangePassword={() =>
+                  navigate(`/users/${id}/change-password`)
+                }
+                handleDeleteAccount={() =>
+                  navigate(`/users/${id}/delete-account`)
+                }
+              />
+            )}
+          </div>
+
           <h4 className="mt-2 text-light">{user?.username}</h4>
-          {currentUser?.id === user.id && (
-            <Button
-              variant="primary"
-              className="mt-1"
-              onClick={() => navigate(`/users/${id}/edit`)}
-            >
-              Edit Profile
-            </Button>
-          )}
         </Col>
-        <Col lg={9} className="mt-4 mt-lg-0">
+        <Col lg={9} className="mt-4 ">
           <Row className="justify-content-center text-center">
-            <Col xs={6} sm={4} className="my-2">
+            <Col className="my-2">
               <h5 className="text-light">{user?.posts_count}</h5>
               <div className={styles.ProfileStats}>Posts</div>
             </Col>
-            <Col xs={6} sm={4} className="my-2">
+            <Col className="my-2">
               <h5 className="text-light">{user?.followers_count}</h5>
               <div className={styles.ProfileStats}>Followers</div>
             </Col>
-            <Col xs={6} sm={4} className="my-2">
+            <Col className="my-2">
               <h5 className="text-light">{user?.following_count}</h5>
               <div className={styles.ProfileStats}>Following</div>
             </Col>
