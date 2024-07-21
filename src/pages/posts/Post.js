@@ -147,7 +147,7 @@ const Post = ({
             </Link>
           </Button>
         </div>
-        <small className="text-muted">{updated_at}</small>
+        <small className="mx-2 text-white-50">{updated_at}</small>
       </Card.Footer>
       <Modal show={showConfirm} onHide={handleCancelConfirm}>
         <Modal.Header
