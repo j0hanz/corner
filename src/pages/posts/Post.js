@@ -81,7 +81,7 @@ const Post = ({
 
   return (
     <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
-      <Card.Header className="d-flex justify-content-between align-items-center">
+      <Card.Body className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
           <Avatar src={profile_image} height={40} />
           <Link
@@ -100,19 +100,17 @@ const Post = ({
               variant="outline-danger"
               size="sm"
               onClick={handleShowConfirm}
-              className="ms-2"
+              className="ms-3"
             >
               Delete
             </Button>
           </div>
         )}
-      </Card.Header>
-      <Card.Body>
+      </Card.Body>
         <Card.Title>{title}</Card.Title>
         <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
         <Card.Text>{content}</Card.Text>
         {image && <Image src={image} fluid />}
-      </Card.Body>
       <Card.Footer className="d-flex justify-content-between align-items-center">
         <div>
           <Button
@@ -124,7 +122,7 @@ const Post = ({
           </Button>
           <Link
             to={`/posts/${id}`}
-            className="ms-2 text-white text-decoration-none"
+            className="ms-3 text-white text-decoration-none"
           >
             Comments ({comments_count})
           </Link>
