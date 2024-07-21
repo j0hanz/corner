@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, Button, Modal, Image } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
@@ -6,6 +6,7 @@ import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
+import defaultProfileImage from '../../assets/nobody.webp'; // Corrected import path
 
 const Post = ({
   id,
@@ -26,6 +27,22 @@ const Post = ({
   const isOwner = currentUser?.username === owner;
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [profile, setProfile] = useState({
+    image: defaultProfileImage,
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await axiosRes.get(`/api/profiles/${profile_id}/`);
+        setProfile(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchProfile();
+  }, [profile_id]);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
@@ -83,7 +100,7 @@ const Post = ({
     <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
-          <Avatar src={profile_image} height={40} />
+          <Avatar src={profile.image || defaultProfileImage} height={40} />
           <Link
             to={`/profiles/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
@@ -107,10 +124,10 @@ const Post = ({
           </div>
         )}
       </Card.Body>
-        <Card.Title>{title}</Card.Title>
-        <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
-        <Card.Text className='text-center'>{content}</Card.Text>
-        {image && <Image src={image} fluid />}
+      <Card.Title>{title}</Card.Title>
+      <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
+      <Card.Text className="text-center">{content}</Card.Text>
+      {image && <Image src={image} fluid />}
       <Card.Footer className="d-flex justify-content-between align-items-center">
         <div>
           <Button
