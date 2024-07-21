@@ -18,22 +18,18 @@
 
 span:hover {
   color: #007bff;
-  transform: scale(1.2);
 }
 
 .DropdownItem:hover {
   color: #007bff;
-  transform: scale(1.02);
 }
 
 .DropdownItem:hover .faEdit {
   color: yellow;
-  transform: scale(1.02);
 }
 
 .DropdownItem:hover .faTrashAlt {
   color: red;
-  transform: scale(1.02);
 }
 
 .DropdownMenu {
