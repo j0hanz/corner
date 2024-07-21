@@ -1,0 +1,27 @@
+.CommentCard {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.CommentCard .card-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+.CommentCard .card-footer {
+  background: transparent;
+  border-top: none;
+}
+
+.CommentCard .card-title {
+  color: #e4e6eb;
+}
+
+.CommentCard .card-subtitle {
+  color: #b0b3b8;
+}
+
+.CommentCard .card-text {
+  color: #e4e6eb;
+}
