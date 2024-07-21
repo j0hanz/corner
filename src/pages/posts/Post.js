@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
 import defaultProfileImage from '../../assets/nobody.webp';
 import CustomDropdown from '../../components/Dropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
 
 const Post = ({
   id,
@@ -124,21 +126,27 @@ const Post = ({
       <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
       <Card.Text className="text-center">{content}</Card.Text>
       {image && <Image src={image} fluid />}
-      <Card.Footer className="d-flex justify-content-between align-items-center bg-black p-0">
+      <Card.Footer
+        className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
+      >
         <div>
           <Button
             variant="outline-primary"
             size="sm"
             onClick={like_id ? handleUnlike : handleLike}
           >
-            {like_id ? 'Unlike' : 'Like'} ({likes_count})
+            <FontAwesomeIcon className="mx-1" icon={faThumbsUp} />
+            {like_id ? 'Unlike' : 'Like'} {likes_count}
           </Button>
-          <Link
-            to={`/posts/${id}`}
-            className="ms-3 text-white text-decoration-none"
-          >
-            Comments ({comments_count})
-          </Link>
+          <Button variant="outline-secondary ms-3" size="sm">
+            <Link
+              to={`/posts/${id}`}
+              className="text-white text-decoration-none"
+            >
+              <FontAwesomeIcon className="mx-1" icon={faComment} />
+              Comments {comments_count}
+            </Link>
+          </Button>
         </div>
         <small className="text-muted">{updated_at}</small>
       </Card.Footer>
