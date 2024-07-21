@@ -129,7 +129,9 @@ const Post = ({
       >
         <div>
           <Button
-            className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
+            className={`${styles.likeButton} px-3 ${
+              like_id ? styles.liked : ''
+            }`}
             size="sm"
             onClick={like_id ? handleUnlike : handleLike}
           >
@@ -139,14 +141,14 @@ const Post = ({
           <Button className={styles.commentButton} size="sm">
             <Link
               to={`/posts/${id}`}
-              className="text-white text-decoration-none"
+              className="text-white text-decoration-none px-2"
             >
               <FontAwesomeIcon className="mx-1" icon={faComment} />
               Comments {comments_count}
             </Link>
           </Button>
         </div>
-        <span className="text-white-50 ms-3">{updated_at}</span>
+        <span className="text-white-50 mx-1">{updated_at}</span>
       </Card.Footer>
       <Modal show={showConfirm} onHide={handleCancelConfirm}>
         <Modal.Header
