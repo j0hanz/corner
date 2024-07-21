@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import Post from './Post';
 
@@ -23,17 +23,20 @@ const PostPage = () => {
     fetchPost();
   }, [id]);
 
-  if (!hasLoaded) {
-    return <div>Loading...</div>; // Replace with Asset spinner if needed
-  }
-
   return (
-    <Row className="h-100 mx-auto">
-      <Col className="d-flex flex-column justify-content-center mx-auto">
-        <Post {...post.results[0]} setPosts={setPost} postPage />
-        {/* Comments section can be added here */}
-      </Col>
-    </Row>
+    <Container>
+      <Row className="justify-content-center my-4">
+        <Col xs={12} xl={10}>
+          {!hasLoaded ? (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+              <Spinner animation="grow" />
+            </div>
+          ) : (
+            <Post {...post.results[0]} setPosts={setPost} postPage />
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
