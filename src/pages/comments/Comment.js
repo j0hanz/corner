@@ -9,6 +9,7 @@ import {
   Alert,
   OverlayTrigger,
   Tooltip,
+  Dropdown,
 } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
@@ -32,12 +33,14 @@ const Comment = (props) => {
   const { like_id, likes_count } = props;
 
   const currentUser = useCurrentUser();
+  const is_owner = currentUser?.username === owner;
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [error, setError] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
 
   const handleDelete = async () => {
     if (showModal) {
@@ -131,7 +134,9 @@ const Comment = (props) => {
   }
 
   return (
-    <Card className={`mt-3 mb-1 pb-4 text-center bg-dark text-white ${styles.CommentCard}`}>
+    <Card
+      className={`mt-3 mb-1 pb-4 text-center bg-dark text-white ${styles.CommentCard}`}
+    >
       <Row className="d-flex">
         <Col className="d-flex align-items-center mt-2">
           <Link to={`/profiles/${profile_id}`}>
@@ -141,6 +146,20 @@ const Comment = (props) => {
           {likeButtonContent}
           <div className="flex-grow-1"></div>
           <span className="text-muted me-2">{updated_at}</span>
+          {is_owner && (
+            <Dropdown className="ms-auto">
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                ...
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setShowEditForm(true)}>
+                  Edit
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleShowModal}>Delete</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
         </Col>
       </Row>
 
@@ -171,18 +190,28 @@ const Comment = (props) => {
       )}
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header
+          className="bg-dark text-white"
+          closeButton
+          closeVariant="white"
+        >
           <Modal.Title>Delete Comment</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this comment?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
+        <Modal.Body className="bg-dark text-white">
+          <p>Are you sure you want to delete this comment?</p>
+          <div className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              onClick={handleCloseModal}
+              className="me-2"
+            >
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleDelete}>
+              Delete
+            </Button>
+          </div>
+        </Modal.Body>
       </Modal>
     </Card>
   );
