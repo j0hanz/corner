@@ -6,6 +6,6 @@
 }
 
 .Icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 0 8px 16px #000000;
 }
