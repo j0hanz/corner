@@ -9,12 +9,12 @@ import {
   Alert,
   OverlayTrigger,
   Tooltip,
-  Dropdown,
 } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import CommentEditForm from './CommentEditForm';
+import CustomDropdown from '../../components/Dropdown';
 import styles from './styles/Comment.module.css';
 
 const Comment = (props) => {
@@ -147,18 +147,10 @@ const Comment = (props) => {
           <div className="flex-grow-1"></div>
           <span className="text-muted me-2">{updated_at}</span>
           {is_owner && (
-            <Dropdown className="ms-auto">
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                ...
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => setShowEditForm(true)}>
-                  Edit
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handleShowModal}>Delete</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <CustomDropdown
+              handleEdit={() => setShowEditForm(true)}
+              handleDelete={handleShowModal}
+            />
           )}
         </Col>
       </Row>
