@@ -1,12 +1,49 @@
-.editProfilePage {
-  margin-top: 20px;
+.Container {
+  min-height: 400px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 25px;
+  border-radius: 12px;
+  color: #f8f9fa;
 }
 
-.profileImagePreview {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border: 4px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
+.Image {
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.ImageWrapper {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+}
+
+.ImageWrapper:hover {
+  border-color: #007bff;
+  box-shadow: 0 0 10px 0 rgba(0, 123, 255, 0.5);
+}
+
+.FormControl {
+  width: 100%;
+  border-radius: 8px;
+  background-color: #495057;
+  color: #f8f9fa;
+  border: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 10px 15px;
+  font-size: 1rem;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.FormControl:focus {
+  background-color: #3a3f44;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
 }
