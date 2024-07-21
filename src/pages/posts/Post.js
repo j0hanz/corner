@@ -19,10 +19,9 @@ const Post = ({
   comments_count,
   likes_count,
   like_id,
-  title,
-  location,
   content,
   image,
+  image_filter,
   updated_at,
   setPosts,
 }) => {
@@ -122,9 +121,9 @@ const Post = ({
           />
         )}
       </Card.Body>
-      <Card.Title>{title}</Card.Title>
-      <Card.Subtitle className="mb-2">{location}</Card.Subtitle>
-      <Card.Text className="text-center">{content}</Card.Text>
+      <Card.Text className={`text-center ${styles[image_filter]}`}>
+        {content}
+      </Card.Text>
       {image && <Image src={image} fluid />}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
