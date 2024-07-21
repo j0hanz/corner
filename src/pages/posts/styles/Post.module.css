@@ -4,14 +4,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.PostCard .card-header {
-  background: transparent;
-  border-bottom: none;
-}
-
+.PostCard .card-header,
 .PostCard .card-footer {
   background: transparent;
-  border-top: none;
+  border: none;
 }
 
 .PostCard .card-title {
@@ -27,6 +23,33 @@
 }
 
 .greyFooter {
-  background-color: #2422227c;
+  background-color: #242526;
   padding: 0;
+}
+
+.likeButton,
+.commentButton {
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.likeButton {
+  color: #4267b2;
+}
+
+.likeButton.liked {
+  color: #1877f2;
+}
+
+.commentButton {
+  color: #65676b;
+}
+
+.commentButton .text-decoration-none {
+  color: inherit;
+}
+
+.text-white-50 {
+  color: rgba(255, 255, 255, 0.5);
 }
