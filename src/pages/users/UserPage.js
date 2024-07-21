@@ -71,6 +71,10 @@ const UserPage = () => {
             roundedCircle
             src={user?.image || nobody}
             alt={`${user?.first_name} ${user?.last_name}`}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = nobody;
+            }}
           />
           <div className={styles.ProfileOwner}>{user?.username}</div>
           {currentUser?.id === user.id && (
