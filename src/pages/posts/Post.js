@@ -7,10 +7,10 @@ import Avatar from '../../components/Avatar';
 import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
 import defaultProfileImage from '../../assets/nobody.webp';
-import CustomDropdown from '../../components/Dropdown';
+import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
-import Comment from '../comments/Comment'; // Import Comment component
+import Comment from '../comments/Comment';
 
 const Post = ({
   id,
@@ -32,7 +32,7 @@ const Post = ({
   const [profile, setProfile] = useState({
     image: defaultProfileImage,
   });
-  const [comments, setComments] = useState({ results: [] }); // Initialize comments state
+  const [comments, setComments] = useState({ results: [] });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -129,7 +129,7 @@ const Post = ({
           </Link>
         </div>
         {isOwner && (
-          <CustomDropdown
+          <EditDeleteDropdown
             handleEdit={handleEdit}
             handleDelete={handleShowConfirm}
           />
