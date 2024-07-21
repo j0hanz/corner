@@ -19,9 +19,6 @@ const EditProfilePage = () => {
     first_name: '',
     last_name: '',
     bio: '',
-    favorite_movie_genre: '',
-    favorite_music_genre: '',
-    favorite_sport: '',
     location: '',
     url_link: '',
     contact_email: '',
@@ -45,9 +42,6 @@ const EditProfilePage = () => {
           first_name: data.first_name,
           last_name: data.last_name,
           bio: data.bio,
-          favorite_movie_genre: data.favorite_movie_genre?.id || '',
-          favorite_music_genre: data.favorite_music_genre?.id || '',
-          favorite_sport: data.favorite_sport?.id || '',
           location: data.location,
           url_link: data.url_link,
           contact_email: data.contact_email,
@@ -162,57 +156,6 @@ const EditProfilePage = () => {
           />
           <Form.Control.Feedback type="invalid">
             {errors.bio}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group controlId="formFavoriteMovieGenre">
-          <Form.Label>Favorite Movie Genre</Form.Label>
-          <Form.Control
-            as="select"
-            name="favorite_movie_genre"
-            value={profileData.favorite_movie_genre}
-            onChange={handleChange}
-            isInvalid={!!errors.favorite_movie_genre}
-          >
-            <option value="">Select Movie Genre</option>
-            {/* Populate with options */}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {errors.favorite_movie_genre}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group controlId="formFavoriteMusicGenre">
-          <Form.Label>Favorite Music Genre</Form.Label>
-          <Form.Control
-            as="select"
-            name="favorite_music_genre"
-            value={profileData.favorite_music_genre}
-            onChange={handleChange}
-            isInvalid={!!errors.favorite_music_genre}
-          >
-            <option value="">Select Music Genre</option>
-            {/* Populate with options */}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {errors.favorite_music_genre}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group controlId="formFavoriteSport">
-          <Form.Label>Favorite Sport</Form.Label>
-          <Form.Control
-            as="select"
-            name="favorite_sport"
-            value={profileData.favorite_sport}
-            onChange={handleChange}
-            isInvalid={!!errors.favorite_sport}
-          >
-            <option value="">Select Sport</option>
-            {/* Populate with options */}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {errors.favorite_sport}
           </Form.Control.Feedback>
         </Form.Group>
 
