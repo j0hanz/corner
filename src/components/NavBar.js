@@ -100,13 +100,21 @@ const NavBar = () => {
         </Offcanvas.Header>
         <hr />
         {currentUser ? (
-          <Button
-            variant="outline-light"
-            onClick={handleLogout}
-            className="mx-auto"
-          >
-            Sign Out
-          </Button>
+          <>
+            <Button
+              variant="outline-light"
+              onClick={handleLogout}
+              className="mx-auto"
+            >
+              Sign Out
+            </Button>
+            <NavLink
+              to="/posts/create"
+              className="btn btn-outline-light mt-2 mx-auto"
+            >
+              Create Post
+            </NavLink>
+          </>
         ) : (
           <>
             {showLogin ? (
