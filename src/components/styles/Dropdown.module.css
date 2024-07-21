@@ -16,17 +16,29 @@
   transition: color 0.3s;
 }
 
-span:hover,
-.DropdownItem:hover,
-.DropdownItem:hover .faEdit,
-.DropdownItem:hover .faTrashAlt,
-.DropdownItem:hover .faIdCard,
-.DropdownItem:hover .faKey {
+span:hover {
   color: #007bff;
-  transform: scale(1.05);
+  transform: scale(1.2);
+}
+
+.DropdownItem:hover {
+  color: #007bff;
+  transform: scale(1.02);
+}
+
+.DropdownItem:hover .faEdit {
+  color: yellow;
+  transform: scale(1.02);
+}
+
+.DropdownItem:hover .faTrashAlt {
+  color: red;
+  transform: scale(1.02);
 }
 
 .DropdownMenu {
+  padding: 2px;
+  border-radius: 10%;
   background-color: #343a40 !important;
   --bs-dropdown-link-hover-bg: none;
   --bs-dropdown-link-active-color: none;
