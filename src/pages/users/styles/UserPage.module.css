@@ -2,20 +2,20 @@
   width: 150px;
   height: 150px;
   object-fit: cover;
-  border: 4px solid #555;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 4px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ProfileOwner {
   margin-top: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ccc;
+  color: #333;
 }
 
 .ProfileStats {
   font-size: 1rem;
-  color: #aaa;
+  color: #727272;
 }
 
 @media (max-width: 768px) {
