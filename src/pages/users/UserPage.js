@@ -39,10 +39,7 @@ const UserPage = () => {
 
   if (loading) {
     return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: '100vh' }}
-      >
+      <Container className="d-flex justify-content-center align-items-center vh-100">
         <Spinner animation="border" variant="primary" />
       </Container>
     );
@@ -50,10 +47,7 @@ const UserPage = () => {
 
   if (error) {
     return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: '100vh' }}
-      >
+      <Container className="d-flex justify-content-center align-items-center vh-100">
         <Alert variant="danger">{error}</Alert>
       </Container>
     );
@@ -61,11 +55,8 @@ const UserPage = () => {
 
   return (
     <Container>
-      <Row className="px-3 mx-auto text-center justify-content-center">
-        <Col
-          lg={3}
-          className="d-flex flex-column align-items-center justify-content-center"
-        >
+      <Row className="justify-content-center">
+        <Col lg={3} className="d-flex flex-column align-items-center">
           <Image
             className={styles.ProfileImage}
             roundedCircle
@@ -76,7 +67,7 @@ const UserPage = () => {
               e.target.src = nobody;
             }}
           />
-          <div className={styles.ProfileOwner}>{user?.username}</div>
+          <h4 className="mt-2">{user?.username}</h4>
           {currentUser?.id === user.id && (
             <Button
               variant="primary"
@@ -87,37 +78,53 @@ const UserPage = () => {
             </Button>
           )}
         </Col>
-        <Col className="mt-2">
-          <Row className="justify-content-center no-gutters">
-            <Col xs={4} className="my-2 text-center">
-              <div className="h5">{user?.posts_count}</div>
+        <Col lg={9} className="mt-4 mt-lg-0">
+          <Row className="justify-content-center text-center">
+            <Col xs={6} sm={4} className="my-2">
+              <h5>{user?.posts_count}</h5>
               <div className={styles.ProfileStats}>Posts</div>
             </Col>
-            <Col xs={4} className="my-2 text-center">
-              <div className="h5">{user?.followers_count}</div>
+            <Col xs={6} sm={4} className="my-2">
+              <h5>{user?.followers_count}</h5>
               <div className={styles.ProfileStats}>Followers</div>
             </Col>
-            <Col xs={4} className="my-2 text-center">
-              <div className="h5">{user?.following_count}</div>
+            <Col xs={6} sm={4} className="my-2">
+              <h5>{user?.following_count}</h5>
               <div className={styles.ProfileStats}>Following</div>
             </Col>
           </Row>
           <hr />
-          <Row className="justify-content-center">
-            <Col className="my-2 text-center">
-              <div className="font-weight-bold">
-                {user?.first_name} {user?.last_name}
-              </div>
-            </Col>
-            <Col className="my-2 text-center">
+          <Row className="text-center">
+            <Col className="my-2">
+              <h5 className="font-weight-bold">{`${user?.first_name} ${user?.last_name}`}</h5>
               <div>{user?.country}</div>
             </Col>
           </Row>
           <hr />
-          <Row className="w-100 justify-content-center">
-            <Col xs={12} sm={4} className="my-2 text-center">
-              <div>About me:</div>
-              <div>{user?.bio}</div>
+          <Row className="text-center">
+            <Col xs={12} sm={6} className="my-2">
+              <strong>About me:</strong>
+              <p>{user?.bio}</p>
+            </Col>
+            <Col xs={12} sm={6} className="my-2">
+              <strong>First Name:</strong>
+              <p>{user?.first_name}</p>
+            </Col>
+            <Col xs={12} sm={6} className="my-2">
+              <strong>Last Name:</strong>
+              <p>{user?.last_name}</p>
+            </Col>
+            <Col xs={12} sm={6} className="my-2">
+              <strong>Location:</strong>
+              <p>{user?.location}</p>
+            </Col>
+            <Col xs={12} sm={6} className="my-2">
+              <strong>URL Link:</strong>
+              <p>{user?.url_link}</p>
+            </Col>
+            <Col xs={12} sm={6} className="my-2">
+              <strong>Contact Email:</strong>
+              <p>{user?.contact_email}</p>
             </Col>
           </Row>
         </Col>
