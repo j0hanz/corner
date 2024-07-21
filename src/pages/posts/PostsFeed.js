@@ -36,7 +36,7 @@ function PostsFeed({ message, filter = '' }) {
   return (
     <Container>
       <Row className="justify-content-center my-4">
-        <Col xs={12} lg={8}>
+        <Col xs={12} xl={10}>
           <Form onSubmit={(event) => event.preventDefault()}>
             <Form.Label className="d-none">Search</Form.Label>
             <Form.Control
@@ -49,7 +49,7 @@ function PostsFeed({ message, filter = '' }) {
         </Col>
       </Row>
       <Row className="justify-content-center">
-        <Col xs={12} lg={8} className="text-center">
+        <Col xs={12} xl={10} className="text-center">
           {!hasLoaded ? (
             <div className="d-flex justify-content-center align-items-center vh-100">
               <Spinner animation="grow" />
