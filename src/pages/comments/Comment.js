@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Card,
-  Row,
-  Col,
-  Modal,
   Button,
+  Modal,
   Alert,
   OverlayTrigger,
   Tooltip,
@@ -16,29 +14,29 @@ import Avatar from '../../components/Avatar';
 import CommentEditForm from './CommentEditForm';
 import CustomDropdown from '../../components/Dropdown';
 import styles from './styles/Comment.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp as faThumbsUpSolid } from '@fortawesome/free-solid-svg-icons';
 
-const Comment = (props) => {
-  const {
-    profile_id,
-    profile_image,
-    owner,
-    updated_at,
-    content,
-    id,
-    setPost,
-    setComments,
-    onDelete = () => {},
-  } = props;
-
-  const { like_id, likes_count } = props;
-
+const Comment = ({
+  profile_id,
+  profile_image,
+  owner,
+  updated_at,
+  content,
+  id,
+  setPost,
+  setComments,
+  like_id,
+  likes_count,
+}) => {
   const currentUser = useCurrentUser();
-  const is_owner = currentUser?.username === owner;
+  const isOwner = currentUser?.username === owner;
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [error, setError] = useState(null);
-
   const [showModal, setShowModal] = useState(false);
+
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
@@ -63,7 +61,6 @@ const Comment = (props) => {
       }
     }
     handleCloseModal();
-    onDelete();
   };
 
   const handleLike = async () => {
@@ -71,17 +68,18 @@ const Comment = (props) => {
       const { data } = await axiosRes.post('/likes/', { comment: id });
       setComments((prevComments) => ({
         ...prevComments,
-        results: prevComments.results.map((comment) => {
-          return comment.id === id
+        results: prevComments.results.map((comment) =>
+          comment.id === id
             ? {
                 ...comment,
                 likes_count: comment.likes_count + 1,
                 like_id: data.id,
               }
-            : comment;
-        }),
+            : comment,
+        ),
       }));
     } catch (err) {
+      console.error('Error liking the comment:', err);
       setError('There was an error liking the comment');
     }
   };
@@ -91,95 +89,93 @@ const Comment = (props) => {
       await axiosRes.delete(`/likes/${like_id}/`);
       setComments((prevComments) => ({
         ...prevComments,
-        results: prevComments.results.map((comment) => {
-          return comment.id === id
+        results: prevComments.results.map((comment) =>
+          comment.id === id
             ? {
                 ...comment,
                 likes_count: comment.likes_count - 1,
                 like_id: null,
               }
-            : comment;
-        }),
+            : comment,
+        ),
       }));
     } catch (err) {
+      console.error('Error unliking the comment:', err);
       setError('There was an error unliking the comment');
     }
   };
 
-  let likeButtonContent = null;
-  if (!like_id && !currentUser) {
-    likeButtonContent = (
-      <OverlayTrigger
-        placement="top"
-        overlay={<Tooltip>Sign in to like</Tooltip>}
-      >
-        <div>
-          <i className="fa-regular fa-thumbs-up"></i> <span>{likes_count}</span>
-        </div>
-      </OverlayTrigger>
-    );
-  } else if (!like_id && currentUser) {
-    likeButtonContent = (
-      <div onClick={handleLike}>
-        <i className="fa-regular fa-thumbs-up"></i> <span>{likes_count}</span>
+  !like_id && !currentUser ? (
+    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip>Sign in to like</Tooltip>}
+    >
+      <div>
+        <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
       </div>
-    );
-  } else if (like_id && currentUser) {
-    likeButtonContent = (
-      <div onClick={handleUnlike}>
-        <i className="fa-solid fa-thumbs-up"></i>
-        <span>{likes_count}</span>
-      </div>
-    );
-  }
+    </OverlayTrigger>
+  ) : like_id && currentUser ? (
+    <div onClick={handleUnlike}>
+      <FontAwesomeIcon icon={faThumbsUpSolid} /> <span>{likes_count}</span>
+    </div>
+  ) : (
+    <div onClick={handleLike}>
+      <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+    </div>
+  );
 
   return (
-    <Card
-      className={`mt-3 mb-1 pb-4 text-center bg-dark text-white ${styles.CommentCard}`}
-    >
-      <Row className="d-flex">
-        <Col className="d-flex align-items-center mt-2">
-          <Link to={`/profiles/${profile_id}`}>
-            <Avatar src={profile_image} height={30} />
+    <Card className={`mb-5 bg-dark text-white ${styles.CommentCard}`}>
+      <Card.Body className="d-flex justify-content-between align-items-center p-2">
+        <div className="d-flex align-items-center">
+          <Avatar src={profile_image} height={40} width={40} />
+          <Link
+            to={`/profiles/${profile_id}`}
+            className="ms-2 text-white text-decoration-none"
+          >
+            {owner}
           </Link>
-          <span className="ms-2">{owner}</span>
-          {likeButtonContent}
-          <div className="flex-grow-1"></div>
-          {is_owner && (
-            <CustomDropdown
-              handleEdit={() => setShowEditForm(true)}
-              handleDelete={handleShowModal}
-            />
-          )}
-        </Col>
-      </Row>
-      <Row className="mt-2">
-        <Col>
-          {showEditForm ? (
-            <CommentEditForm
-              id={id}
-              profile_id={profile_id}
-              content={content}
-              setComments={setComments}
-              setShowEditForm={setShowEditForm}
-            />
-          ) : (
-            <p>{content}</p>
-          )}
-        </Col>
-      </Row>
-      {error && (
-        <Row className="mt-3">
-          <Col className="text-center">
-            <Alert variant="danger">
-              <p>{error}</p>
-            </Alert>
-          </Col>
-        </Row>
+        </div>
+        {isOwner && (
+          <CustomDropdown
+            handleEdit={() => setShowEditForm(true)}
+            handleDelete={handleShowModal}
+          />
+        )}
+      </Card.Body>
+      {showEditForm ? (
+        <CommentEditForm
+          id={id}
+          profile_id={profile_id}
+          content={content}
+          setComments={setComments}
+          setShowEditForm={setShowEditForm}
+        />
+      ) : (
+        <Card.Text className="text-center">{content}</Card.Text>
       )}
-      <small className="text-white-50 position-absolute bottom-0 end-0 m-2">
-        {updated_at}
-      </small>{' '}
+      <Card.Footer
+        className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
+      >
+        <div>
+          <Button
+            className={`${styles.likeButton} px-3 ${
+              like_id ? styles.liked : ''
+            }`}
+            size="sm"
+            onClick={like_id ? handleUnlike : handleLike}
+          >
+            <FontAwesomeIcon className="mx-1" icon={faThumbsUp} />
+            {like_id ? 'Unlike' : 'Like'} {likes_count}
+          </Button>
+        </div>
+        <span className="text-white-50 mx-1">{updated_at}</span>
+      </Card.Footer>
+      {error && (
+        <Alert variant="danger" className="mt-3">
+          <p>{error}</p>
+        </Alert>
+      )}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header
           className="bg-dark text-white"
