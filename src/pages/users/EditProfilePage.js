@@ -41,31 +41,19 @@ const EditProfilePage = () => {
     const fetchProfile = async () => {
       try {
         const { data } = await axios.get(`/users/${id}/`);
-        const {
-          first_name,
-          last_name,
-          bio,
-          location,
-          url_link,
-          contact_email,
-          image,
-          favorite_movie_genre,
-          favorite_music_genre,
-          favorite_sport,
-        } = data;
         setProfileData({
-          first_name,
-          last_name,
-          bio,
-          favorite_movie_genre: favorite_movie_genre.id || '',
-          favorite_music_genre: favorite_music_genre.id || '',
-          favorite_sport: favorite_sport.id || '',
-          location,
-          url_link,
-          contact_email,
-          image,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          bio: data.bio,
+          favorite_movie_genre: data.favorite_movie_genre?.id || '',
+          favorite_music_genre: data.favorite_music_genre?.id || '',
+          favorite_sport: data.favorite_sport?.id || '',
+          location: data.location,
+          url_link: data.url_link,
+          contact_email: data.contact_email,
+          image: data.image,
         });
-        setImagePreview(image);
+        setImagePreview(data.image);
       } catch (error) {
         console.error('Error fetching profile:', error);
       } finally {
