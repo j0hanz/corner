@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
+import styles from './styles/CommentCreateForm.module.css';
 
 const CommentEditForm = ({
   id,
@@ -32,6 +33,7 @@ const CommentEditForm = ({
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="content">
         <Form.Control
+          className={`${styles.CommentContent}`}
           as="textarea"
           rows={3}
           value={formContent}
