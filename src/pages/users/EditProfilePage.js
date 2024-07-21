@@ -1,7 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Form, Button, Spinner, Alert } from 'react-bootstrap';
+import {
+  Container,
+  Form,
+  Button,
+  Spinner,
+  Alert,
+  Row,
+  Col,
+} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faUser,
+  faMapMarkerAlt,
+  faLink,
+  faEnvelope,
+  faFileAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   useCurrentUser,
   useSetCurrentUser,
@@ -38,15 +54,7 @@ const EditProfilePage = () => {
     const fetchProfile = async () => {
       try {
         const { data } = await axios.get(`/users/${id}/`);
-        setProfileData({
-          first_name: data.first_name,
-          last_name: data.last_name,
-          bio: data.bio,
-          location: data.location,
-          url_link: data.url_link,
-          contact_email: data.contact_email,
-          image: data.image,
-        });
+        setProfileData(data);
         setImagePreview(data.image);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -69,19 +77,20 @@ const EditProfilePage = () => {
   const handleImageChange = (e) => {
     const { files } = e.target;
     if (files.length > 0) {
+      const imageFile = files[0];
       setProfileData((prevData) => ({
         ...prevData,
-        image: files[0],
+        image: imageFile,
       }));
-      setImagePreview(URL.createObjectURL(files[0]));
+      setImagePreview(URL.createObjectURL(imageFile));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    Object.keys(profileData).forEach((key) => {
-      formData.append(key, profileData[key]);
+    Object.entries(profileData).forEach(([key, value]) => {
+      formData.append(key, value);
     });
 
     try {
@@ -102,140 +111,219 @@ const EditProfilePage = () => {
 
   if (loading) {
     return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: '100vh' }}
-      >
+      <Container className={styles.loadingContainer}>
         <Spinner animation="border" variant="primary" />
       </Container>
     );
   }
 
-  return (
-    <Container className={styles.EditProfilePage}>
-      <h2>Edit Profile</h2>
-      {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formFirstName">
-          <Form.Label>First Name</Form.Label>
+  const textFields = (
+    <div className="text-center">
+      <Form.Group controlId="formFirstName" className="mb-3">
+        <Form.Label className="d-none">First Name</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faUser} className="me-2" />
           <Form.Control
             type="text"
+            placeholder="First Name"
             name="first_name"
             value={profileData.first_name}
             onChange={handleChange}
-            isInvalid={!!errors.first_name}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.first_name}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.first_name?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formLastName">
-          <Form.Label>Last Name</Form.Label>
+      <Form.Group controlId="formLastName" className="mb-3">
+        <Form.Label className="d-none">Last Name</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faUser} className="me-2" />
           <Form.Control
             type="text"
+            placeholder="Last Name"
             name="last_name"
             value={profileData.last_name}
             onChange={handleChange}
-            isInvalid={!!errors.last_name}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.last_name}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.last_name?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formBio">
-          <Form.Label>Bio</Form.Label>
+      <Form.Group controlId="formBio" className="mb-3">
+        <Form.Label className="d-none">Bio</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faFileAlt} className="me-2" />
           <Form.Control
             as="textarea"
+            rows={6}
+            placeholder="Bio"
             name="bio"
             value={profileData.bio}
             onChange={handleChange}
-            rows={3}
-            isInvalid={!!errors.bio}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.bio}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.bio?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formLocation">
-          <Form.Label>Location</Form.Label>
+      <Form.Group controlId="formLocation" className="mb-3">
+        <Form.Label className="d-none">Location</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
           <Form.Control
             type="text"
+            placeholder="Location"
             name="location"
             value={profileData.location}
             onChange={handleChange}
-            isInvalid={!!errors.location}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.location}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.location?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formUrlLink">
-          <Form.Label>URL Link</Form.Label>
+      <Form.Group controlId="formUrlLink" className="mb-3">
+        <Form.Label className="d-none">URL Link</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faLink} className="me-2" />
           <Form.Control
             type="text"
+            placeholder="URL Link"
             name="url_link"
             value={profileData.url_link}
             onChange={handleChange}
-            isInvalid={!!errors.url_link}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.url_link}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.url_link?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formContactEmail">
-          <Form.Label>Contact Email</Form.Label>
+      <Form.Group controlId="formContactEmail" className="mb-3">
+        <Form.Label className="d-none">Contact Email</Form.Label>
+        <div className="d-flex align-items-center mb-2">
+          <FontAwesomeIcon icon={faEnvelope} className="me-2" />
           <Form.Control
             type="email"
+            placeholder="Contact Email"
             name="contact_email"
             value={profileData.contact_email}
             onChange={handleChange}
-            isInvalid={!!errors.contact_email}
+            className={styles.FormControl}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.contact_email}
-          </Form.Control.Feedback>
-        </Form.Group>
+        </div>
+        {errors?.contact_email?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+      </Form.Group>
 
-        <Form.Group controlId="formImage">
-          <Form.Label>Profile Image</Form.Label>
-          <Form.Control
-            type="file"
-            name="image"
-            ref={imageFileRef}
-            onChange={handleImageChange}
-            isInvalid={!!errors.image}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.image}
-          </Form.Control.Feedback>
-          {imagePreview && (
-            <div className="mt-3">
-              <img
-                src={imagePreview}
-                alt="Profile Preview"
-                className={styles.ProfileImagePreview}
-              />
-            </div>
-          )}
-        </Form.Group>
-
-        <Button type="submit" className="mt-3">
-          Save Changes
-        </Button>
+      <div className="d-flex justify-content-center mt-4">
         <Button
-          variant="secondary"
-          className="mt-3 ms-2"
+          variant="outline-secondary"
           onClick={() => navigate(`/users/${id}/`)}
+          className="mx-3 btn-lg"
         >
           Cancel
         </Button>
-      </Form>
-    </Container>
+        <Button variant="outline-primary" className="mx-3 btn-lg" type="submit">
+          Save Changes
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Container
+        className={`${styles.Container} d-flex flex-column justify-content-center`}
+      >
+        <Row>
+          <Col className="py-2 p-0 p-md-2" md={12} lg={12}>
+            <Form.Group className="text-center">
+              <div onClick={() => imageFileRef.current.click()}>
+                {imagePreview ? (
+                  <figure>
+                    <img
+                      className={`${styles.Image} ${styles.ImageWrapper}`}
+                      src={imagePreview}
+                      alt="Profile"
+                      rounded="true"
+                    />
+                  </figure>
+                ) : (
+                  <Form.Label
+                    className="d-flex justify-content-center"
+                    htmlFor="image-upload"
+                  >
+                    <span className={styles.UploadMessage}>
+                      Click to upload an image
+                    </span>
+                  </Form.Label>
+                )}
+                <Form.Control
+                  type="file"
+                  id="image-upload"
+                  accept="image/*"
+                  className="d-none"
+                  ref={imageFileRef}
+                  onChange={handleImageChange}
+                />
+              </div>
+              {imagePreview && (
+                <div className="d-flex justify-content-center mt-2">
+                  <Button
+                    variant="outline-light"
+                    onClick={() => {
+                      setProfileData((prevData) => ({
+                        ...prevData,
+                        image: '',
+                      }));
+                      setImagePreview('');
+                    }}
+                    className="ml-2"
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
+            </Form.Group>
+            {errors?.image?.map((message, idx) => (
+              <Alert variant="warning" key={idx}>
+                {message}
+              </Alert>
+            ))}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="py-2 p-0 p-md-2" md={12} lg={12}>
+            {textFields}
+          </Col>
+        </Row>
+      </Container>
+    </Form>
   );
 };
 
