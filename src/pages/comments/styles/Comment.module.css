@@ -25,3 +25,13 @@
 .CommentCard .card-text {
   color: #e4e6eb;
 }
+
+.ModalHeader {
+  background-color: #1c1e21;
+  color: #e4e6eb;
+}
+
+.ModalHeader .btn-close {
+  filter: invert(1);
+}
+
