@@ -27,7 +27,7 @@ const Comment = (props) => {
     id,
     setPost,
     setComments,
-    onDelete,
+    onDelete = () => {}, // Default to an empty function if not provided
   } = props;
 
   const { like_id, likes_count } = props;
