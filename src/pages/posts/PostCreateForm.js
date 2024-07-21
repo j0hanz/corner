@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Form,
   Button,
@@ -10,46 +10,53 @@ import {
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
-import { useRedirect } from '../../contexts/useRidirect';
+import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
 
 function PostCreateForm() {
-  useRedirect('loggedOut');
-  const [errors, setErrors] = useState({});
+  const currentUser = useCurrentUser();
+  const navigate = useNavigate();
+  const imageInput = useRef(null);
+
   const [postData, setPostData] = useState({
-    title: '',
-    location: '',
     content: '',
     image: '',
+    image_filter: 'normal',
+    tags: '',
   });
+  const [errors, setErrors] = useState({});
+  const { content, image, image_filter, tags } = postData;
 
-  const { title, location, content, image } = postData;
-  const imageInput = useRef(null);
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
 
   const handleChange = (event) => {
-    setPostData({
-      ...postData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      [name]: value,
+    }));
   };
 
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
       URL.revokeObjectURL(image);
-      setPostData({
-        ...postData,
-        image: URL.createObjectURL(event.target.files[0]),
-      });
+      setPostData((prevPostData) => ({
+        ...prevPostData,
+        image: event.target.files[0],
+      }));
     }
   };
 
   const handleRemoveImage = () => {
     URL.revokeObjectURL(image);
-    setPostData({
-      ...postData,
+    setPostData((prevPostData) => ({
+      ...prevPostData,
       image: '',
-    });
+    }));
     if (imageInput.current) {
       imageInput.current.value = '';
     }
@@ -58,22 +65,22 @@ function PostCreateForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-
-    formData.append('title', title);
-    formData.append('location', location);
     formData.append('content', content);
-    if (imageInput.current.files[0]) {
-      formData.append('image', imageInput.current.files[0]);
+    formData.append('image_filter', image_filter);
+    formData.append('tags', tags);
+    if (image) {
+      formData.append('image', image);
     }
 
     try {
-      const { data } = await axiosReq.post('/posts/', formData);
-      toast('Post created successfully!');
+      const { data } = await axiosReq.post('/posts/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      toast.success('Post created successfully!');
       navigate(`/posts/${data.id}`);
     } catch (err) {
-      console.log(err);
       if (err.response?.status !== 401) {
-        setErrors(err.response?.data);
+        setErrors(err.response?.data || {});
         toast.error('Failed to create post. Please try again.');
       }
     }
@@ -85,32 +92,6 @@ function PostCreateForm() {
         <Col md={8}>
           <h2>Create Post</h2>
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formTitle">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                name="title"
-                value={title}
-                onChange={handleChange}
-                isInvalid={!!errors.title}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.title}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group controlId="formLocation" className="mt-3">
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                value={location}
-                onChange={handleChange}
-                isInvalid={!!errors.location}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.location}
-              </Form.Control.Feedback>
-            </Form.Group>
             <Form.Group controlId="formContent" className="mt-3">
               <Form.Label>Content</Form.Label>
               <Form.Control
@@ -139,7 +120,11 @@ function PostCreateForm() {
               </Form.Control.Feedback>
               {image && (
                 <div className="mt-3">
-                  <img src={image} alt="Post" className="img-thumbnail" />
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Post preview"
+                    className="img-thumbnail"
+                  />
                   <Button
                     variant="danger"
                     className="mt-2"
@@ -149,6 +134,47 @@ function PostCreateForm() {
                   </Button>
                 </div>
               )}
+            </Form.Group>
+            <Form.Group controlId="formImageFilter" className="mt-3">
+              <Form.Label>Image Filter</Form.Label>
+              <Form.Control
+                as="select"
+                name="image_filter"
+                value={image_filter}
+                onChange={handleChange}
+                isInvalid={!!errors.image_filter}
+              >
+                <option value="normal">Normal</option>
+                <option value="_1977">1977</option>
+                <option value="brannan">Brannan</option>
+                <option value="earlybird">Earlybird</option>
+                <option value="hudson">Hudson</option>
+                <option value="inkwell">Inkwell</option>
+                <option value="lofi">Lo-Fi</option>
+                <option value="kelvin">Kelvin</option>
+                <option value="nashville">Nashville</option>
+                <option value="rise">Rise</option>
+                <option value="toaster">Toaster</option>
+                <option value="valencia">Valencia</option>
+                <option value="walden">Walden</option>
+                <option value="xpro2">X-pro II</option>
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {errors.image_filter}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="formTags" className="mt-3">
+              <Form.Label>Tags</Form.Label>
+              <Form.Control
+                type="text"
+                name="tags"
+                value={tags}
+                onChange={handleChange}
+                isInvalid={!!errors.tags}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.tags}
+              </Form.Control.Feedback>
             </Form.Group>
             <Button variant="primary" type="submit" className="mt-3">
               {false ? <Spinner animation="border" size="sm" /> : 'Create Post'}
