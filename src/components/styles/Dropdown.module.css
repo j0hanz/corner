@@ -1,0 +1,34 @@
+.DropdownItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 25px;
+  margin-bottom: 5px;
+  color: white !important;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.faEdit,
+.faTrashAlt,
+.faIdCard,
+.faKey {
+  color: white;
+  transition: color 0.3s;
+}
+
+span:hover,
+.DropdownItem:hover,
+.DropdownItem:hover .faEdit,
+.DropdownItem:hover .faTrashAlt,
+.DropdownItem:hover .faIdCard,
+.DropdownItem:hover .faKey {
+  color: #007bff;
+  transform: scale(1.05);
+}
+
+.DropdownMenu {
+  background-color: #343a40 !important;
+  --bs-dropdown-link-hover-bg: none;
+  --bs-dropdown-link-active-color: none;
+  --bs-dropdown-link-active-bg: none;
+}
