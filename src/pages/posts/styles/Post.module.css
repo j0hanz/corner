@@ -1,0 +1,27 @@
+.PostCard {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.PostCard .card-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+.PostCard .card-footer {
+  background: transparent;
+  border-top: none;
+}
+
+.PostCard .card-title {
+  color: #e4e6eb;
+}
+
+.PostCard .card-subtitle {
+  color: #b0b3b8;
+}
+
+.PostCard .card-text {
+  color: #e4e6eb;
+}
