@@ -103,7 +103,8 @@ const Post = ({
         <div className="d-flex align-items-center">
           <Avatar
             src={profile.image || defaultProfileImage}
-            className={styles.AvatarNoHover}
+            height={40}
+            width={40}
           />
           <Link
             to={`/profiles/${profile_id}`}
