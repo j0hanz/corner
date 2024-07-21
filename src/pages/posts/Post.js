@@ -15,7 +15,6 @@ const Post = ({
   id,
   owner,
   profile_id,
-  profile_image,
   comments_count,
   likes_count,
   like_id,
@@ -130,14 +129,14 @@ const Post = ({
       >
         <div>
           <Button
-            variant="outline-primary"
+            className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
             size="sm"
             onClick={like_id ? handleUnlike : handleLike}
           >
             <FontAwesomeIcon className="mx-1" icon={faThumbsUp} />
             {like_id ? 'Unlike' : 'Like'} {likes_count}
           </Button>
-          <Button variant="outline-secondary ms-3" size="sm">
+          <Button className={styles.commentButton} size="sm">
             <Link
               to={`/posts/${id}`}
               className="text-white text-decoration-none"
@@ -147,7 +146,7 @@ const Post = ({
             </Link>
           </Button>
         </div>
-        <small className="mx-2 text-white-50">{updated_at}</small>
+        <span className="text-white-50 ms-3">{updated_at}</span>
       </Card.Footer>
       <Modal show={showConfirm} onHide={handleCancelConfirm}>
         <Modal.Header
