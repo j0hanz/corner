@@ -7,7 +7,7 @@ import Avatar from '../../components/Avatar';
 import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
 import defaultProfileImage from '../../assets/nobody.webp';
-import CustomDropdown from '../../components/Dropdown'; // Import CustomDropdown
+import CustomDropdown from '../../components/Dropdown';
 
 const Post = ({
   id,
@@ -99,9 +99,12 @@ const Post = ({
 
   return (
     <Card className={`mb-3 bg-dark text-white ${styles.PostCard}`}>
-      <Card.Body className="d-flex justify-content-between align-items-center p-1">
+      <Card.Body className="d-flex justify-content-between align-items-center p-0">
         <div className="d-flex align-items-center">
-          <Avatar src={profile.image || defaultProfileImage} height={40} width={40} />
+          <Avatar
+            src={profile.image || defaultProfileImage}
+            className={styles.AvatarNoHover}
+          />
           <Link
             to={`/profiles/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
@@ -139,18 +142,28 @@ const Post = ({
         <small className="text-muted">{updated_at}</small>
       </Card.Footer>
       <Modal show={showConfirm} onHide={handleCancelConfirm}>
-        <Modal.Header closeButton>
+        <Modal.Header
+          className="bg-dark text-white"
+          closeButton
+          closeVariant="white"
+        >
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this post?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelConfirm}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
+        <Modal.Body className="bg-dark text-white">
+          <p>Are you sure you want to delete this post?</p>
+          <div className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              onClick={handleCancelConfirm}
+              className="me-2"
+            >
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete
+            </Button>
+          </div>
+        </Modal.Body>
       </Modal>
     </Card>
   );
