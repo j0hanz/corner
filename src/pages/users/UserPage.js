@@ -67,7 +67,7 @@ const UserPage = () => {
               e.target.src = nobody;
             }}
           />
-          <h4 className="mt-2">{user?.username}</h4>
+          <h4 className="mt-2 text-light">{user?.username}</h4>
           {currentUser?.id === user.id && (
             <Button
               variant="primary"
@@ -81,47 +81,47 @@ const UserPage = () => {
         <Col lg={9} className="mt-4 mt-lg-0">
           <Row className="justify-content-center text-center">
             <Col xs={6} sm={4} className="my-2">
-              <h5>{user?.posts_count}</h5>
+              <h5 className="text-light">{user?.posts_count}</h5>
               <div className={styles.ProfileStats}>Posts</div>
             </Col>
             <Col xs={6} sm={4} className="my-2">
-              <h5>{user?.followers_count}</h5>
+              <h5 className="text-light">{user?.followers_count}</h5>
               <div className={styles.ProfileStats}>Followers</div>
             </Col>
             <Col xs={6} sm={4} className="my-2">
-              <h5>{user?.following_count}</h5>
+              <h5 className="text-light">{user?.following_count}</h5>
               <div className={styles.ProfileStats}>Following</div>
             </Col>
           </Row>
-          <hr />
+          <hr className="border-secondary" />
           <Row className="text-center">
             <Col className="my-2">
-              <h5 className="font-weight-bold">{`${user?.first_name} ${user?.last_name}`}</h5>
+              <h5 className="font-weight-bold text-light">{`${user?.first_name} ${user?.last_name}`}</h5>
             </Col>
           </Row>
-          <hr />
+          <hr className="border-secondary" />
           <Row className="text-center">
             <Col xs={12} sm={6} className="my-2">
-              <strong>About me:</strong>
-              <p>{user?.bio}</p>
+              <strong className="text-light">About me:</strong>
+              <p className="text-light">{user?.bio}</p>
             </Col>
             <Col xs={12} sm={6} className="my-2">
-              <strong>Location:</strong>
-              <p>{user?.location}</p>
+              <strong className="text-light">Location:</strong>
+              <p className="text-light">{user?.location}</p>
             </Col>
           </Row>
-          <hr />
+          <hr className="border-secondary" />
           <Row className="text-center">
             <Col xs={12} sm={6} className="my-2">
-              <strong>URL Link:</strong>
-              <p>{user?.url_link}</p>
+              <strong className="text-light">URL Link:</strong>
+              <p className="text-light">{user?.url_link}</p>
             </Col>
             <Col xs={12} sm={6} className="my-2">
-              <strong>Contact Email:</strong>
-              <p>{user?.contact_email}</p>
+              <strong className="text-light">Contact Email:</strong>
+              <p className="text-light">{user?.contact_email}</p>
             </Col>
           </Row>
-          <hr />
+          <hr className="border-secondary" />
         </Col>
       </Row>
     </Container>
