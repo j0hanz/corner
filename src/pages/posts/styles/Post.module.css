@@ -25,3 +25,8 @@
 .PostCard .card-text {
   color: #e4e6eb;
 }
+
+.greyFooter {
+  background-color: #2422227c;
+  padding: 0;
+}
