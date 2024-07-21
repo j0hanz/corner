@@ -2,10 +2,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 25px;
-  margin-bottom: 5px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  padding: 10px 15px;
+  background-color: #2d2f33;
   color: white !important;
-  transition: color 0.3s, background-color 0.3s;
+}
+
+.Icon {
+  padding-left: 20px;
 }
 
 .faEdit,
@@ -17,25 +22,27 @@
 }
 
 span:hover {
-  color: #007bff;
+  color: inherit;
 }
 
 .DropdownItem:hover {
-  color: #007bff;
+  background-image: linear-gradient(to bottom right, #464749, #38393f);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .DropdownItem:hover .faEdit {
-  color: yellow;
+  color: #ffc107;
 }
 
 .DropdownItem:hover .faTrashAlt {
-  color: red;
+  color: #ff4c4c;
 }
 
 .DropdownMenu {
-  padding: 2px;
-  border-radius: 10%;
-  background-color: #343a40 !important;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #242526 !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   --bs-dropdown-link-hover-bg: none;
   --bs-dropdown-link-active-color: none;
   --bs-dropdown-link-active-bg: none;
