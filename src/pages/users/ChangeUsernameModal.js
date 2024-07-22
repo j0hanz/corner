@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
+import { axiosRes } from '../../api/axiosDefaults';
+import {
+  useCurrentUser,
+  useSetCurrentUser,
+} from '../../contexts/CurrentUserContext';
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangeUsernameModal = ({ show, handleClose }) => {
-  const { id } = useParams();
   const [username, setUsername] = useState('');
   const [errors, setErrors] = useState({});
+  const { id } = useParams();
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .put(`/users/${id}/`, { username })
-      .then(() => {
-        handleClose();
-        window.location.reload();
-      })
-      .catch((error) => {
-        setErrors(error.response?.data || {});
-      });
+  useEffect(() => {
+    if (currentUser?.pk?.toString() === id) {
+      setUsername(currentUser.username);
+    } else {
+      setUsername('');
+    }
+  }, [currentUser, id]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await axiosRes.put('/dj-rest-auth/user/', { username });
+      setCurrentUser((prevUser) => ({ ...prevUser, username }));
+      handleClose();
+      window.location.reload();
+    } catch (err) {
+      setErrors(err.response?.data);
+    }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} className="text-light">
+    <Modal show={show} onHide={handleClose} centered className="text-light">
       <Modal.Header
         closeButton
         closeVariant="white"
@@ -35,7 +45,7 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
       >
         <Modal.Title>Change Username</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form onSubmit={handleSubmit}>
@@ -45,7 +55,7 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
                 type="text"
                 placeholder="Enter new username"
                 value={username}
-                onChange={handleUsernameChange}
+                onChange={(e) => setUsername(e.target.value)}
                 className="bg-dark text-light"
               />
               {errors?.username?.map((message, idx) => (
@@ -55,13 +65,17 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
               ))}
             </Form.Group>
             <div className={styles.buttonWrapper}>
-              <Button variant="primary" type="submit" className="mx-2">
+              <Button
+                variant="outline-primary"
+                type="submit"
+                className={styles.leftButton}
+              >
                 Save Changes
               </Button>
               <Button
-                variant="secondary"
+                variant="outline-secondary"
                 onClick={handleClose}
-                className="mx-2"
+                className={styles.rightButton}
               >
                 Cancel
               </Button>
@@ -69,11 +83,6 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
           </Form>
         </Container>
       </Modal.Body>
-      <Modal.Footer className="bg-dark text-light">
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
