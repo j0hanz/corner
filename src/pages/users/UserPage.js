@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
-import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import {
+  useCurrentUser,
+  useSetCurrentUser,
+} from '../../contexts/CurrentUserContext';
 import nobody from '../../assets/nobody.webp';
 import styles from './styles/UserPage.module.css';
 import ProfileImageModal from './ProfileImageModal';
@@ -11,13 +15,17 @@ import ChangeUsernameModal from './ChangeUsernameModal';
 import ChangePasswordModal from './ChangePasswordModal';
 import DeleteAccountModal from './DeleteAccountModal';
 import { ProfileActionsDropdown } from '../../components/Dropdown';
+import Asset from '../../components/Asset';
+import Post from '../posts/Post';
 
 const UserPage = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState({ results: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -26,19 +34,37 @@ const UserPage = () => {
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/users/${id}/`);
-        setUser(data);
+        const [{ data: userData }, { data: userPosts }] = await Promise.all([
+          axios.get(`/users/${id}/`),
+          axios.get(`/posts/?owner__profile=${id}`),
+        ]);
+        setUser(userData);
+        setPosts(userPosts);
+        setLoading(false);
       } catch (err) {
         setError('User not found or an error occurred');
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    fetchData();
   }, [id]);
+
+  const fetchMoreData = async () => {
+    if (posts.next) {
+      try {
+        const { data } = await axios.get(posts.next);
+        setPosts((prevPosts) => ({
+          ...data,
+          results: [...prevPosts.results, ...data.results],
+        }));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -63,7 +89,7 @@ const UserPage = () => {
           <Image
             className={styles.ProfileImage}
             roundedCircle
-            src={user?.image || nobody}
+            src={currentUser?.profile_image || nobody}
             alt={`${user?.first_name} ${user?.last_name}`}
             onError={(e) => {
               e.target.onerror = null;
@@ -137,6 +163,8 @@ const UserPage = () => {
       <ProfileImageModal
         show={showProfileImageModal}
         handleClose={() => setShowProfileImageModal(false)}
+        setCurrentUser={setCurrentUser}
+        currentUser={currentUser}
       />
       <ChangeUsernameModal
         show={showChangeUsernameModal}
@@ -150,6 +178,26 @@ const UserPage = () => {
         show={showDeleteAccountModal}
         handleClose={() => setShowDeleteAccountModal(false)}
       />
+
+      <hr />
+      <p className="text-center">{user?.username}'s posts</p>
+      <hr />
+      {posts.results.length ? (
+        <InfiniteScroll
+          dataLength={posts.results.length}
+          next={fetchMoreData}
+          hasMore={!!posts.next}
+          loader={<Spinner animation="border" variant="primary" />}
+        >
+          {posts.results.map((post) => (
+            <Post key={post.id} {...post} setPosts={setPosts} />
+          ))}
+        </InfiniteScroll>
+      ) : (
+        <Asset
+          message={`No results found, ${user?.username} hasn't posted yet.`}
+        />
+      )}
     </Container>
   );
 };
