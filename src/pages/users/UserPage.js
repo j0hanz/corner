@@ -65,7 +65,7 @@ const UserPage = () => {
               <ProfileActionsDropdown
                 handleEditProfile={() => navigate(`/users/${id}/edit`)}
                 handleChangeProfileImage={() =>
-                  navigate(`/users/${id}/change-profile-image`)
+                  navigate(`/users/${id}/profile-image`)
                 }
                 handleChangeUsername={() =>
                   navigate(`/users/${id}/change-username`)
