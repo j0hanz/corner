@@ -9,8 +9,8 @@ import React, {
 import axios from 'axios';
 import { axiosRes, axiosReq } from '../api/axiosDefaults';
 
-export const CurrentUserContext = createContext();
-export const SetCurrentUserContext = createContext();
+export const CurrentUserContext = createContext(null);
+export const SetCurrentUserContext = createContext(null);
 
 export const useCurrentUser = () => useContext(CurrentUserContext);
 export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
@@ -23,7 +23,7 @@ export const CurrentUserProvider = ({ children }) => {
       const { data } = await axiosRes.get('/dj-rest-auth/user/');
       setCurrentUser(data);
     } catch (err) {
-      console.error('Failed to fetch current user:', err);
+      console.error('Error fetching current user:', err);
     }
   }, []);
 
@@ -31,15 +31,15 @@ export const CurrentUserProvider = ({ children }) => {
     handleMount();
   }, [handleMount]);
 
-  useEffect(() => {
+  const setupInterceptors = useCallback(() => {
     const requestInterceptor = axiosReq.interceptors.request.use(
       async (config) => {
         if (!currentUser) return config;
         try {
           await axios.post('/dj-rest-auth/token/refresh/');
         } catch (err) {
+          console.error('Error refreshing token on request:', err);
           setCurrentUser(null);
-          return config;
         }
         return config;
       },
@@ -52,10 +52,11 @@ export const CurrentUserProvider = ({ children }) => {
         if (err.response?.status === 401 && currentUser) {
           try {
             await axios.post('/dj-rest-auth/token/refresh/');
+            return axios(err.config);
           } catch (error) {
+            console.error('Error refreshing token on response:', error);
             setCurrentUser(null);
           }
-          return axios(err.config);
         }
         return Promise.reject(err);
       },
@@ -66,6 +67,11 @@ export const CurrentUserProvider = ({ children }) => {
       axiosRes.interceptors.response.eject(responseInterceptor);
     };
   }, [currentUser]);
+
+  useEffect(() => {
+    const cleanupInterceptors = setupInterceptors();
+    return cleanupInterceptors;
+  }, [setupInterceptors]);
 
   const contextValue = useMemo(() => currentUser, [currentUser]);
   const setContextValue = useMemo(() => setCurrentUser, []);
