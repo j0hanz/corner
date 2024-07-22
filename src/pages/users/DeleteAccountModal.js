@@ -22,7 +22,7 @@ const DeleteAccountModal = ({ show, handleClose }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} className="text-light">
+    <Modal show={show} onHide={handleClose} centered className="text-light">
       <Modal.Header
         closeButton
         closeVariant="white"
@@ -30,7 +30,7 @@ const DeleteAccountModal = ({ show, handleClose }) => {
       >
         <Modal.Title>Delete Account</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <p>
@@ -38,20 +38,23 @@ const DeleteAccountModal = ({ show, handleClose }) => {
             undone.
           </p>
           <div className={styles.buttonWrapper}>
-            <Button variant="danger" onClick={handleDelete} className="mx-2">
+            <Button
+              variant="outline-danger"
+              onClick={handleDelete}
+              className={styles.leftButton}
+            >
               Delete Account
             </Button>
-            <Button variant="secondary" onClick={handleClose} className="mx-2">
+            <Button
+              variant="outline-secondary"
+              onClick={handleClose}
+              className={styles.rightButton}
+            >
               Cancel
             </Button>
           </div>
         </Container>
       </Modal.Body>
-      <Modal.Footer className="bg-dark text-light">
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
