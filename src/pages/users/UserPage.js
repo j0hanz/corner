@@ -183,11 +183,11 @@ const UserPage = () => {
         show={showDeleteAccountModal}
         handleClose={() => setShowDeleteAccountModal(false)}
       />
-      <Row className='mt-4'>
+      <Row className="mt-4">
         <Col className="d-flex text-center justify-content-center">
-            <strong className="text-center text-white py-2 mb-0">
-              {user?.owner}'s posts
-            </strong>
+          <strong className="text-center text-white py-2 mb-0">
+            {user?.owner}'s posts
+          </strong>
         </Col>
       </Row>
       {posts.results.length ? (
