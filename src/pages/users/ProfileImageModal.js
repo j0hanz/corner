@@ -45,7 +45,7 @@ const ProfileImageModal = ({
             ...prevUser,
             profile_image: data.image,
           }));
-          handleClose(); // Close modal without reloading
+          window.location.reload();
         })
         .catch((error) => setErrors(error.response?.data || {}));
     } else {
@@ -71,7 +71,7 @@ const ProfileImageModal = ({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} className="text-light">
+    <Modal show={show} onHide={handleClose} centered>
       <Modal.Header
         closeButton
         closeVariant="white"
@@ -79,7 +79,7 @@ const ProfileImageModal = ({
       >
         <Modal.Title>Change Profile Image</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light py-0">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form>
@@ -126,12 +126,17 @@ const ProfileImageModal = ({
             ))}
             <div className={styles.buttonWrapper}>
               <Button
-                variant="outline-primary text-white mx-2"
+                variant="outline-primary text-white"
                 onClick={handleSaveChanges}
+                className={styles.leftButton}
               >
                 Save Changes
               </Button>
-              <Button variant="outline-secondary mx-2" onClick={handleClose}>
+              <Button
+                variant="outline-secondary text-white"
+                onClick={handleClose}
+                className={styles.rightButton}
+              >
                 Cancel
               </Button>
             </div>
