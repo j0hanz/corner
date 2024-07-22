@@ -1,19 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
+  Modal,
   Form,
   Button,
-  Container,
-  Row,
-  Col,
   Alert,
   Spinner,
+  Container,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
+import styles from './styles/PostCreateForm.module.css';
 
-function PostCreateForm() {
+function PostCreateForm({ show, handleClose }) {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
   const imageInput = useRef(null);
@@ -29,7 +29,7 @@ function PostCreateForm() {
 
   useEffect(() => {
     if (!currentUser) {
-      navigate('/login');
+      navigate('/');
     }
   }, [currentUser, navigate]);
 
@@ -78,6 +78,7 @@ function PostCreateForm() {
       });
       toast.success('Post created successfully!');
       navigate(`/posts/${data.id}`);
+      handleClose();
     } catch (err) {
       if (err.response?.status !== 401) {
         setErrors(err.response?.data || {});
@@ -87,11 +88,17 @@ function PostCreateForm() {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col md={8}>
-          <h2>Create Post</h2>
-          <Form onSubmit={handleSubmit}>
+    <Modal show={show} onHide={handleClose} centered className="text-light">
+      <Modal.Header
+        closeButton
+        closeVariant="white"
+        className="bg-dark text-light"
+      >
+        <Modal.Title>Create Post</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="bg-dark text-light p-0">
+        <Form onSubmit={handleSubmit}>
+          <Container className={styles.Container}>
             <Form.Group controlId="formContent" className="mt-3">
               <Form.Label>Content</Form.Label>
               <Form.Control
@@ -101,11 +108,14 @@ function PostCreateForm() {
                 value={content}
                 onChange={handleChange}
                 isInvalid={!!errors.content}
+                placeholder="Write your post content here..."
+                className={`bg-dark text-light ${styles.FormControl}`}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.content}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Form.Group controlId="formImage" className="mt-3">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -114,12 +124,14 @@ function PostCreateForm() {
                 ref={imageInput}
                 onChange={handleChangeImage}
                 isInvalid={!!errors.image}
+                placeholder="Upload an image..."
+                className={`bg-dark text-light ${styles.FormControl}`}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.image}
               </Form.Control.Feedback>
               {image && (
-                <div className="mt-3">
+                <div className={`mt-3 ${styles.ImageWrapper}`}>
                   <img
                     src={URL.createObjectURL(image)}
                     alt="Post preview"
@@ -135,6 +147,7 @@ function PostCreateForm() {
                 </div>
               )}
             </Form.Group>
+
             <Form.Group controlId="formImageFilter" className="mt-3">
               <Form.Label>Image Filter</Form.Label>
               <Form.Control
@@ -143,6 +156,7 @@ function PostCreateForm() {
                 value={image_filter}
                 onChange={handleChange}
                 isInvalid={!!errors.image_filter}
+                className={`bg-dark text-light ${styles.FormControl}`}
               >
                 <option value="normal">Normal</option>
                 <option value="_1977">1977</option>
@@ -163,6 +177,7 @@ function PostCreateForm() {
                 {errors.image_filter}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Form.Group controlId="formTags" className="mt-3">
               <Form.Label>Tags</Form.Label>
               <Form.Control
@@ -171,23 +186,43 @@ function PostCreateForm() {
                 value={tags}
                 onChange={handleChange}
                 isInvalid={!!errors.tags}
+                placeholder="Add some tags..."
+                className={`bg-dark text-light ${styles.FormControl}`}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.tags}
               </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit" className="mt-3">
-              {false ? <Spinner animation="border" size="sm" /> : 'Create Post'}
-            </Button>
-          </Form>
-          {errors.non_field_errors && (
-            <Alert variant="danger" className="mt-3">
-              {errors.non_field_errors.join(', ')}
-            </Alert>
-          )}
-        </Col>
-      </Row>
-    </Container>
+
+            <div className={styles.buttonWrapper}>
+              <Button
+                variant="outline-primary"
+                className={styles.leftButton}
+                type="submit"
+              >
+                {false ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  'Create Post'
+                )}
+              </Button>
+              <Button
+                variant="outline-secondary"
+                className={styles.rightButton}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </div>
+            {errors.non_field_errors && (
+              <Alert variant="danger" className="mt-3">
+                {errors.non_field_errors.join(', ')}
+              </Alert>
+            )}
+          </Container>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 }
 
