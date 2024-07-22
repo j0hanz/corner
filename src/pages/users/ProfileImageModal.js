@@ -3,6 +3,10 @@ import { Modal, Button, Form, Alert, Container, Image } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import Upload from '../../assets/upload.png';
+import Asset from '../../components/Asset';
 
 const ProfileImageModal = ({
   show,
@@ -19,9 +23,9 @@ const ProfileImageModal = ({
   const [errors, setErrors] = useState({});
 
   const handleImageChange = (e) => {
-    const { files } = e.target;
-    if (files.length > 0) {
-      const file = files[0];
+    const file = e.target.files[0];
+    if (file) {
+      URL.revokeObjectURL(imagePreview); // revoke the previous URL to avoid memory leaks
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -34,20 +38,16 @@ const ProfileImageModal = ({
 
       axios
         .put(`/users/${id}/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then(({ data }) => {
           setCurrentUser((prevUser) => ({
             ...prevUser,
             profile_image: data.image,
           }));
-          window.location.reload();
+          handleClose(); // Close modal without reloading
         })
-        .catch((error) => {
-          setErrors(error.response?.data || {});
-        });
+        .catch((error) => setErrors(error.response?.data || {}));
     } else {
       handleClose();
     }
@@ -55,10 +55,10 @@ const ProfileImageModal = ({
 
   const handleRemoveImage = () => {
     setImagePreview('');
+    setImageFile(null); // Reset imageFile state
     axios
       .put(`/users/${id}/`, { image: null })
       .then(() => {
-        setImagePreview('');
         setCurrentUser((prevUser) => ({
           ...prevUser,
           profile_image: '',
@@ -79,7 +79,7 @@ const ProfileImageModal = ({
       >
         <Modal.Title>Change Profile Image</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light py-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form>
@@ -88,16 +88,16 @@ const ProfileImageModal = ({
                 {imagePreview ? (
                   <div className={styles.ImageWrapper}>
                     <Image src={imagePreview} rounded fluid alt="Profile" />
+                    <div className={styles.Placeholder}>
+                      Click to change the image
+                    </div>
                   </div>
                 ) : (
                   <Form.Label
+                    className="d-flex justify-content-center"
                     htmlFor="image-upload"
-                    className={styles.uploadMessage}
                   >
-                    <span>Click to upload an image</span>
-                    <span role="img" aria-label="upload">
-                      📷
-                    </span>
+                    <Asset src={Upload} message="Click to upload an image" />
                   </Form.Label>
                 )}
                 <Form.Control
@@ -110,9 +110,11 @@ const ProfileImageModal = ({
                 />
               </div>
               {imagePreview && (
-                <div className="d-flex justify-content-center mt-2">
+                <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-danger" onClick={handleRemoveImage}>
                     Remove Image
+                    <br />
+                    <FontAwesomeIcon className="fa-lg" icon={faXmark} />
                   </Button>
                 </div>
               )}
@@ -136,11 +138,6 @@ const ProfileImageModal = ({
           </Form>
         </Container>
       </Modal.Body>
-      <Modal.Footer className="bg-dark text-light">
-        <Button variant="outline-secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
