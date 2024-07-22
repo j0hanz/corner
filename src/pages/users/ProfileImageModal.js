@@ -1,21 +1,34 @@
 import React, { useState, useRef } from 'react';
-import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
+import { Modal, Button, Form, Alert, Container, Image } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
 
-const ProfileImageModal = ({ show, handleClose }) => {
+const ProfileImageModal = ({
+  show,
+  handleClose,
+  setCurrentUser,
+  currentUser,
+}) => {
   const { id } = useParams();
   const imageFileRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState(
+    currentUser?.profile_image || '',
+  );
+  const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
 
   const handleImageChange = (e) => {
     const { files } = e.target;
     if (files.length > 0) {
-      const imageFile = files[0];
-      setImagePreview(URL.createObjectURL(imageFile));
+      const file = files[0];
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
+  const handleSaveChanges = () => {
+    if (imageFile) {
       const formData = new FormData();
       formData.append('image', imageFile);
 
@@ -26,11 +39,17 @@ const ProfileImageModal = ({ show, handleClose }) => {
           },
         })
         .then(({ data }) => {
-          setImagePreview(data.image);
+          setCurrentUser((prevUser) => ({
+            ...prevUser,
+            profile_image: data.image,
+          }));
+          window.location.reload();
         })
         .catch((error) => {
           setErrors(error.response?.data || {});
         });
+    } else {
+      handleClose();
     }
   };
 
@@ -40,6 +59,11 @@ const ProfileImageModal = ({ show, handleClose }) => {
       .put(`/users/${id}/`, { image: null })
       .then(() => {
         setImagePreview('');
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          profile_image: '',
+        }));
+        window.location.reload();
       })
       .catch((error) => {
         setErrors(error.response?.data || {});
@@ -63,7 +87,7 @@ const ProfileImageModal = ({ show, handleClose }) => {
               <div onClick={() => imageFileRef.current.click()}>
                 {imagePreview ? (
                   <div className={styles.ImageWrapper}>
-                    <img src={imagePreview} alt="Profile" />
+                    <Image src={imagePreview} rounded fluid alt="Profile" />
                   </div>
                 ) : (
                   <Form.Label
@@ -101,7 +125,7 @@ const ProfileImageModal = ({ show, handleClose }) => {
             <div className={styles.buttonWrapper}>
               <Button
                 variant="outline-primary text-white mx-2"
-                onClick={handleClose}
+                onClick={handleSaveChanges}
               >
                 Save Changes
               </Button>
