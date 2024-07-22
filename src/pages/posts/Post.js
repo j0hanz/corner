@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, Button, Modal, Image } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
@@ -10,7 +10,6 @@ import defaultProfileImage from '../../assets/nobody.webp';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
-import Comment from '../comments/Comment';
 
 const Post = ({
   id,
@@ -30,20 +29,6 @@ const Post = ({
   const isOwner = currentUser?.username === owner;
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
-  const [comments, setComments] = useState({ results: [] });
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const { data } = await axiosRes.get(`/posts/${id}/comments/`);
-        setComments(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchComments();
-  }, [id]);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
@@ -174,15 +159,6 @@ const Post = ({
           </div>
         </Modal.Body>
       </Modal>
-      {/* Render comments */}
-      {comments.results?.map((comment) => (
-        <Comment
-          key={comment.id}
-          {...comment}
-          setPost={setPosts}
-          setComments={setComments}
-        />
-      ))}
     </Card>
   );
 };
