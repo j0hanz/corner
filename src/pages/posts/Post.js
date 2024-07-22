@@ -16,6 +16,7 @@ const Post = ({
   id,
   owner,
   profile_id,
+  profile_image,
   comments_count,
   likes_count,
   like_id,
@@ -29,28 +30,12 @@ const Post = ({
   const isOwner = currentUser?.username === owner;
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
-  const [profile, setProfile] = useState({
-    image: defaultProfileImage,
-  });
   const [comments, setComments] = useState({ results: [] });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await axiosRes.get(`/api/profiles/${profile_id}/`);
-        setProfile(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchProfile();
-  }, [profile_id]);
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const { data } = await axiosRes.get(`/api/posts/${id}/comments/`);
+        const { data } = await axiosRes.get(`/posts/${id}/comments/`);
         setComments(data);
       } catch (err) {
         console.error(err);
@@ -117,7 +102,7 @@ const Post = ({
       <Card.Body className="d-flex justify-content-between align-items-center p-2">
         <div className="d-flex align-items-center">
           <Avatar
-            src={profile.image || defaultProfileImage}
+            src={profile_image || defaultProfileImage}
             height={40}
             width={40}
           />
