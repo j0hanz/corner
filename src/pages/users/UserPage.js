@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import nobody from '../../assets/nobody.webp';
 import styles from './styles/UserPage.module.css';
+import ProfileImageModal from './ProfileImageModal';
+import EditProfileModal from './EditProfileModal';
+import ChangeUsernameModal from './ChangeUsernameModal';
+import ChangePasswordModal from './ChangePasswordModal';
+import DeleteAccountModal from './DeleteAccountModal';
 import { ProfileActionsDropdown } from '../../components/Dropdown';
 
 const UserPage = () => {
@@ -13,7 +18,12 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
-  const navigate = useNavigate();
+
+  const [showProfileImageModal, setShowProfileImageModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,26 +73,17 @@ const UserPage = () => {
           <div className="mt-3">
             {currentUser?.id === user.id && (
               <ProfileActionsDropdown
-                handleEditProfile={() => navigate(`/users/${id}/edit`)}
-                handleChangeProfileImage={() =>
-                  navigate(`/users/${id}/profile-image`)
-                }
-                handleChangeUsername={() =>
-                  navigate(`/users/${id}/change-username`)
-                }
-                handleChangePassword={() =>
-                  navigate(`/users/${id}/change-password`)
-                }
-                handleDeleteAccount={() =>
-                  navigate(`/users/${id}/delete-account`)
-                }
+                handleEditProfile={() => setShowEditProfileModal(true)}
+                handleChangeProfileImage={() => setShowProfileImageModal(true)}
+                handleChangeUsername={() => setShowChangeUsernameModal(true)}
+                handleChangePassword={() => setShowChangePasswordModal(true)}
+                handleDeleteAccount={() => setShowDeleteAccountModal(true)}
               />
             )}
           </div>
-
           <h4 className="mt-2 text-light">{user?.username}</h4>
         </Col>
-        <Col lg={9} className="mt-4 ">
+        <Col lg={9} className="mt-4">
           <Row className="justify-content-center text-center">
             <Col className="my-2">
               <h5 className="text-light">{user?.posts_count}</h5>
@@ -128,6 +129,27 @@ const UserPage = () => {
           <hr className="border-secondary" />
         </Col>
       </Row>
+
+      <EditProfileModal
+        show={showEditProfileModal}
+        handleClose={() => setShowEditProfileModal(false)}
+      />
+      <ProfileImageModal
+        show={showProfileImageModal}
+        handleClose={() => setShowProfileImageModal(false)}
+      />
+      <ChangeUsernameModal
+        show={showChangeUsernameModal}
+        handleClose={() => setShowChangeUsernameModal(false)}
+      />
+      <ChangePasswordModal
+        show={showChangePasswordModal}
+        handleClose={() => setShowChangePasswordModal(false)}
+      />
+      <DeleteAccountModal
+        show={showDeleteAccountModal}
+        handleClose={() => setShowDeleteAccountModal(false)}
+      />
     </Container>
   );
 };
