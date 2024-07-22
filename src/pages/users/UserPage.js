@@ -95,6 +95,7 @@ const UserPage = () => {
               e.target.onerror = null;
               e.target.src = nobody;
             }}
+            onClick={() => setShowProfileImageModal(true)}
           />
           <div className="mt-3">
             {currentUser?.id === user.id && (
