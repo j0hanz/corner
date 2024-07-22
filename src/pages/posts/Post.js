@@ -75,8 +75,7 @@ const Post = ({
     }
   };
 
-  const handleShowConfirm = () => setShowConfirm(true);
-  const handleCancelConfirm = () => setShowConfirm(false);
+  const toggleConfirmModal = () => setShowConfirm((prev) => !prev);
   const handleConfirmDelete = () => {
     handleDelete();
     setShowConfirm(false);
@@ -84,7 +83,7 @@ const Post = ({
 
   return (
     <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
-      <Card.Body className="d-flex justify-content-between align-items-center p-2">
+      <Card.Body className="d-flex justify-content-between align-items-center p-1">
         <div className="d-flex align-items-center">
           <Avatar
             src={profile_image || defaultProfileImage}
@@ -101,41 +100,47 @@ const Post = ({
         {isOwner && (
           <EditDeleteDropdown
             handleEdit={handleEdit}
-            handleDelete={handleShowConfirm}
+            handleDelete={toggleConfirmModal}
           />
         )}
       </Card.Body>
-      {image && <Image src={image} fluid />}
-      <Card.Text className={`text-center ${styles[image_filter]}`}>
+      <hr />
+      <Card.Text className={`text-center mb-4 ${styles[image_filter]}`}>
         {content}
       </Card.Text>
+      {image && <Image src={image} fluid />}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
         <div>
           <Button
-            className={`${styles.likeButton} px-3 ${
+            className={`${styles.likeButton} p-2 ${
               like_id ? styles.liked : ''
             }`}
             size="sm"
             onClick={like_id ? handleUnlike : handleLike}
           >
-            <FontAwesomeIcon className="mx-1" icon={faThumbsUp} />
+            <FontAwesomeIcon className="me-1" icon={faThumbsUp} />
             {like_id ? 'Unlike' : 'Like'} {likes_count}
           </Button>
-          <Button className={styles.commentButton} size="sm">
+          <Button className={`p-2 ${styles.commentButton}`} size="sm">
             <Link
               to={`/posts/${id}`}
-              className="text-white text-decoration-none px-2"
+              className="text-white text-decoration-none"
             >
-              <FontAwesomeIcon className="mx-1" icon={faComment} />
+              <FontAwesomeIcon className="me-1" icon={faComment} />
               Comments {comments_count}
             </Link>
           </Button>
         </div>
-        <span className="text-white-50 mx-1">{updated_at}</span>
+        <span className="text-white-50 me-1">{updated_at}</span>
       </Card.Footer>
-      <Modal show={showConfirm} onHide={handleCancelConfirm}>
+      <Modal
+        show={showConfirm}
+        centered
+        className="text-light"
+        onHide={toggleConfirmModal}
+      >
         <Modal.Header
           className="bg-dark text-white"
           closeButton
@@ -145,15 +150,19 @@ const Post = ({
         </Modal.Header>
         <Modal.Body className="bg-dark text-white">
           <p>Are you sure you want to delete this post?</p>
-          <div className="d-flex justify-content-end">
+          <div className={styles.buttonWrapper}>
             <Button
-              variant="secondary"
-              onClick={handleCancelConfirm}
-              className="me-2"
+              variant="outline-secondary"
+              onClick={toggleConfirmModal}
+              className={styles.leftButton}
             >
               Cancel
             </Button>
-            <Button variant="danger" onClick={handleConfirmDelete}>
+            <Button
+              variant="outline-danger"
+              className={styles.rightButton}
+              onClick={handleConfirmDelete}
+            >
               Delete
             </Button>
           </div>
