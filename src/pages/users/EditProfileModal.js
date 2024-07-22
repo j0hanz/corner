@@ -19,7 +19,6 @@ const EditProfileModal = ({ show, handleClose }) => {
   const { id } = useParams();
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-
   const [profileData, setProfileData] = useState({
     first_name: '',
     last_name: '',
@@ -28,7 +27,6 @@ const EditProfileModal = ({ show, handleClose }) => {
     url_link: '',
     contact_email: '',
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +35,6 @@ const EditProfileModal = ({ show, handleClose }) => {
       setLoading(false);
       return;
     }
-
     const fetchProfile = async () => {
       try {
         const { data } = await axios.get(`/users/${id}/`);
@@ -48,16 +45,12 @@ const EditProfileModal = ({ show, handleClose }) => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, [currentUser, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfileData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setProfileData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -66,12 +59,9 @@ const EditProfileModal = ({ show, handleClose }) => {
     Object.entries(profileData).forEach(([key, value]) => {
       formData.append(key, value);
     });
-
     try {
       const { data } = await axios.put(`/users/${id}/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       setCurrentUser((prevUser) => ({
         ...prevUser,
@@ -91,128 +81,8 @@ const EditProfileModal = ({ show, handleClose }) => {
     );
   }
 
-  const textFields = (
-    <div>
-      <Form.Group controlId="formFirstName" className="mb-3">
-        <Form.Label>First Name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="First Name"
-          name="first_name"
-          value={profileData.first_name}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.first_name?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <Form.Group controlId="formLastName" className="mb-3">
-        <Form.Label>Last Name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Last Name"
-          name="last_name"
-          value={profileData.last_name}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.last_name?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <Form.Group controlId="formBio" className="mb-3">
-        <Form.Label>Bio</Form.Label>
-        <Form.Control
-          as="textarea"
-          rows={6}
-          placeholder="Bio"
-          name="bio"
-          value={profileData.bio}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.bio?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <Form.Group controlId="formLocation" className="mb-3">
-        <Form.Label>Location</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Location"
-          name="location"
-          value={profileData.location}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.location?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <Form.Group controlId="formUrlLink" className="mb-3">
-        <Form.Label>URL Link</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="URL Link"
-          name="url_link"
-          value={profileData.url_link}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.url_link?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <Form.Group controlId="formContactEmail" className="mb-3">
-        <Form.Label>Contact Email</Form.Label>
-        <Form.Control
-          type="email"
-          placeholder="Contact Email"
-          name="contact_email"
-          value={profileData.contact_email}
-          onChange={handleChange}
-          className="bg-dark text-light"
-        />
-        {errors?.contact_email?.map((message, idx) => (
-          <Alert variant="warning" key={idx}>
-            {message}
-          </Alert>
-        ))}
-      </Form.Group>
-
-      <div className={styles.buttonWrapper}>
-        <Button
-          variant="secondary"
-          onClick={handleClose}
-          className="mx-3 btn-lg"
-        >
-          Cancel
-        </Button>
-        <Button variant="primary" className="mx-3 btn-lg" type="submit">
-          Save Changes
-        </Button>
-      </div>
-    </div>
-  );
-
   return (
-    <Modal show={show} onHide={handleClose} className="text-light">
+    <Modal show={show} onHide={handleClose} centered className="text-light">
       <Modal.Header
         closeButton
         closeVariant="white"
@@ -220,16 +90,52 @@ const EditProfileModal = ({ show, handleClose }) => {
       >
         <Modal.Title>Edit Profile</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light p-0">
         <Form onSubmit={handleSubmit}>
-          <Container className={styles.Container}>{textFields}</Container>
+          <Container className={styles.Container}>
+            {Object.entries(profileData).map(([field, value]) => (
+              <Form.Group
+                controlId={`form${field}`}
+                className="mb-3"
+                key={field}
+              >
+                <Form.Label>{field.replace('_', ' ')}</Form.Label>
+                <Form.Control
+                  type={field.includes('email') ? 'email' : 'text'}
+                  as={field === 'bio' ? 'textarea' : 'input'}
+                  rows={field === 'bio' ? 6 : undefined}
+                  placeholder={field.replace('_', ' ')}
+                  name={field}
+                  value={value}
+                  onChange={handleChange}
+                  className="bg-dark text-light"
+                />
+                {errors?.[field]?.map((message, idx) => (
+                  <Alert variant="warning" key={idx}>
+                    {message}
+                  </Alert>
+                ))}
+              </Form.Group>
+            ))}
+            <div className={styles.buttonWrapper}>
+              <Button
+                variant="outline-primary"
+                className={styles.leftButton}
+                type="submit"
+              >
+                Save Changes
+              </Button>
+              <Button
+                variant="outline-secondary"
+                onClick={handleClose}
+                className={styles.rightButton}
+              >
+                Cancel
+              </Button>
+            </div>
+          </Container>
         </Form>
       </Modal.Body>
-      <Modal.Footer className="bg-dark text-light">
-        <Button variant="outline-secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
