@@ -105,10 +105,10 @@ const Post = ({
           />
         )}
       </Card.Body>
+      {image && <Image src={image} fluid />}
       <Card.Text className={`text-center ${styles[image_filter]}`}>
         {content}
       </Card.Text>
-      {image && <Image src={image} fluid />}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
