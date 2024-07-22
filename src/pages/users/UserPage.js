@@ -1,3 +1,5 @@
+// UserPage.js
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -26,6 +28,7 @@ const UserPage = () => {
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
+  const isOwner = currentUser?.username === user?.owner;
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -97,17 +100,18 @@ const UserPage = () => {
             }}
             onClick={() => setShowProfileImageModal(true)}
           />
-          <div className="mt-3">
-            {currentUser?.id === user.id && (
-              <ProfileActionsDropdown
-                handleEditProfile={() => setShowEditProfileModal(true)}
-                handleChangeProfileImage={() => setShowProfileImageModal(true)}
-                handleChangeUsername={() => setShowChangeUsernameModal(true)}
-                handleChangePassword={() => setShowChangePasswordModal(true)}
-                handleDeleteAccount={() => setShowDeleteAccountModal(true)}
-              />
-            )}
-          </div>
+          <div className="my-2 text-white">{user?.owner}</div>
+
+          {isOwner && (
+            <ProfileActionsDropdown
+              handleEditProfile={() => setShowEditProfileModal(true)}
+              handleChangeProfileImage={() => setShowProfileImageModal(true)}
+              handleChangeUsername={() => setShowChangeUsernameModal(true)}
+              handleChangePassword={() => setShowChangePasswordModal(true)}
+              handleDeleteAccount={() => setShowDeleteAccountModal(true)}
+            />
+          )}
+
           <h4 className="mt-2 text-light">{user?.username}</h4>
         </Col>
         <Col lg={9} className="mt-4">
@@ -179,24 +183,39 @@ const UserPage = () => {
         show={showDeleteAccountModal}
         handleClose={() => setShowDeleteAccountModal(false)}
       />
-
-      <hr />
-      <p className="text-center">{user?.username}'s posts</p>
-      <hr />
+      <Row className='mt-4'>
+        <Col className="d-flex text-center justify-content-center">
+            <strong className="text-center text-white py-2 mb-0">
+              {user?.owner}'s posts
+            </strong>
+        </Col>
+      </Row>
       {posts.results.length ? (
         <InfiniteScroll
           dataLength={posts.results.length}
           next={fetchMoreData}
           hasMore={!!posts.next}
-          loader={<Spinner animation="border" variant="primary" />}
+          loader={
+            <Spinner
+              animation="border"
+              variant="primary"
+              className="my-4 d-block mx-auto"
+            />
+          }
         >
           {posts.results.map((post) => (
-            <Post key={post.id} {...post} setPosts={setPosts} />
+            <Post
+              key={post.id}
+              {...post}
+              setPosts={setPosts}
+              className="mb-4"
+            />
           ))}
         </InfiniteScroll>
       ) : (
         <Asset
           message={`No results found, ${user?.username} hasn't posted yet.`}
+          className="mt-4"
         />
       )}
     </Container>
