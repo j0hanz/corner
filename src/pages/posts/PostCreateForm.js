@@ -6,12 +6,17 @@ import {
   Alert,
   Spinner,
   Container,
+  Image,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
 import styles from './styles/PostCreateForm.module.css';
+import Asset from '../../components/Asset';
+import Upload from '../../assets/upload.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 function PostCreateForm({ show, handleClose }) {
   const currentUser = useCurrentUser();
@@ -99,53 +104,49 @@ function PostCreateForm({ show, handleClose }) {
       <Modal.Body className="bg-dark text-light p-0">
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
-            <Form.Group controlId="formContent" className="mt-3">
-              <Form.Label>Content</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="content"
-                value={content}
-                onChange={handleChange}
-                isInvalid={!!errors.content}
-                placeholder="Write your post content here..."
-                className={`bg-dark text-light ${styles.FormControl}`}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.content}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group controlId="formImage" className="mt-3">
-              <Form.Label>Image</Form.Label>
-              <Form.Control
-                type="file"
-                name="image"
-                ref={imageInput}
-                onChange={handleChangeImage}
-                isInvalid={!!errors.image}
-                placeholder="Upload an image..."
-                className={`bg-dark text-light ${styles.FormControl}`}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.image}
-              </Form.Control.Feedback>
-              {image && (
-                <div className={`mt-3 ${styles.ImageWrapper}`}>
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt="Post preview"
-                    className="img-thumbnail"
-                  />
-                  <Button
-                    variant="danger"
-                    className="mt-2"
-                    onClick={handleRemoveImage}
+            <Form.Group className="text-center mb-3">
+              <div onClick={() => imageInput.current.click()}>
+                {image ? (
+                  <div className={styles.ImageWrapper}>
+                    <Image
+                      src={URL.createObjectURL(image)}
+                      rounded
+                      fluid
+                      alt="Post preview"
+                    />
+                    <div className={styles.Placeholder}>
+                      Click to change the image
+                    </div>
+                  </div>
+                ) : (
+                  <Form.Label
+                    className="d-flex justify-content-center"
+                    htmlFor="image-upload"
                   >
+                    <Asset src={Upload} message="Click to upload an image" />
+                  </Form.Label>
+                )}
+                <Form.Control
+                  type="file"
+                  id="image-upload"
+                  accept="image/*"
+                  className="d-none"
+                  ref={imageInput}
+                  onChange={handleChangeImage}
+                />
+              </div>
+              {image && (
+                <div className="d-flex justify-content-center my-4">
+                  <Button variant="outline-danger" onClick={handleRemoveImage}>
                     Remove Image
+                    <br />
+                    <FontAwesomeIcon className="fa-lg" icon={faXmark} />
                   </Button>
                 </div>
               )}
+              <Form.Control.Feedback type="invalid">
+                {errors.image}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group controlId="formImageFilter" className="mt-3">
@@ -175,6 +176,23 @@ function PostCreateForm({ show, handleClose }) {
               </Form.Control>
               <Form.Control.Feedback type="invalid">
                 {errors.image_filter}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group controlId="formContent" className="mt-3">
+              <Form.Label>Content</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="content"
+                value={content}
+                onChange={handleChange}
+                isInvalid={!!errors.content}
+                placeholder="Write your post content here..."
+                className={`bg-dark text-light ${styles.FormControl}`}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.content}
               </Form.Control.Feedback>
             </Form.Group>
 
