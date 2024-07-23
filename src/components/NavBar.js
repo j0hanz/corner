@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
 import logo from '../assets/logo.webp';
 import defaultProfileImage from '../assets/nobody.webp';
 import styles from './styles/NavBar.module.css';
