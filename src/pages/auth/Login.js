@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -60,7 +60,9 @@ const Login = ({ handleSignUp }) => {
           </InputGroup>
         </Form.Group>
         {errors.non_field_errors && (
-          <div className="text-danger">{errors.non_field_errors}</div>
+          <Alert variant="danger" className="mt-3">
+            {errors.non_field_errors}
+          </Alert>
         )}
         <div className="d-flex justify-content-center">
           <Button variant="outline-primary text-white my-3" type="submit">
