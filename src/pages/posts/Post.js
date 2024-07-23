@@ -105,7 +105,8 @@ const Post = ({
           overlay={<Tooltip>Sign in to like</Tooltip>}
         >
           <div className={styles.likeButton}>
-            <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
           </div>
         </OverlayTrigger>
       );
@@ -115,13 +116,15 @@ const Post = ({
           onClick={handleUnlike}
           className={`${styles.likeButton} ${styles.liked}`}
         >
-          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+          <span>{likes_count}</span>
         </div>
       );
     } else {
       return (
         <div onClick={handleLike} className={styles.likeButton}>
-          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+          <span>{likes_count}</span>
         </div>
       );
     }
@@ -172,7 +175,7 @@ const Post = ({
             size="sm"
             onClick={handleShowPostModal}
           >
-            <FontAwesomeIcon className="me-1" icon={faComment} />
+            <FontAwesomeIcon className="me-1 fa-lg" icon={faComment} />
             Comments {comments_count}
           </Button>
         </div>
