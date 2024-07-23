@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faRightToBracket,
-  faCircleUser,
-} from '@fortawesome/free-solid-svg-icons';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -41,7 +38,7 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" className="fixed-top py-3">
+      <Navbar bg="dark" variant="dark" className="fixed-top py-2">
         <Container
           fluid
           className="d-flex justify-content-between align-items-center"
@@ -62,10 +59,15 @@ const NavBar = () => {
             onClick={toggleOffcanvas}
             className={styles.navIcon}
           >
-            <FontAwesomeIcon
-              className="fa-xl"
-              icon={currentUser ? faCircleUser : faRightToBracket}
-            />
+            {currentUser ? (
+              <Avatar
+                src={currentUser.profile_image || defaultProfileImage}
+                height={35}
+                width={35}
+              />
+            ) : (
+              <FontAwesomeIcon className="fa-xl" icon={faRightToBracket} />
+            )}
           </NavLink>
         </Container>
       </Navbar>
