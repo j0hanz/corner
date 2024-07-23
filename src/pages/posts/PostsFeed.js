@@ -14,9 +14,9 @@ import Post from './Post';
 import { axiosReq } from '../../api/axiosDefaults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import PostCreateForm from './PostCreateForm'; // Adjust the import path as needed
+import PostCreateForm from './PostCreateForm';
 
-function PostsFeed({ message, filter = '' }) {
+const PostsFeed = ({ message, filter = '' }) => {
   const [posts, setPosts] = useState({ results: [] });
   const [hasLoaded, setHasLoaded] = useState(false);
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ function PostsFeed({ message, filter = '' }) {
         setPosts(data);
         setHasLoaded(true);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
 
@@ -94,6 +94,6 @@ function PostsFeed({ message, filter = '' }) {
       <PostCreateForm show={showModal} handleClose={handleCloseModal} />
     </Container>
   );
-}
+};
 
 export default PostsFeed;
