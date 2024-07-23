@@ -1,0 +1,43 @@
+.searchBarContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.searchBarCol {
+  width: 100%;
+  max-width: 800px;
+}
+
+.searchBar {
+  background-color: #343a40;
+  border: 1px solid #495057;
+  color: #fcfcfc;
+  padding-left: 2.3rem;
+  padding-right: 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.searchBar::placeholder {
+  color: #adb5bd;
+}
+
+.searchBar:focus {
+  border-color: #fcfcfca9;
+  box-shadow: 0 0 15px 0 rgba(10, 10, 10, 0.5);
+  background-color: #495057;
+  color: #fcfcfc;
+  outline: none;
+  opacity: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+  font-size: 20px;
+}
