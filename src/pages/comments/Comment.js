@@ -113,7 +113,8 @@ const Comment = ({
           overlay={<Tooltip>Sign in to like</Tooltip>}
         >
           <div className={styles.likeButton}>
-            <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
           </div>
         </OverlayTrigger>
       );
@@ -123,13 +124,15 @@ const Comment = ({
           onClick={handleUnlike}
           className={`${styles.likeButton} ${styles.liked}`}
         >
-          <FontAwesomeIcon icon={faThumbsUpSolid} /> <span>{likes_count}</span>
+          <FontAwesomeIcon className="fa-lg" icon={faThumbsUpSolid} />{' '}
+          <span>{likes_count}</span>
         </div>
       );
     } else {
       return (
         <div onClick={handleLike} className={styles.likeButton}>
-          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+          <span>{likes_count}</span>
         </div>
       );
     }
