@@ -152,7 +152,10 @@ const Comment = ({
           setShowEditForm={setShowEditForm}
         />
       ) : (
-        <Card.Text className="text-center">{content}</Card.Text>
+        <>
+          <hr />
+          <Card.Text className="text-center">{content}</Card.Text>
+        </>
       )}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
