@@ -54,11 +54,7 @@ const NavBar = () => {
             />
           </NavLink>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <NavLink
-            as="div"
-            onClick={toggleOffcanvas}
-            className={styles.navIcon}
-          >
+          <div onClick={toggleOffcanvas} className={styles.navIcon}>
             {currentUser ? (
               <Avatar
                 src={currentUser.profile_image || defaultProfileImage}
@@ -68,7 +64,7 @@ const NavBar = () => {
             ) : (
               <FontAwesomeIcon className="fa-xl" icon={faRightToBracket} />
             )}
-          </NavLink>
+          </div>
         </Container>
       </Navbar>
 
