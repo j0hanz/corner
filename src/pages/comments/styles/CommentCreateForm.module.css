@@ -13,3 +13,8 @@
 .CommentContent::placeholder {
   color: #b0b3b8;
 }
+
+.CommentContent:focus {
+  background-image: linear-gradient(to bottom right, #3a3a3a, #1f1e1e);
+  color: #fcfcfc;
+}
