@@ -49,7 +49,7 @@ function PostsFeed({ message, filter = '' }) {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <Container>
+    <Container className="px-1">
       <Row className="justify-content-center">
         <Col xs={12} xl={10} className="text-center">
           <Button
