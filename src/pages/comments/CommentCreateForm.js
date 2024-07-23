@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/CommentCreateForm.module.css';
 
-function CommentCreateForm(props) {
-  const { post, setPost, setComments } = props;
+const CommentCreateForm = ({ post, setPost, setComments }) => {
   const [content, setContent] = useState('');
-  const [commentErrorShow, setCommentErrorShow] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange = (event) => {
     setContent(event.target.value);
@@ -32,9 +31,9 @@ function CommentCreateForm(props) {
         ],
       }));
       setContent('');
+      setError(false);
     } catch (err) {
-      setCommentErrorShow(true);
-      setContent('');
+      setError(true);
     }
   };
 
@@ -46,7 +45,7 @@ function CommentCreateForm(props) {
             <Form.Group controlId="comment">
               <Form.Label visuallyHidden>Leave your comment here</Form.Label>
               <Form.Control
-                className={`${styles.CommentContent}`}
+                className={styles.CommentContent}
                 as="textarea"
                 placeholder="Leave your comment here"
                 rows={2}
@@ -54,19 +53,19 @@ function CommentCreateForm(props) {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Button type="submit" variant="outline-light float-end">
+            <Button type="submit" variant="outline-light" className="float-end">
               Submit
             </Button>
           </Form>
         </Col>
       </Row>
-      {commentErrorShow && (
-        <div className="text-danger mt-2">
+      {error && (
+        <Alert variant="danger" className="mt-2">
           There was an error adding your comment!
-        </div>
+        </Alert>
       )}
     </>
   );
-}
+};
 
 export default CommentCreateForm;
