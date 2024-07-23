@@ -37,7 +37,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
       handleClose();
       window.location.reload();
     } catch (err) {
-      setErrors(err.response?.data);
+      setErrors(err.response?.data || {});
     }
   };
 
