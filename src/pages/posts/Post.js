@@ -10,6 +10,7 @@ import defaultProfileImage from '../../assets/nobody.webp';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
+import PostPage from './PostPage';
 
 const Post = ({
   id,
@@ -29,6 +30,7 @@ const Post = ({
   const isOwner = currentUser?.username === owner;
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
@@ -81,6 +83,9 @@ const Post = ({
     setShowConfirm(false);
   };
 
+  const handleShowPostModal = () => setShowPostModal(true);
+  const handleClosePostModal = () => setShowPostModal(false);
+
   return (
     <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-1">
@@ -91,7 +96,7 @@ const Post = ({
             width={40}
           />
           <Link
-            to={`/profiles/${profile_id}`}
+            to={`/users/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
           >
             {owner}
@@ -123,14 +128,13 @@ const Post = ({
             <FontAwesomeIcon className="me-1" icon={faThumbsUp} />
             {like_id ? 'Unlike' : 'Like'} {likes_count}
           </Button>
-          <Button className={`p-2 ${styles.commentButton}`} size="sm">
-            <Link
-              to={`/posts/${id}`}
-              className="text-white text-decoration-none"
-            >
-              <FontAwesomeIcon className="me-1" icon={faComment} />
-              Comments {comments_count}
-            </Link>
+          <Button
+            className={`p-2 ${styles.commentButton}`}
+            size="sm"
+            onClick={handleShowPostModal}
+          >
+            <FontAwesomeIcon className="me-1" icon={faComment} />
+            Comments {comments_count}
           </Button>
         </div>
         <span className="text-white-50 me-1">{updated_at}</span>
@@ -168,6 +172,11 @@ const Post = ({
           </div>
         </Modal.Body>
       </Modal>
+      <PostPage
+        show={showPostModal}
+        handleClose={handleClosePostModal}
+        postId={id}
+      />
     </Card>
   );
 };
