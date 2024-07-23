@@ -27,6 +27,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const toggleOffcanvas = () => setShowOffcanvas((prevState) => !prevState);
+  const closeOffcanvas = () => setShowOffcanvas(false);
 
   const handleLogout = async () => {
     try {
@@ -86,6 +87,7 @@ const NavBar = () => {
             <NavLink
               to={`/users/${currentUser?.pk}/`}
               className="d-flex align-items-center"
+              onClick={closeOffcanvas}
             >
               <Avatar
                 src={nobody}
@@ -111,6 +113,7 @@ const NavBar = () => {
             <NavLink
               to="/posts/create"
               className="btn btn-outline-light mt-2 mx-auto"
+              onClick={closeOffcanvas}
             >
               Create Post
             </NavLink>
