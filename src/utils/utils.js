@@ -1,22 +1,16 @@
 import { axiosReq } from '../api/axiosDefaults';
 
-/**
- * Fetches more data from a paginated API resource and updates the state with the new data.
- * @param {Object} resource - The current resource state containing `next` URL and `results`.
- * @param {Function} setResource - The state setter function for updating the resource state.
- */
 export const fetchMoreData = async (resource, setResource) => {
   if (!resource.next) return;
-
   try {
     const { data } = await axiosReq.get(resource.next);
-
+    const { next, results } = data;
     setResource((prevResource) => ({
       ...prevResource,
-      next: data.next,
+      next,
       results: [
         ...prevResource.results,
-        ...data.results.filter(
+        ...results.filter(
           (cur) =>
             !prevResource.results.some((accResult) => accResult.id === cur.id),
         ),
