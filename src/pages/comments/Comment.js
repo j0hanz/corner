@@ -15,8 +15,10 @@ import CommentEditForm from './CommentEditForm';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import styles from './styles/Comment.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import { faThumbsUp as faThumbsUpSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faThumbsUp,
+  faThumbsUp as faThumbsUpSolid,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Comment = ({
   profile_id,
@@ -41,24 +43,22 @@ const Comment = ({
   const handleShowModal = () => setShowModal(true);
 
   const handleDelete = async () => {
-    if (showModal) {
-      try {
-        await axiosRes.delete(`/comments/${id}/`);
-        setPost((prevPost) => ({
-          results: [
-            {
-              ...prevPost.results[0],
-              comments_count: prevPost.results[0].comments_count - 1,
-            },
-          ],
-        }));
-        setComments((prevComments) => ({
-          ...prevComments,
-          results: prevComments.results.filter((comment) => comment.id !== id),
-        }));
-      } catch (err) {
-        setError('There was an error deleting the comment');
-      }
+    try {
+      await axiosRes.delete(`/comments/${id}/`);
+      setPost((prevPost) => ({
+        results: [
+          {
+            ...prevPost.results[0],
+            comments_count: prevPost.results[0].comments_count - 1,
+          },
+        ],
+      }));
+      setComments((prevComments) => ({
+        ...prevComments,
+        results: prevComments.results.filter((comment) => comment.id !== id),
+      }));
+    } catch (err) {
+      setError('There was an error deleting the comment');
     }
     handleCloseModal();
   };
@@ -105,24 +105,35 @@ const Comment = ({
     }
   };
 
-  !like_id && !currentUser ? (
-    <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip>Sign in to like</Tooltip>}
-    >
-      <div>
-        <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
-      </div>
-    </OverlayTrigger>
-  ) : like_id && currentUser ? (
-    <div onClick={handleUnlike}>
-      <FontAwesomeIcon icon={faThumbsUpSolid} /> <span>{likes_count}</span>
-    </div>
-  ) : (
-    <div onClick={handleLike}>
-      <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
-    </div>
-  );
+  const renderLikeButton = () => {
+    if (!currentUser) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Sign in to like</Tooltip>}
+        >
+          <div className={styles.likeButton}>
+            <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+          </div>
+        </OverlayTrigger>
+      );
+    } else if (like_id) {
+      return (
+        <div
+          onClick={handleUnlike}
+          className={`${styles.likeButton} ${styles.liked}`}
+        >
+          <FontAwesomeIcon icon={faThumbsUpSolid} /> <span>{likes_count}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div onClick={handleLike} className={styles.likeButton}>
+          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+        </div>
+      );
+    }
+  };
 
   return (
     <Card className={`mb-5 text-white ${styles.CommentCard}`}>
@@ -166,10 +177,8 @@ const Comment = ({
               like_id ? styles.liked : ''
             }`}
             size="sm"
-            onClick={like_id ? handleUnlike : handleLike}
           >
-            <FontAwesomeIcon className="mx-1" icon={faThumbsUp} />
-            {like_id ? 'Unlike' : 'Like'} {likes_count}
+            {renderLikeButton()}
           </Button>
         </div>
         <span className="text-white-50 mx-1">{updated_at}</span>
