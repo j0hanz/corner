@@ -53,6 +53,11 @@
   color: #1877f2;
 }
 
+.likeButton.liked:hover {
+  background-color: #1877f2;
+  color: white;
+}
+
 .commentButton .text-decoration-none {
   color: inherit;
 }
