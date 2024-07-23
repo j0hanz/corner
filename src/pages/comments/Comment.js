@@ -125,10 +125,10 @@ const Comment = ({
   );
 
   return (
-    <Card className={`mb-5 bg-dark text-white ${styles.CommentCard}`}>
+    <Card className={`mb-5 text-white ${styles.CommentCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-2">
         <div className="d-flex align-items-center">
-          <Avatar src={profile_image} height={40} width={40} />
+          <Avatar src={profile_image} height={30} width={30} />
           <Link
             to={`/profiles/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
@@ -179,7 +179,7 @@ const Comment = ({
           <p>{error}</p>
         </Alert>
       )}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} centered onHide={handleCloseModal}>
         <Modal.Header
           className="bg-dark text-white"
           closeButton
