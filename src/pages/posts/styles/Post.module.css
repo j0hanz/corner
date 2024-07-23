@@ -32,18 +32,17 @@
   border: none;
   background-color: transparent;
   font-weight: bold;
-}
-
-.likeButton {
-  border: none;
-  background-color: transparent;
-  font-weight: bold;
   color: #bec2caf3;
   cursor: pointer;
 }
 
 .likeButton.liked {
   color: #1877f2;
+}
+
+.likeButton.liked:hover {
+  background-color: #1877f2;
+  color: white;
 }
 
 .commentButton {
