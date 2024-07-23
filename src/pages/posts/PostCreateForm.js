@@ -38,30 +38,20 @@ const PostCreateForm = ({ show, handleClose }) => {
     }
   }, [currentUser, navigate]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setPostData((prevPostData) => ({
-      ...prevPostData,
-      [name]: value,
-    }));
+  const handleChange = ({ target: { name, value } }) => {
+    setPostData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleChangeImage = (event) => {
-    if (event.target.files.length) {
+  const handleChangeImage = ({ target: { files } }) => {
+    if (files.length) {
       URL.revokeObjectURL(image);
-      setPostData((prevPostData) => ({
-        ...prevPostData,
-        image: event.target.files[0],
-      }));
+      setPostData((prev) => ({ ...prev, image: files[0] }));
     }
   };
 
   const handleRemoveImage = () => {
     URL.revokeObjectURL(image);
-    setPostData((prevPostData) => ({
-      ...prevPostData,
-      image: '',
-    }));
+    setPostData((prev) => ({ ...prev, image: '' }));
     if (imageInput.current) {
       imageInput.current.value = '';
     }
@@ -78,11 +68,11 @@ const PostCreateForm = ({ show, handleClose }) => {
     }
 
     try {
-      const { data } = await axiosReq.post('/posts/', formData, {
+      await axiosReq.post('/posts/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       toast.success('Post created successfully!');
-      navigate(`/posts/${data.id}`);
+      window.location.reload();
       handleClose();
     } catch (err) {
       if (err.response?.status !== 401) {
@@ -139,7 +129,6 @@ const PostCreateForm = ({ show, handleClose }) => {
                 <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-danger" onClick={handleRemoveImage}>
                     Remove Image
-                    <br />
                     <FontAwesomeIcon className="fa-lg" icon={faXmark} />
                   </Button>
                 </div>
