@@ -86,7 +86,7 @@ const UserPage = () => {
   }
 
   return (
-    <Container>
+    <Container className="px-1">
       <Row className="justify-content-center">
         <Col lg={3} className="d-flex flex-column align-items-center">
           <Image
