@@ -47,6 +47,7 @@ const Post = ({
     try {
       await axiosRes.delete(`/posts/${id}/`);
       toast.success('Post deleted successfully!');
+      window.location.reload();
       navigate('/');
     } catch (err) {
       console.error(err);
