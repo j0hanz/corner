@@ -29,7 +29,7 @@ const PostPage = ({ show, handleClose, postId }) => {
           setComments(comments);
           setHasLoaded(true);
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       };
 
@@ -38,62 +38,60 @@ const PostPage = ({ show, handleClose, postId }) => {
   }, [show, postId]);
 
   return (
-    <Container className={styles.Container}>
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header
-          closeButton
-          closeVariant="white"
-          className="bg-dark text-light"
-        >
-          <Modal.Title>Post</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="bg-dark text-light p-0">
-          {!hasLoaded ? (
-            <div className="d-flex justify-content-center align-items-center vh-100">
-              <Spinner animation="grow" />
-            </div>
-          ) : (
-            <>
-              <Row className="justify-content-center my-4">
-                <Col xs={12} xl={10}>
-                  <Post {...post.results[0]} setPosts={setPost} postPage />
-                  <hr />
-                  {currentUser && (
-                    <CommentCreateForm
-                      profile_id={currentUser.profile_id}
-                      profileImage={profileImage}
-                      post={postId}
-                      setPost={setPost}
-                      setComments={setComments}
-                    />
-                  )}
-                  <hr />
-                  {comments.results.length ? (
-                    <InfiniteScroll
-                      dataLength={comments.results.length}
-                      next={() => fetchMoreData(comments, setComments)}
-                      hasMore={!!comments.next}
-                      loader={<Asset spinner />}
-                    >
-                      {comments.results.map((comment) => (
-                        <Comment
-                          key={comment.id}
-                          {...comment}
-                          setPost={setPost}
-                          setComments={setComments}
-                        />
-                      ))}
-                    </InfiniteScroll>
-                  ) : (
-                    <div className="text-center">No comments yet.</div>
-                  )}
-                </Col>
-              </Row>
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
-    </Container>
+    <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header
+        closeButton
+        closeVariant="white"
+        className="bg-dark text-light"
+      >
+        <Modal.Title>Post</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="bg-dark text-light p-0">
+        {!hasLoaded ? (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="grow" />
+          </div>
+        ) : (
+          <Container className={styles.Container}>
+            <Row className="justify-content-center my-4">
+              <Col xs={12} xl={10}>
+                <Post {...post.results[0]} setPosts={setPost} postPage />
+                <hr />
+                {currentUser && (
+                  <CommentCreateForm
+                    profile_id={currentUser.profile_id}
+                    profileImage={profileImage}
+                    post={postId}
+                    setPost={setPost}
+                    setComments={setComments}
+                  />
+                )}
+                <hr />
+                {comments.results.length ? (
+                  <InfiniteScroll
+                    dataLength={comments.results.length}
+                    next={() => fetchMoreData(comments, setComments)}
+                    hasMore={!!comments.next}
+                    loader={<Asset spinner />}
+                  >
+                    {comments.results.map((comment) => (
+                      <Comment
+                        key={comment.id}
+                        {...comment}
+                        setPost={setPost}
+                        setComments={setComments}
+                      />
+                    ))}
+                  </InfiniteScroll>
+                ) : (
+                  <div className="text-center">No comments yet.</div>
+                )}
+              </Col>
+            </Row>
+          </Container>
+        )}
+      </Modal.Body>
+    </Modal>
   );
 };
 
