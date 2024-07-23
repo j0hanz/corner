@@ -7,9 +7,9 @@ import UserPage from './pages/users/UserPage';
 import PostsFeed from './pages/posts/PostsFeed';
 import { useCurrentUser } from './contexts/CurrentUserContext';
 
-function App() {
+const App = () => {
   const currentUser = useCurrentUser();
-  const profile_id = useMemo(() => currentUser?.pk || '', [currentUser]);
+  const profileId = useMemo(() => currentUser?.pk || '', [currentUser]);
 
   return (
     <div className={styles.App}>
@@ -23,7 +23,7 @@ function App() {
             element={
               <PostsFeed
                 message="No posts found."
-                filter={`likes__owner__profile=${profile_id}&ordering=-likes__created_at&`}
+                filter={`likes__owner__profile=${profileId}&ordering=-likes__created_at&`}
               />
             }
           />
@@ -31,6 +31,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;
