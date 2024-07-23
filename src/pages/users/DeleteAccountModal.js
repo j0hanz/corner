@@ -9,16 +9,14 @@ const DeleteAccountModal = ({ show, handleClose }) => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  const handleDelete = () => {
-    axios
-      .delete(`/users/${id}/`)
-      .then(() => {
-        handleClose();
-        navigate('/');
-      })
-      .catch((error) => {
-        setErrors(error.response?.data || {});
-      });
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/users/${id}/`);
+      handleClose();
+      navigate('/');
+    } catch (error) {
+      setErrors(error.response?.data || {});
+    }
   };
 
   return (
