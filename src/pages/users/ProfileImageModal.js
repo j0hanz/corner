@@ -25,49 +25,48 @@ const ProfileImageModal = ({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      URL.revokeObjectURL(imagePreview); // revoke the previous URL to avoid memory leaks
+      URL.revokeObjectURL(imagePreview);
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (imageFile) {
       const formData = new FormData();
       formData.append('image', imageFile);
 
-      axios
-        .put(`/users/${id}/`, formData, {
+      try {
+        const { data } = await axios.put(`/users/${id}/`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        .then(({ data }) => {
-          setCurrentUser((prevUser) => ({
-            ...prevUser,
-            profile_image: data.image,
-          }));
-          window.location.reload();
-        })
-        .catch((error) => setErrors(error.response?.data || {}));
+        });
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          profile_image: data.image,
+        }));
+        window.location.reload();
+      } catch (error) {
+        setErrors(error.response?.data || {});
+      }
     } else {
       handleClose();
     }
   };
 
-  const handleRemoveImage = () => {
+  const handleRemoveImage = async () => {
     setImagePreview('');
-    setImageFile(null); // Reset imageFile state
-    axios
-      .put(`/users/${id}/`, { image: null })
-      .then(() => {
-        setCurrentUser((prevUser) => ({
-          ...prevUser,
-          profile_image: '',
-        }));
-        window.location.reload();
-      })
-      .catch((error) => {
-        setErrors(error.response?.data || {});
-      });
+    setImageFile(null);
+
+    try {
+      await axios.put(`/users/${id}/`, { image: null });
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        profile_image: '',
+      }));
+      window.location.reload();
+    } catch (error) {
+      setErrors(error.response?.data || {});
+    }
   };
 
   return (
