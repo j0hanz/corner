@@ -9,7 +9,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import logo from '../assets/logo.webp';
-import nobody from '../assets/nobody.webp';
+import defaultProfileImage from '../assets/nobody.webp';
 import styles from './styles/NavBar.module.css';
 import Login from '../pages/auth/Login';
 import Signup from '../pages/auth/Signup';
@@ -90,9 +90,9 @@ const NavBar = () => {
               onClick={closeOffcanvas}
             >
               <Avatar
-                src={nobody}
-                alt="Profile"
-                className={styles.profileImage}
+                src={currentUser.profile_image || defaultProfileImage} // Use profile_image if it exists, otherwise use defaultProfileImage
+                height={40}
+                width={40}
               />
               <span className={`ms-2 ${styles.username}`}>
                 {currentUser.username}
