@@ -62,8 +62,8 @@ const NavBar = () => {
             {currentUser ? (
               <Avatar
                 src={currentUser.profile_image || defaultProfileImage}
-                height={35}
-                width={35}
+                height={25}
+                width={25}
               />
             ) : (
               <FontAwesomeIcon className="fa-xl" icon={faRightToBracket} />
@@ -92,7 +92,7 @@ const NavBar = () => {
               onClick={closeOffcanvas}
             >
               <Avatar
-                src={currentUser.profile_image || defaultProfileImage} // Use profile_image if it exists, otherwise use defaultProfileImage
+                src={currentUser.profile_image || defaultProfileImage}
                 height={40}
                 width={40}
               />
