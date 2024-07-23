@@ -18,7 +18,7 @@ export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
-  const handleMount = useCallback(async () => {
+  const fetchCurrentUser = useCallback(async () => {
     try {
       const { data } = await axiosRes.get('/dj-rest-auth/user/');
       setCurrentUser(data);
@@ -28,8 +28,8 @@ export const CurrentUserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    handleMount();
-  }, [handleMount]);
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
 
   const setupInterceptors = useCallback(() => {
     const requestInterceptor = axiosReq.interceptors.request.use(
