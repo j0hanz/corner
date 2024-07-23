@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  Button,
-  Form,
-  Alert,
-  Container,
-  Spinner,
-} from 'react-bootstrap';
-import axios from 'axios';
+import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
+import { axiosReq } from '../../api/axiosDefaults';
 import { useParams } from 'react-router-dom';
 import {
   useCurrentUser,
@@ -19,30 +12,45 @@ const EditProfileModal = ({ show, handleClose }) => {
   const { id } = useParams();
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-  const [profileData, setProfileData] = useState({
+
+  const initialProfileData = {
     first_name: '',
     last_name: '',
     bio: '',
     location: '',
     url_link: '',
     contact_email: '',
-  });
+  };
+
+  const [profileData, setProfileData] = useState(initialProfileData);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (currentUser?.id?.toString() !== id) {
-      setLoading(false);
-      return;
-    }
     const fetchProfile = async () => {
+      if (currentUser?.pk?.toString() !== id) {
+        return;
+      }
+
       try {
-        const { data } = await axios.get(`/users/${id}/`);
-        setProfileData(data);
+        const { data } = await axiosReq.get(`/users/${id}/`);
+        const {
+          first_name,
+          last_name,
+          bio,
+          location,
+          url_link,
+          contact_email,
+        } = data;
+        setProfileData({
+          first_name,
+          last_name,
+          bio,
+          location,
+          url_link,
+          contact_email,
+        });
       } catch (error) {
         console.error('Error fetching profile:', error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchProfile();
@@ -55,31 +63,19 @@ const EditProfileModal = ({ show, handleClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    Object.entries(profileData).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
     try {
-      const { data } = await axios.put(`/users/${id}/`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const formData = new FormData();
+      Object.entries(profileData).forEach(([key, value]) => {
+        formData.append(key, value);
       });
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        profile_image: data.image,
-      }));
+      const { data } = await axiosReq.put(`/users/${id}/`, formData);
+      setCurrentUser((prevUser) => ({ ...prevUser, ...data }));
+      window.location.reload();
       handleClose();
     } catch (error) {
       setErrors(error.response?.data || {});
     }
   };
-
-  if (loading) {
-    return (
-      <Container className={styles.loadingContainer}>
-        <Spinner animation="border" variant="primary" />
-      </Container>
-    );
-  }
 
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
