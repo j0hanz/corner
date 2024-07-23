@@ -38,7 +38,7 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" className="fixed-top py-2">
+      <Navbar bg="dark" variant="dark" className="fixed-top py-2 px-1">
         <Container
           fluid
           className="d-flex justify-content-between align-items-center"
