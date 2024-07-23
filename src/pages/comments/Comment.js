@@ -15,10 +15,7 @@ import CommentEditForm from './CommentEditForm';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import styles from './styles/Comment.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faThumbsUp,
-  faThumbsUp as faThumbsUpSolid,
-} from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 const Comment = ({
   profile_id,
@@ -112,28 +109,31 @@ const Comment = ({
           placement="top"
           overlay={<Tooltip>Sign in to like</Tooltip>}
         >
-          <div className={styles.likeButton}>
+          <Button className={styles.likeButton}>
             <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
             <span>{likes_count}</span>
-          </div>
+          </Button>
         </OverlayTrigger>
       );
     } else if (like_id) {
       return (
-        <div
+        <Button
           onClick={handleUnlike}
           className={`${styles.likeButton} ${styles.liked}`}
         >
-          <FontAwesomeIcon className="fa-lg" icon={faThumbsUpSolid} />{' '}
+          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
           <span>{likes_count}</span>
-        </div>
+        </Button>
       );
     } else {
       return (
-        <div onClick={handleLike} className={styles.likeButton}>
+        <Button
+          className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
+          onClick={handleLike}
+        >
           <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
           <span>{likes_count}</span>
-        </div>
+        </Button>
       );
     }
   };
@@ -174,16 +174,7 @@ const Comment = ({
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
-        <div>
-          <Button
-            className={`${styles.likeButton} px-3 ${
-              like_id ? styles.liked : ''
-            }`}
-            size="sm"
-          >
-            {renderLikeButton()}
-          </Button>
-        </div>
+        <div>{renderLikeButton()}</div>
         <span className="text-white-50 mx-1">{updated_at}</span>
       </Card.Footer>
       {error && (
