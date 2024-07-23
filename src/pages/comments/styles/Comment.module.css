@@ -46,10 +46,8 @@
   border: none;
   background-color: transparent;
   font-weight: bold;
-}
-
-.likeButton {
   color: #4267b2;
+  cursor: pointer;
 }
 
 .likeButton.liked {
