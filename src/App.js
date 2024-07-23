@@ -5,8 +5,6 @@ import styles from './App.module.css';
 import NavBar from './components/NavBar';
 import UserPage from './pages/users/UserPage';
 import PostsFeed from './pages/posts/PostsFeed';
-import PostCreateForm from './pages/posts/PostCreateForm';
-import PostPage from './pages/posts/PostPage';
 import { useCurrentUser } from './contexts/CurrentUserContext';
 
 function App() {
@@ -29,8 +27,6 @@ function App() {
               />
             }
           />
-          <Route path="/posts/create" element={<PostCreateForm />} />
-          <Route path="/posts/:id" element={<PostPage />} />
         </Routes>
       </main>
     </div>
