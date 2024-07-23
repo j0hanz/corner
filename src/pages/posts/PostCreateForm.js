@@ -18,7 +18,7 @@ import Upload from '../../assets/upload.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-function PostCreateForm({ show, handleClose }) {
+const PostCreateForm = ({ show, handleClose }) => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
   const imageInput = useRef(null);
@@ -159,20 +159,26 @@ function PostCreateForm({ show, handleClose }) {
                 isInvalid={!!errors.image_filter}
                 className={`bg-dark text-light ${styles.FormControl}`}
               >
-                <option value="normal">Normal</option>
-                <option value="_1977">1977</option>
-                <option value="brannan">Brannan</option>
-                <option value="earlybird">Earlybird</option>
-                <option value="hudson">Hudson</option>
-                <option value="inkwell">Inkwell</option>
-                <option value="lofi">Lo-Fi</option>
-                <option value="kelvin">Kelvin</option>
-                <option value="nashville">Nashville</option>
-                <option value="rise">Rise</option>
-                <option value="toaster">Toaster</option>
-                <option value="valencia">Valencia</option>
-                <option value="walden">Walden</option>
-                <option value="xpro2">X-pro II</option>
+                {[
+                  'normal',
+                  '_1977',
+                  'brannan',
+                  'earlybird',
+                  'hudson',
+                  'inkwell',
+                  'lofi',
+                  'kelvin',
+                  'nashville',
+                  'rise',
+                  'toaster',
+                  'valencia',
+                  'walden',
+                  'xpro2',
+                ].map((filter) => (
+                  <option key={filter} value={filter}>
+                    {filter.replace('_', '')}
+                  </option>
+                ))}
               </Form.Control>
               <Form.Control.Feedback type="invalid">
                 {errors.image_filter}
@@ -242,6 +248,6 @@ function PostCreateForm({ show, handleClose }) {
       </Modal.Body>
     </Modal>
   );
-}
+};
 
 export default PostCreateForm;
