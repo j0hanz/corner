@@ -2,6 +2,7 @@
   border: none;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(to bottom right, #3a3a3a, #1f1e1e);
 }
 
 .CommentCard .card-header {
