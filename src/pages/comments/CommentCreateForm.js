@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { axiosRes } from '../../api/axiosDefaults';
-import Avatar from '../../components/Avatar';
 import styles from './styles/CommentCreateForm.module.css';
 
 function CommentCreateForm(props) {
-  const { post, setPost, setComments, profileImage, profile_id } = props;
+  const { post, setPost, setComments } = props;
   const [content, setContent] = useState('');
   const [commentErrorShow, setCommentErrorShow] = useState(false);
 
@@ -44,9 +42,6 @@ function CommentCreateForm(props) {
     <>
       <Row className="mb-3">
         <Col className="d-flex align-items-center">
-          <Link to={`/profiles/${profile_id}`}>
-            <Avatar src={profileImage} height={30} />
-          </Link>
           <Form onSubmit={handleSubmit} className="flex-grow-1 ms-2">
             <Form.Group controlId="comment">
               <Form.Label visuallyHidden>Leave your comment here</Form.Label>
