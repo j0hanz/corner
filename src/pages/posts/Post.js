@@ -104,30 +104,42 @@ const Post = ({
           placement="top"
           overlay={<Tooltip>Sign in to like</Tooltip>}
         >
-          <div className={styles.likeButton}>
+          <Button className={styles.likeButton}>
             <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
             <span>{likes_count}</span>
-          </div>
+          </Button>
         </OverlayTrigger>
       );
     } else if (like_id) {
       return (
-        <div
+        <Button
           onClick={handleUnlike}
           className={`${styles.likeButton} ${styles.liked}`}
         >
           <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
           <span>{likes_count}</span>
-        </div>
+        </Button>
       );
     } else {
       return (
-        <div onClick={handleLike} className={styles.likeButton}>
+        <Button
+          className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
+          onClick={handleLike}
+        >
           <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
           <span>{likes_count}</span>
-        </div>
+        </Button>
       );
     }
+  };
+
+  const renderCommentButton = () => {
+    return (
+      <Button className={styles.commentButton} onClick={handleShowPostModal}>
+        <FontAwesomeIcon className="fa-lg" icon={faComment} />{' '}
+        <span>{comments_count}</span>
+      </Button>
+    );
   };
 
   return (
@@ -162,22 +174,8 @@ const Post = ({
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
         <div>
-          <Button
-            className={`${styles.likeButton} p-2 ${
-              like_id ? styles.liked : ''
-            }`}
-            size="sm"
-          >
-            {renderLikeButton()}
-          </Button>
-          <Button
-            className={`p-2 ${styles.commentButton}`}
-            size="sm"
-            onClick={handleShowPostModal}
-          >
-            <FontAwesomeIcon className="me-1 fa-lg" icon={faComment} />
-            Comments {comments_count}
-          </Button>
+          {renderLikeButton()}
+          {renderCommentButton()}
         </div>
         <span className="text-white-50 me-1">{updated_at}</span>
       </Card.Footer>
