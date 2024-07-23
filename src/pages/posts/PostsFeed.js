@@ -13,8 +13,9 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import Post from './Post';
 import { axiosReq } from '../../api/axiosDefaults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import PostCreateForm from './PostCreateForm';
+import styles from './styles/PostsFeed.module.css';
 
 const PostsFeed = ({ message, filter = '' }) => {
   const [posts, setPosts] = useState({ results: [] });
@@ -36,9 +37,7 @@ const PostsFeed = ({ message, filter = '' }) => {
     };
 
     setHasLoaded(false);
-    const timer = setTimeout(() => {
-      fetchPosts();
-    }, 1000);
+    const timer = setTimeout(fetchPosts, 1000);
 
     return () => {
       clearTimeout(timer);
@@ -61,15 +60,23 @@ const PostsFeed = ({ message, filter = '' }) => {
           </Button>
         </Col>
       </Row>
-      <Row className="justify-content-center my-4">
-        <Col xs={12} xl={10}>
-          <Form onSubmit={(event) => event.preventDefault()}>
+      <Row className={`justify-content-center ${styles.searchBarContainer}`}>
+        <Col xs={12} xl={10} className={styles.searchBarCol}>
+          <Form
+            onSubmit={(event) => event.preventDefault()}
+            className="position-relative"
+          >
             <Form.Label className="d-none">Search</Form.Label>
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              className={styles.searchIcon}
+            />
             <Form.Control
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               type="text"
-              placeholder="Search: Users, Tags, Title"
+              placeholder="Search: Users, Tags or Posts"
+              className={`text-bold ${styles.searchBar}`}
             />
           </Form>
         </Col>
