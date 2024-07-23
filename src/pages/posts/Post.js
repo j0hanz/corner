@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Card, Button, Modal, Image } from 'react-bootstrap';
+import {
+  Card,
+  Button,
+  Modal,
+  Image,
+  OverlayTrigger,
+  Tooltip,
+  Alert,
+} from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
@@ -31,6 +39,7 @@ const Post = ({
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
@@ -57,7 +66,8 @@ const Post = ({
         ),
       }));
     } catch (err) {
-      console.error(err);
+      console.error('Error liking the post:', err);
+      setError('There was an error liking the post');
     }
   };
 
@@ -73,7 +83,8 @@ const Post = ({
         ),
       }));
     } catch (err) {
-      console.error(err);
+      console.error('Error unliking the post:', err);
+      setError('There was an error unliking the post');
     }
   };
 
@@ -85,6 +96,36 @@ const Post = ({
 
   const handleShowPostModal = () => setShowPostModal(true);
   const handleClosePostModal = () => setShowPostModal(false);
+
+  const renderLikeButton = () => {
+    if (!currentUser) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Sign in to like</Tooltip>}
+        >
+          <div className={styles.likeButton}>
+            <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+          </div>
+        </OverlayTrigger>
+      );
+    } else if (like_id) {
+      return (
+        <div
+          onClick={handleUnlike}
+          className={`${styles.likeButton} ${styles.liked}`}
+        >
+          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div onClick={handleLike} className={styles.likeButton}>
+          <FontAwesomeIcon icon={faThumbsUp} /> <span>{likes_count}</span>
+        </div>
+      );
+    }
+  };
 
   return (
     <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
@@ -123,10 +164,8 @@ const Post = ({
               like_id ? styles.liked : ''
             }`}
             size="sm"
-            onClick={like_id ? handleUnlike : handleLike}
           >
-            <FontAwesomeIcon className="me-1" icon={faThumbsUp} />
-            {like_id ? 'Unlike' : 'Like'} {likes_count}
+            {renderLikeButton()}
           </Button>
           <Button
             className={`p-2 ${styles.commentButton}`}
@@ -139,6 +178,11 @@ const Post = ({
         </div>
         <span className="text-white-50 me-1">{updated_at}</span>
       </Card.Footer>
+      {error && (
+        <Alert variant="danger" className="mt-3">
+          <p>{error}</p>
+        </Alert>
+      )}
       <Modal
         show={showConfirm}
         centered
