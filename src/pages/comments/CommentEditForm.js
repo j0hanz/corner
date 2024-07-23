@@ -3,15 +3,13 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/CommentCreateForm.module.css';
 
-const CommentEditForm = ({
-  id,
-  profile_id,
-  content,
-  setComments,
-  setShowEditForm,
-}) => {
+const CommentEditForm = ({ id, content, setComments, setShowEditForm }) => {
   const [formContent, setFormContent] = useState(content);
   const [error, setError] = useState(null);
+
+  const handleChange = (event) => {
+    setFormContent(event.target.value);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,24 +31,30 @@ const CommentEditForm = ({
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="content">
         <Form.Control
-          className={`${styles.CommentContent}`}
+          className={styles.CommentContent}
           as="textarea"
           rows={3}
           value={formContent}
-          onChange={(event) => setFormContent(event.target.value)}
+          onChange={handleChange}
         />
       </Form.Group>
-      {error && <Alert variant="danger">{error}</Alert>}
-      <Button type="submit" variant="primary" className="mt-2">
-        Save
-      </Button>
-      <Button
-        variant="secondary"
-        className="mt-2 ms-2"
-        onClick={() => setShowEditForm(false)}
-      >
-        Cancel
-      </Button>
+      {error && (
+        <Alert variant="danger" className="mt-2">
+          {error}
+        </Alert>
+      )}
+      <div className="d-flex justify-content-end mt-2">
+        <Button type="submit" variant="primary">
+          Save
+        </Button>
+        <Button
+          variant="secondary"
+          className="ms-2"
+          onClick={() => setShowEditForm(false)}
+        >
+          Cancel
+        </Button>
+      </div>
     </Form>
   );
 };
