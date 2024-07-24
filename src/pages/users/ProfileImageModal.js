@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Upload from '../../assets/upload.png';
 import Asset from '../../components/Asset';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const ProfileImageModal = ({
   show,
@@ -21,6 +22,7 @@ const ProfileImageModal = ({
   );
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -36,6 +38,7 @@ const ProfileImageModal = ({
       const formData = new FormData();
       formData.append('image', imageFile);
 
+      setLoading(true);
       try {
         const { data } = await axios.put(`/users/${id}/`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -44,9 +47,12 @@ const ProfileImageModal = ({
           ...prevUser,
           profile_image: data.image,
         }));
+        handleClose();
         window.location.reload();
       } catch (error) {
         setErrors(error.response?.data || {});
+      } finally {
+        setLoading(false);
       }
     } else {
       handleClose();
@@ -57,92 +63,108 @@ const ProfileImageModal = ({
     setImagePreview('');
     setImageFile(null);
 
+    setLoading(true);
     try {
       await axios.put(`/users/${id}/`, { image: null });
       setCurrentUser((prevUser) => ({
         ...prevUser,
         profile_image: '',
       }));
+      handleClose();
       window.location.reload();
     } catch (error) {
       setErrors(error.response?.data || {});
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header
-        closeButton
-        closeVariant="white"
-        className="bg-dark text-light"
-      >
-        <Modal.Title>Change Profile Image</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-0">
-        <Container className={styles.Container}>
-          {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
-          <Form>
-            <Form.Group className="text-center mb-5 m-5">
-              <div onClick={() => imageFileRef.current.click()}>
-                {imagePreview ? (
-                  <div className={styles.ImageWrapper}>
-                    <Image src={imagePreview} rounded fluid alt="Profile" />
-                    <div className={styles.Placeholder}>
-                      Click to change the image
+    <>
+      {loading && (
+        <LoadingSpinnerToast
+          show={true}
+          message="Processing, please wait..."
+          duration={5000}
+        />
+      )}
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header
+          closeButton
+          closeVariant="white"
+          className="bg-dark text-light"
+        >
+          <Modal.Title>Change Profile Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-light p-0">
+          <Container className={styles.Container}>
+            {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
+            <Form>
+              <Form.Group className="text-center mb-5 m-5">
+                <div onClick={() => imageFileRef.current.click()}>
+                  {imagePreview ? (
+                    <div className={styles.ImageWrapper}>
+                      <Image src={imagePreview} rounded fluid alt="Profile" />
+                      <div className={styles.Placeholder}>
+                        Click to change the image
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <Form.Label
-                    className="d-flex justify-content-center"
-                    htmlFor="image-upload"
-                  >
-                    <Asset src={Upload} message="Click to upload an image" />
-                  </Form.Label>
-                )}
-                <Form.Control
-                  type="file"
-                  id="image-upload"
-                  accept="image/*"
-                  className="d-none"
-                  ref={imageFileRef}
-                  onChange={handleImageChange}
-                />
-              </div>
-              {imagePreview && (
-                <div className="d-flex justify-content-center my-4">
-                  <Button variant="outline-danger" onClick={handleRemoveImage}>
-                    Remove Image
-                    <br />
-                    <FontAwesomeIcon className="fa-lg" icon={faXmark} />
-                  </Button>
+                  ) : (
+                    <Form.Label
+                      className="d-flex justify-content-center"
+                      htmlFor="image-upload"
+                    >
+                      <Asset src={Upload} message="Click to upload an image" />
+                    </Form.Label>
+                  )}
+                  <Form.Control
+                    type="file"
+                    id="image-upload"
+                    accept="image/*"
+                    className="d-none"
+                    ref={imageFileRef}
+                    onChange={handleImageChange}
+                  />
                 </div>
-              )}
-            </Form.Group>
-            {errors?.image?.map((message, idx) => (
-              <Alert variant="warning" key={idx}>
-                {message}
-              </Alert>
-            ))}
-            <div className={styles.buttonWrapper}>
-              <Button
-                variant="outline-primary text-white"
-                onClick={handleSaveChanges}
-                className={styles.leftButton}
-              >
-                Save Changes
-              </Button>
-              <Button
-                variant="outline-secondary text-white"
-                onClick={handleClose}
-                className={styles.rightButton}
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
-        </Container>
-      </Modal.Body>
-    </Modal>
+                {imagePreview && (
+                  <div className="d-flex justify-content-center my-4">
+                    <Button
+                      variant="outline-danger"
+                      onClick={handleRemoveImage}
+                    >
+                      Remove Image
+                      <br />
+                      <FontAwesomeIcon className="fa-lg" icon={faXmark} />
+                    </Button>
+                  </div>
+                )}
+              </Form.Group>
+              {errors?.image?.map((message, idx) => (
+                <Alert variant="warning" key={idx}>
+                  {message}
+                </Alert>
+              ))}
+              <div className={styles.buttonWrapper}>
+                <Button
+                  variant="outline-primary text-white"
+                  onClick={handleSaveChanges}
+                  className={styles.leftButton}
+                >
+                  Save Changes
+                </Button>
+                <Button
+                  variant="outline-secondary text-white"
+                  onClick={handleClose}
+                  className={styles.rightButton}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Form>
+          </Container>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

@@ -17,6 +17,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 import { ProfileActionsDropdown } from '../../components/Dropdown';
 import Asset from '../../components/Asset';
 import Post from '../posts/Post';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -37,6 +38,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [{ data: userData }, { data: userPosts }] = await Promise.all([
           axios.get(`/users/${id}/`),
           axios.get(`/posts/?owner__profile=${id}`),
@@ -69,9 +71,11 @@ const UserPage = () => {
 
   if (loading) {
     return (
-      <Container className="d-flex justify-content-center align-items-center vh-100">
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <LoadingSpinnerToast
+        show={true}
+        message="Loading user data, please wait..."
+        duration={5000}
+      />
     );
   }
 
