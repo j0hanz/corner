@@ -8,6 +8,7 @@ import {
   OverlayTrigger,
   Tooltip,
   Alert,
+  Spinner,
 } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
@@ -40,10 +41,12 @@ const Post = ({
   const [showConfirm, setShowConfirm] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = () => navigate(`/posts/${id}/edit`);
 
   const handleDelete = async () => {
+    setLoading(true);
     try {
       await axiosRes.delete(`/posts/${id}/`);
       toast.success('Post deleted successfully!');
@@ -52,6 +55,8 @@ const Post = ({
     } catch (err) {
       console.error(err);
       toast.error('Failed to delete post!');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -205,6 +210,7 @@ const Post = ({
               variant="outline-secondary"
               onClick={toggleConfirmModal}
               className={styles.leftButton}
+              disabled={loading}
             >
               Cancel
             </Button>
@@ -212,8 +218,23 @@ const Post = ({
               variant="outline-danger"
               className={styles.rightButton}
               onClick={handleConfirmDelete}
+              disabled={loading}
             >
-              Delete
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    variant="light"
+                  />{' '}
+                  Deleting...
+                </>
+              ) : (
+                'Delete'
+              )}
             </Button>
           </div>
         </Modal.Body>
