@@ -44,7 +44,6 @@ const DeleteAccountModal = ({ show, handleClose }) => {
               <Button
                 variant="outline-danger"
                 onClick={handleDelete}
-                className={styles.leftButton}
                 disabled={loading}
               >
                 {loading ? (
@@ -66,7 +65,6 @@ const DeleteAccountModal = ({ show, handleClose }) => {
               <Button
                 variant="outline-secondary"
                 onClick={handleClose}
-                className={styles.rightButton}
                 disabled={loading}
               >
                 Cancel
