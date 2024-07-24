@@ -4,15 +4,16 @@ import {
   Form,
   Button,
   Alert,
-  Spinner,
   Container,
   Image,
+  Spinner,
 } from 'react-bootstrap';
 import Upload from '../../assets/upload.png';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import { axiosReq } from '../../api/axiosDefaults';
 import { toast } from 'react-toastify';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const PostEditForm = ({ show, handleClose, postId }) => {
   const [errors, setErrors] = useState({});
@@ -23,16 +24,16 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     tags: '',
   });
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const imageInput = useRef(null);
-  const { content, image, image_filter, tags } = postData;
 
   useEffect(() => {
     const fetchPostData = async () => {
       if (show && postId) {
+        setLoading(true);
         try {
           const { data } = await axiosReq.get(`/posts/${postId}/`);
           const { content, image, image_filter, tags, is_owner } = data;
-
           if (is_owner) {
             setPostData({
               content,
@@ -45,10 +46,12 @@ const PostEditForm = ({ show, handleClose, postId }) => {
           }
         } catch (error) {
           console.error(error);
+          toast.error('Failed to load post data. Please try again.');
+        } finally {
+          setLoading(false);
         }
       }
     };
-
     fetchPostData();
   }, [show, postId, handleClose]);
 
@@ -62,16 +65,20 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
       const file = event.target.files[0];
-      URL.revokeObjectURL(image);
+      URL.revokeObjectURL(postData.image);
+      setImageLoading(true);
       setPostData((prevData) => ({
         ...prevData,
         image: file,
       }));
+      setImageLoading(false);
     }
   };
 
   const handleRemoveImage = () => {
-    URL.revokeObjectURL(image);
+    if (postData.image) {
+      URL.revokeObjectURL(postData.image);
+    }
     setPostData((prevData) => ({
       ...prevData,
       image: '',
@@ -83,16 +90,19 @@ const PostEditForm = ({ show, handleClose, postId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (postData.image === null) {
+      handleRemoveImage();
+    }
+
     const formData = new FormData();
-    formData.append('content', content);
-    formData.append('image_filter', image_filter);
+    formData.append('content', postData.content);
+    formData.append('image_filter', postData.image_filter);
     formData.append(
       'tags',
-      tags.split(',').map((tag) => tag.trim()),
+      postData.tags.split(',').map((tag) => tag.trim()),
     );
-
-    if (typeof image === 'object') {
-      formData.append('image', image);
+    if (postData.image && typeof postData.image === 'object') {
+      formData.append('image', postData.image);
     }
 
     setLoading(true);
@@ -113,6 +123,13 @@ const PostEditForm = ({ show, handleClose, postId }) => {
 
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
+      {loading && (
+        <LoadingSpinnerToast
+          show={true}
+          message="Loading post data, please wait..."
+          duration={5000}
+        />
+      )}
       <Modal.Header
         closeButton
         closeVariant="white"
@@ -124,14 +141,20 @@ const PostEditForm = ({ show, handleClose, postId }) => {
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
             <Form.Group className="text-center mb-3">
-              <div onClick={() => imageInput.current.click()}>
-                {image ? (
+              {imageLoading ? (
+                <LoadingSpinnerToast
+                  show={true}
+                  message="Loading image, please wait..."
+                  duration={5000}
+                />
+              ) : postData.image ? (
+                <div onClick={() => imageInput.current.click()}>
                   <div className={styles.ImageWrapper}>
                     <Image
                       src={
-                        typeof image === 'string'
-                          ? image
-                          : URL.createObjectURL(image)
+                        typeof postData.image === 'string'
+                          ? postData.image
+                          : URL.createObjectURL(postData.image)
                       }
                       rounded
                       fluid
@@ -141,24 +164,24 @@ const PostEditForm = ({ show, handleClose, postId }) => {
                       Click to change the image
                     </div>
                   </div>
-                ) : (
-                  <Form.Label
-                    className="d-flex justify-content-center"
-                    htmlFor="image-upload"
-                  >
-                    <Asset src={Upload} message="Click to upload an image" />
-                  </Form.Label>
-                )}
-                <Form.Control
-                  type="file"
-                  id="image-upload"
-                  accept="image/*"
-                  className="d-none"
-                  ref={imageInput}
-                  onChange={handleChangeImage}
-                />
-              </div>
-              {image && (
+                </div>
+              ) : (
+                <Form.Label
+                  className="d-flex justify-content-center"
+                  htmlFor="image-upload"
+                >
+                  <Asset src={Upload} message="Click to upload an image" />
+                </Form.Label>
+              )}
+              <Form.Control
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                className="d-none"
+                ref={imageInput}
+                onChange={handleChangeImage}
+              />
+              {postData.image && (
                 <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-danger" onClick={handleRemoveImage}>
                     Remove Image
@@ -175,7 +198,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
               <Form.Control
                 as="select"
                 name="image_filter"
-                value={image_filter}
+                value={postData.image_filter}
                 onChange={handleChange}
                 isInvalid={!!errors.image_filter}
                 className={`bg-dark text-light ${styles.FormControl}`}
@@ -212,7 +235,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
                 as="textarea"
                 rows={3}
                 name="content"
-                value={content}
+                value={postData.content}
                 onChange={handleChange}
                 isInvalid={!!errors.content}
                 placeholder="Write your post content here..."
@@ -228,7 +251,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
               <Form.Control
                 type="text"
                 name="tags"
-                value={tags}
+                value={postData.tags}
                 onChange={handleChange}
                 isInvalid={!!errors.tags}
                 placeholder="Add some tags..."
