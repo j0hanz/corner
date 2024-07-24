@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import Post from './Post';
@@ -19,9 +19,9 @@ const PostPage = ({ show, handleClose, postId }) => {
   const profileImage = currentUser?.profile_image;
 
   const fetchPostAndComments = useCallback(async () => {
+    setLoading(true);
+    setError(false);
     try {
-      setLoading(true);
-      setError(false);
       const [{ data: post }, { data: comments }] = await Promise.all([
         axiosReq.get(`/posts/${postId}`),
         axiosReq.get(`/comments/?post=${postId}`),
@@ -42,6 +42,19 @@ const PostPage = ({ show, handleClose, postId }) => {
     }
   }, [show, fetchPostAndComments]);
 
+  const memoizedComments = useMemo(
+    () =>
+      comments.results.map((comment) => (
+        <Comment
+          key={comment.id}
+          {...comment}
+          setPost={setPost}
+          setComments={setComments}
+        />
+      )),
+    [comments.results, setPost, setComments],
+  );
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       {loading ? (
@@ -51,9 +64,7 @@ const PostPage = ({ show, handleClose, postId }) => {
           duration={5000}
         />
       ) : error ? (
-        <div className="text-center my-4 text-danger">
-          Failed to load post and comments.
-        </div>
+        <div className="d-none">Failed to load post and comments.</div>
       ) : (
         <>
           <Modal.Header
@@ -63,7 +74,6 @@ const PostPage = ({ show, handleClose, postId }) => {
           >
             <Modal.Title>Post</Modal.Title>
           </Modal.Header>
-
           <Modal.Body className="bg-dark text-light p-0">
             <Container fluid className={`${styles.Container} p-1`}>
               <Row className="justify-content-center">
@@ -94,14 +104,7 @@ const PostPage = ({ show, handleClose, postId }) => {
                         </p>
                       }
                     >
-                      {comments.results.map((comment) => (
-                        <Comment
-                          key={comment.id}
-                          {...comment}
-                          setPost={setPost}
-                          setComments={setComments}
-                        />
-                      ))}
+                      {memoizedComments}
                     </InfiniteScroll>
                   ) : (
                     <div className="text-center my-4">No comments yet.</div>
@@ -116,4 +119,4 @@ const PostPage = ({ show, handleClose, postId }) => {
   );
 };
 
-export default PostPage;
+export default React.memo(PostPage);
