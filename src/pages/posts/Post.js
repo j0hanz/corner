@@ -245,7 +245,11 @@ const Post = ({
         handleClose={handleClosePostModal}
         postId={id}
       />
-      <PostEditForm show={showEditModal} handleClose={handleCloseEditModal} />
+      <PostEditForm
+        show={showEditModal}
+        handleClose={handleCloseEditModal}
+        postId={id}
+      />{' '}
     </Card>
   );
 };
