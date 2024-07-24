@@ -23,13 +23,12 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     tags: '',
   });
   const [loading, setLoading] = useState(false);
-
-  const { content, image, image_filter, tags } = postData;
   const imageInput = useRef(null);
+  const { content, image, image_filter, tags } = postData;
 
   useEffect(() => {
-    if (show && postId) {
-      const handleMount = async () => {
+    const fetchPostData = async () => {
+      if (show && postId) {
         try {
           const { data } = await axiosReq.get(`/posts/${postId}/`);
           const { content, image, image_filter, tags, is_owner } = data;
@@ -44,38 +43,39 @@ const PostEditForm = ({ show, handleClose, postId }) => {
           } else {
             handleClose();
           }
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          console.error(error);
         }
-      };
+      }
+    };
 
-      handleMount();
-    }
+    fetchPostData();
   }, [show, postId, handleClose]);
 
-  const handleChange = (event) => {
-    setPostData({
-      ...postData,
-      [event.target.name]: event.target.value,
-    });
+  const handleChange = ({ target: { name, value } }) => {
+    setPostData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleChangeImage = (event) => {
     if (event.target.files.length) {
+      const file = event.target.files[0];
       URL.revokeObjectURL(image);
-      setPostData({
-        ...postData,
-        image: event.target.files[0],
-      });
+      setPostData((prevData) => ({
+        ...prevData,
+        image: file,
+      }));
     }
   };
 
   const handleRemoveImage = () => {
     URL.revokeObjectURL(image);
-    setPostData({
-      ...postData,
+    setPostData((prevData) => ({
+      ...prevData,
       image: '',
-    });
+    }));
     if (imageInput.current) {
       imageInput.current.value = '';
     }
@@ -90,6 +90,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       'tags',
       tags.split(',').map((tag) => tag.trim()),
     );
+
     if (typeof image === 'object') {
       formData.append('image', image);
     }
@@ -100,9 +101,9 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       toast.success('Post updated successfully!');
       window.location.reload();
       handleClose();
-    } catch (err) {
-      if (err.response?.status !== 401) {
-        setErrors(err.response?.data || {});
+    } catch (error) {
+      if (error.response?.status !== 401) {
+        setErrors(error.response?.data || {});
         toast.error('Failed to update post. Please try again.');
       }
     } finally {
