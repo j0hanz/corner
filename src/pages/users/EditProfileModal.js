@@ -7,6 +7,7 @@ import {
   useSetCurrentUser,
 } from '../../contexts/CurrentUserContext';
 import styles from './styles/EditProfilePage.module.css';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const EditProfileModal = ({ show, handleClose }) => {
   const { id } = useParams();
@@ -24,6 +25,7 @@ const EditProfileModal = ({ show, handleClose }) => {
 
   const [profileData, setProfileData] = useState(initialProfileData);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -68,71 +70,83 @@ const EditProfileModal = ({ show, handleClose }) => {
       Object.entries(profileData).forEach(([key, value]) => {
         formData.append(key, value);
       });
+      setLoading(true);
       const { data } = await axiosReq.put(`/users/${id}/`, formData);
       setCurrentUser((prevUser) => ({ ...prevUser, ...data }));
       window.location.reload();
       handleClose();
     } catch (error) {
       setErrors(error.response?.data || {});
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered className="text-light">
-      <Modal.Header
-        closeButton
-        closeVariant="white"
-        className="bg-dark text-light"
-      >
-        <Modal.Title>Edit Profile</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-0">
-        <Form onSubmit={handleSubmit}>
-          <Container className={styles.Container}>
-            {Object.entries(profileData).map(([field, value]) => (
-              <Form.Group
-                controlId={`form${field}`}
-                className="mb-3"
-                key={field}
-              >
-                <Form.Label>{field.replace('_', ' ')}</Form.Label>
-                <Form.Control
-                  type={field.includes('email') ? 'email' : 'text'}
-                  as={field === 'bio' ? 'textarea' : 'input'}
-                  rows={field === 'bio' ? 6 : undefined}
-                  placeholder={field.replace('_', ' ')}
-                  name={field}
-                  value={value}
-                  onChange={handleChange}
-                  className="bg-dark text-light"
+    <>
+      <Modal show={show} onHide={handleClose} centered className="text-light">
+        <Modal.Header
+          closeButton
+          closeVariant="white"
+          className="bg-dark text-light"
+        >
+          <Modal.Title>Edit Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-light p-0">
+          <Form onSubmit={handleSubmit}>
+            <Container className={styles.Container}>
+              {Object.entries(profileData).map(([field, value]) => (
+                <Form.Group
+                  controlId={`form${field}`}
+                  className="mb-3"
+                  key={field}
+                >
+                  <Form.Label>{field.replace('_', ' ')}</Form.Label>
+                  <Form.Control
+                    type={field.includes('email') ? 'email' : 'text'}
+                    as={field === 'bio' ? 'textarea' : 'input'}
+                    rows={field === 'bio' ? 6 : undefined}
+                    placeholder={field.replace('_', ' ')}
+                    name={field}
+                    value={value}
+                    onChange={handleChange}
+                    className="bg-dark text-light"
+                  />
+                  {errors?.[field]?.map((message, idx) => (
+                    <Alert variant="warning" key={idx}>
+                      {message}
+                    </Alert>
+                  ))}
+                </Form.Group>
+              ))}
+              <div className={styles.buttonWrapper}>
+                <Button
+                  variant="outline-primary"
+                  className={styles.leftButton}
+                  type="submit"
+                >
+                  Save Changes
+                </Button>
+                <Button
+                  variant="outline-secondary"
+                  onClick={handleClose}
+                  className={styles.rightButton}
+                >
+                  Cancel
+                </Button>
+              </div>
+              {loading && (
+                <LoadingSpinnerToast
+                  show={true}
+                  message="Processing, please wait..."
+                  duration={5000}
                 />
-                {errors?.[field]?.map((message, idx) => (
-                  <Alert variant="warning" key={idx}>
-                    {message}
-                  </Alert>
-                ))}
-              </Form.Group>
-            ))}
-            <div className={styles.buttonWrapper}>
-              <Button
-                variant="outline-primary"
-                className={styles.leftButton}
-                type="submit"
-              >
-                Save Changes
-              </Button>
-              <Button
-                variant="outline-secondary"
-                onClick={handleClose}
-                className={styles.rightButton}
-              >
-                Cancel
-              </Button>
-            </div>
-          </Container>
-        </Form>
-      </Modal.Body>
-    </Modal>
+              )}
+            </Container>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 
