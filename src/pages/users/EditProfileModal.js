@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
+import {
+  Modal,
+  Button,
+  Form,
+  Alert,
+  Container,
+  Spinner,
+} from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useParams } from 'react-router-dom';
 import {
@@ -7,7 +14,6 @@ import {
   useSetCurrentUser,
 } from '../../contexts/CurrentUserContext';
 import styles from './styles/EditProfilePage.module.css';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const EditProfileModal = ({ show, handleClose }) => {
   const { id } = useParams();
@@ -124,24 +130,33 @@ const EditProfileModal = ({ show, handleClose }) => {
                   variant="outline-primary"
                   className={styles.leftButton}
                   type="submit"
+                  disabled={loading}
                 >
-                  Save Changes
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        style={{ color: 'white' }}
+                      />{' '}
+                      <span className="text-light">Saving...</span>
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
                 </Button>
                 <Button
                   variant="outline-secondary"
                   onClick={handleClose}
                   className={styles.rightButton}
+                  disabled={loading}
                 >
                   Cancel
                 </Button>
               </div>
-              {loading && (
-                <LoadingSpinnerToast
-                  show={true}
-                  message="Processing, please wait..."
-                  duration={5000}
-                />
-              )}
             </Container>
           </Form>
         </Modal.Body>
