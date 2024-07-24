@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Card,
   Button,
@@ -20,6 +20,7 @@ import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
 import PostPage from './PostPage';
+import PostEditForm from './PostEditForm';
 
 const Post = ({
   id,
@@ -37,13 +38,13 @@ const Post = ({
 }) => {
   const currentUser = useCurrentUser();
   const isOwner = currentUser?.username === owner;
-  const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleEdit = () => navigate(`/posts/${id}/edit`);
+  const handleEdit = () => setShowEditModal(true);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -51,7 +52,6 @@ const Post = ({
       await axiosRes.delete(`/posts/${id}/`);
       toast.success('Post deleted successfully!');
       window.location.reload();
-      navigate('/');
     } catch (err) {
       console.error(err);
       toast.error('Failed to delete post!');
@@ -102,6 +102,7 @@ const Post = ({
 
   const handleShowPostModal = () => setShowPostModal(true);
   const handleClosePostModal = () => setShowPostModal(false);
+  const handleCloseEditModal = () => setShowEditModal(false);
 
   const renderLikeButton = () => {
     if (!currentUser) {
@@ -244,6 +245,7 @@ const Post = ({
         handleClose={handleClosePostModal}
         postId={id}
       />
+      <PostEditForm show={showEditModal} handleClose={handleCloseEditModal} />
     </Card>
   );
 };
