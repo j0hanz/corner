@@ -73,7 +73,7 @@ const Login = ({ handleSignUp }) => {
       <div className={styles.signupContainer}>
         <p className="text-center mb-0">Don't have an account?</p>
         <Button
-          variant="outline-light d-block mx-auto mt-2"
+          variant="outline-light d-block mx-auto my-2"
           onClick={handleSignUp}
           className={styles.signupButton}
         >
