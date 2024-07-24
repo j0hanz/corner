@@ -3,6 +3,7 @@ import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosRes } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangePasswordModal = ({ show, handleClose }) => {
@@ -16,6 +17,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
   });
   const { new_password1, new_password2 } = userData;
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     setUserData({
@@ -32,12 +34,15 @@ const ChangePasswordModal = ({ show, handleClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       await axiosRes.post('/dj-rest-auth/password/change/', userData);
       handleClose();
       window.location.reload();
     } catch (err) {
       setErrors(err.response?.data || {});
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,23 +91,22 @@ const ChangePasswordModal = ({ show, handleClose }) => {
                 </Alert>
               ))}
             </Form.Group>
-            <div className={styles.buttonWrapper}>
-              <Button
-                variant="outline-primary"
-                type="submit"
-                className={styles.leftButton}
-              >
+            <div className="d-flex justify-content-between">
+              <Button variant="outline-primary" type="submit">
                 Save Changes
               </Button>
-              <Button
-                variant="outline-secondary"
-                onClick={handleClose}
-                className={styles.rightButton}
-              >
+              <Button variant="outline-secondary" onClick={handleClose}>
                 Cancel
               </Button>
             </div>
           </Form>
+          {loading && (
+            <LoadingSpinnerToast
+              show={true}
+              message="Processing, please wait..."
+              duration={5000}
+            />
+          )}
         </Container>
       </Modal.Body>
     </Modal>
