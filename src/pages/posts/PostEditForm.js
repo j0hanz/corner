@@ -63,8 +63,8 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   };
 
   const handleChangeImage = (event) => {
-    if (event.target.files.length) {
-      const file = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
       URL.revokeObjectURL(postData.image);
       setImageLoading(true);
       setPostData((prevData) => ({
@@ -77,7 +77,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     const formData = new FormData();
     formData.append('content', postData.content);
     formData.append('image_filter', postData.image_filter);
@@ -85,13 +85,9 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       'tags',
       postData.tags.split(',').map((tag) => tag.trim()),
     );
-
-    // Append image only if it exists and is a file object
-    if (postData.image && typeof postData.image === 'object') {
+    if (postData.image) {
       formData.append('image', postData.image);
     }
-
-    setLoading(true);
     try {
       await axiosReq.put(`/posts/${postId}/`, formData);
       toast.success('Post updated successfully!');
@@ -104,6 +100,45 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const renderImagePreview = () => {
+    if (imageLoading) {
+      return (
+        <LoadingSpinnerToast
+          show={true}
+          message="Loading image, please wait..."
+          duration={5000}
+        />
+      );
+    } else if (postData.image) {
+      return (
+        <div onClick={() => imageInput.current.click()}>
+          <div className={styles.ImageWrapper}>
+            <Image
+              src={
+                typeof postData.image === 'string'
+                  ? postData.image
+                  : URL.createObjectURL(postData.image)
+              }
+              rounded
+              fluid
+              alt="Post preview"
+            />
+            <div className={styles.Placeholder}>Click to change the image</div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <Form.Label
+          className="d-flex justify-content-center"
+          htmlFor="image-upload"
+        >
+          <Asset src={Upload} message="Click to upload an image" />
+        </Form.Label>
+      );
     }
   };
 
@@ -127,38 +162,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
             <Form.Group className="text-center mb-3">
-              {imageLoading ? (
-                <LoadingSpinnerToast
-                  show={true}
-                  message="Loading image, please wait..."
-                  duration={5000}
-                />
-              ) : postData.image ? (
-                <div onClick={() => imageInput.current.click()}>
-                  <div className={styles.ImageWrapper}>
-                    <Image
-                      src={
-                        typeof postData.image === 'string'
-                          ? postData.image
-                          : URL.createObjectURL(postData.image)
-                      }
-                      rounded
-                      fluid
-                      alt="Post preview"
-                    />
-                    <div className={styles.Placeholder}>
-                      Click to change the image
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Form.Label
-                  className="d-flex justify-content-center"
-                  htmlFor="image-upload"
-                >
-                  <Asset src={Upload} message="Click to upload an image" />
-                </Form.Label>
-              )}
+              {renderImagePreview()}
               <Form.Control
                 type="file"
                 id="image-upload"
