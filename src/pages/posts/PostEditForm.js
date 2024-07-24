@@ -75,24 +75,8 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
   };
 
-  const handleRemoveImage = () => {
-    if (postData.image) {
-      URL.revokeObjectURL(postData.image);
-    }
-    setPostData((prevData) => ({
-      ...prevData,
-      image: '',
-    }));
-    if (imageInput.current) {
-      imageInput.current.value = '';
-    }
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (postData.image === null) {
-      handleRemoveImage();
-    }
 
     const formData = new FormData();
     formData.append('content', postData.content);
@@ -101,6 +85,8 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       'tags',
       postData.tags.split(',').map((tag) => tag.trim()),
     );
+
+    // Append image only if it exists and is a file object
     if (postData.image && typeof postData.image === 'object') {
       formData.append('image', postData.image);
     }
@@ -181,13 +167,6 @@ const PostEditForm = ({ show, handleClose, postId }) => {
                 ref={imageInput}
                 onChange={handleChangeImage}
               />
-              {postData.image && (
-                <div className="d-flex justify-content-center my-4">
-                  <Button variant="outline-danger" onClick={handleRemoveImage}>
-                    Remove Image
-                  </Button>
-                </div>
-              )}
               <Form.Control.Feedback type="invalid">
                 {errors.image}
               </Form.Control.Feedback>
