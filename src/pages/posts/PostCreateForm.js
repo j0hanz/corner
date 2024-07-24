@@ -15,8 +15,6 @@ import { toast } from 'react-toastify';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import Upload from '../../assets/upload.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const PostCreateForm = ({ show, handleClose }) => {
   const currentUser = useCurrentUser();
@@ -133,7 +131,6 @@ const PostCreateForm = ({ show, handleClose }) => {
                 <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-danger" onClick={handleRemoveImage}>
                     Remove Image
-                    <FontAwesomeIcon className="fa-lg" icon={faXmark} />
                   </Button>
                 </div>
               )}
