@@ -215,7 +215,7 @@ const Comment = ({
                     size="sm"
                     role="status"
                     aria-hidden="true"
-                    style={{ color: 'white' }}
+                    variant="light"
                   />{' '}
                   <span className="text-light">Deleting...</span>
                 </>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/CommentCreateForm.module.css';
 
 const CommentCreateForm = ({ post, setPost, setComments }) => {
   const [content, setContent] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     setContent(event.target.value);
@@ -13,6 +14,7 @@ const CommentCreateForm = ({ post, setPost, setComments }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const { data } = await axiosRes.post('/comments/', {
         content,
@@ -34,6 +36,8 @@ const CommentCreateForm = ({ post, setPost, setComments }) => {
       setError(false);
     } catch (err) {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,8 +57,26 @@ const CommentCreateForm = ({ post, setPost, setComments }) => {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Button type="submit" variant="outline-light" className="float-end">
-              Submit
+            <Button
+              type="submit"
+              variant="outline-light"
+              className="float-end"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    variant="light"
+                  />{' '}
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Form>
         </Col>

@@ -226,7 +226,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                       size="sm"
                       role="status"
                       aria-hidden="true"
-                      style={{ color: 'white' }}
+                      variant="light"
                     />{' '}
                     <span className="text-light">Creating...</span>
                   </>
