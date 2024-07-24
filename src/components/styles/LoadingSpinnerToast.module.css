@@ -1,0 +1,19 @@
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 200px;
+  padding: 25px;
+  background-color: #343a40;
+  border-radius: 25px;
+  color: #f8f9fa;
+  box-shadow: #fcfcfca9;
+}
+
+.message {
+  margin-top: 20px;
+  font-size: 1.3em;
+  text-align: center;
+  color: #ffffffb0;
+}
