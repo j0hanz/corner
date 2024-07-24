@@ -114,7 +114,6 @@ const ProfileImageModal = ({
                 <Button
                   variant="outline-primary text-white"
                   onClick={handleSaveChanges}
-                  className={styles.leftButton}
                   disabled={loading}
                 >
                   {loading ? (
@@ -136,7 +135,6 @@ const ProfileImageModal = ({
                 <Button
                   variant="outline-secondary text-white"
                   onClick={handleClose}
-                  className={styles.rightButton}
                   disabled={loading}
                 >
                   Cancel
