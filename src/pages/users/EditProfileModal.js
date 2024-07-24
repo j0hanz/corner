@@ -128,7 +128,6 @@ const EditProfileModal = ({ show, handleClose }) => {
               <div className={styles.buttonWrapper}>
                 <Button
                   variant="outline-primary"
-                  className={styles.leftButton}
                   type="submit"
                   disabled={loading}
                 >
@@ -151,7 +150,6 @@ const EditProfileModal = ({ show, handleClose }) => {
                 <Button
                   variant="outline-secondary"
                   onClick={handleClose}
-                  className={styles.rightButton}
                   disabled={loading}
                 >
                   Cancel
