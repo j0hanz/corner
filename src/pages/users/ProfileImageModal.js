@@ -59,13 +59,6 @@ const ProfileImageModal = ({
 
   return (
     <>
-      {loading && (
-        <LoadingSpinnerToast
-          show={true}
-          message="Processing, please wait..."
-          duration={5000}
-        />
-      )}
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header
           closeButton
@@ -127,6 +120,13 @@ const ProfileImageModal = ({
                 </Button>
               </div>
             </Form>
+            {loading && (
+              <LoadingSpinnerToast
+                show={true}
+                message="Processing, please wait..."
+                duration={5000}
+              />
+            )}
           </Container>
         </Modal.Body>
       </Modal>
