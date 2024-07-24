@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
+import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import Upload from '../../assets/upload.png';
@@ -30,6 +31,7 @@ const PostCreateForm = ({ show, handleClose }) => {
     tags: '',
   });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const { content, image, image_filter, tags } = postData;
 
   useEffect(() => {
@@ -67,6 +69,7 @@ const PostCreateForm = ({ show, handleClose }) => {
       formData.append('image', image);
     }
 
+    setLoading(true);
     try {
       await axiosReq.post('/posts/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -79,6 +82,8 @@ const PostCreateForm = ({ show, handleClose }) => {
         setErrors(err.response?.data || {});
         toast.error('Failed to create post. Please try again.');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -213,7 +218,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                 className={styles.leftButton}
                 type="submit"
               >
-                {false ? (
+                {loading ? (
                   <Spinner animation="border" size="sm" />
                 ) : (
                   'Create Post'
@@ -234,6 +239,13 @@ const PostCreateForm = ({ show, handleClose }) => {
             )}
           </Container>
         </Form>
+        {loading && (
+          <LoadingSpinnerToast
+            show={true}
+            message="Creating post, please wait..."
+            duration={5000}
+          />
+        )}
       </Modal.Body>
     </Modal>
   );
