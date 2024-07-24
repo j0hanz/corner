@@ -3,8 +3,6 @@ import { Modal, Button, Form, Alert, Container, Image } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import Upload from '../../assets/upload.png';
 import Asset from '../../components/Asset';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
@@ -59,26 +57,6 @@ const ProfileImageModal = ({
     }
   };
 
-  const handleRemoveImage = async () => {
-    setImagePreview('');
-    setImageFile(null);
-
-    setLoading(true);
-    try {
-      await axios.put(`/users/${id}/`, { image: null });
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        profile_image: '',
-      }));
-      handleClose();
-      window.location.reload();
-    } catch (error) {
-      setErrors(error.response?.data || {});
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       {loading && (
@@ -126,18 +104,6 @@ const ProfileImageModal = ({
                     onChange={handleImageChange}
                   />
                 </div>
-                {imagePreview && (
-                  <div className="d-flex justify-content-center my-4">
-                    <Button
-                      variant="outline-danger"
-                      onClick={handleRemoveImage}
-                    >
-                      Remove Image
-                      <br />
-                      <FontAwesomeIcon className="fa-lg" icon={faXmark} />
-                    </Button>
-                  </div>
-                )}
               </Form.Group>
               {errors?.image?.map((message, idx) => (
                 <Alert variant="warning" key={idx}>
