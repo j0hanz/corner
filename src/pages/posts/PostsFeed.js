@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import PostCreateForm from './PostCreateForm';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { fetchMoreData } from '../../utils/utils';
 import styles from './styles/PostsFeed.module.css';
 
 const PostsFeed = ({ message, filter = '' }) => {
-  const [posts, setPosts] = useState({ results: [] });
+  const [posts, setPosts] = useState({ results: [], next: null });
   const [hasLoaded, setHasLoaded] = useState(false);
   const { pathname } = useLocation();
   const [query, setQuery] = useState('');
@@ -41,14 +43,7 @@ const PostsFeed = ({ message, filter = '' }) => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <Container className="px-1">
-      {!hasLoaded && (
-        <LoadingSpinnerToast
-          show={true}
-          message="Loading posts, please wait..."
-          duration={5000}
-        />
-      )}
+    <Container className="px-0">
       <Row className="justify-content-center">
         <Col xs={12} xl={10} className="text-center">
           <Button
@@ -81,15 +76,39 @@ const PostsFeed = ({ message, filter = '' }) => {
           </Form>
         </Col>
       </Row>
-      {hasLoaded && posts.results.length > 0
-        ? posts.results.map((post) => (
-            <Post key={post.id} {...post} setPosts={setPosts} />
-          ))
-        : hasLoaded && (
-            <div className="d-flex justify-content-center">
-              <Alert variant="info">{message}</Alert>
+      {!hasLoaded && (
+        <LoadingSpinnerToast
+          show={true}
+          message="Loading posts, please wait..."
+          duration={5000}
+        />
+      )}
+      {hasLoaded && posts.results.length > 0 ? (
+        <InfiniteScroll
+          dataLength={posts.results.length}
+          next={() => fetchMoreData(posts, setPosts)}
+          hasMore={!!posts.next}
+          loader={
+            <LoadingSpinnerToast
+              show={true}
+              message="Loading more posts..."
+              duration={5000}
+            />
+          }
+        >
+          {posts.results.map((post) => (
+            <div key={post.id}>
+              <Post {...post} setPosts={setPosts} />
             </div>
-          )}
+          ))}
+        </InfiniteScroll>
+      ) : (
+        hasLoaded && (
+          <div>
+            <Alert variant="info">{message}</Alert>
+          </div>
+        )
+      )}
       <PostCreateForm show={showModal} handleClose={handleCloseModal} />
     </Container>
   );
