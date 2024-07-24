@@ -8,14 +8,13 @@ import {
   Container,
   Image,
 } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 import Upload from '../../assets/upload.png';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import { axiosReq } from '../../api/axiosDefaults';
 import { toast } from 'react-toastify';
 
-const PostEditForm = ({ show, handleClose }) => {
+const PostEditForm = ({ show, handleClose, postId }) => {
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     content: '',
@@ -27,17 +26,21 @@ const PostEditForm = ({ show, handleClose }) => {
 
   const { content, image, image_filter, tags } = postData;
   const imageInput = useRef(null);
-  const { id } = useParams();
 
   useEffect(() => {
-    if (show && id) {
+    if (show && postId) {
       const handleMount = async () => {
         try {
-          const { data } = await axiosReq.get(`/posts/${id}/`);
+          const { data } = await axiosReq.get(`/posts/${postId}/`);
           const { content, image, image_filter, tags, is_owner } = data;
 
           if (is_owner) {
-            setPostData({ content, image, image_filter, tags });
+            setPostData({
+              content,
+              image,
+              image_filter,
+              tags: tags.join(', '),
+            });
           } else {
             handleClose();
           }
@@ -48,7 +51,7 @@ const PostEditForm = ({ show, handleClose }) => {
 
       handleMount();
     }
-  }, [show, id, handleClose]);
+  }, [show, postId, handleClose]);
 
   const handleChange = (event) => {
     setPostData({
@@ -83,14 +86,17 @@ const PostEditForm = ({ show, handleClose }) => {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('image_filter', image_filter);
-    formData.append('tags', tags);
+    formData.append(
+      'tags',
+      tags.split(',').map((tag) => tag.trim()),
+    );
     if (typeof image === 'object') {
       formData.append('image', image);
     }
 
     setLoading(true);
     try {
-      await axiosReq.put(`/posts/${id}/`, formData);
+      await axiosReq.put(`/posts/${postId}/`, formData);
       toast.success('Post updated successfully!');
       window.location.reload();
       handleClose();
