@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import Post from './Post';
@@ -6,7 +6,6 @@ import CommentCreateForm from '../comments/CommentCreateForm';
 import Comment from '../comments/Comment';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Asset from '../../components/Asset';
 import { fetchMoreData } from '../../utils/utils';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/PostPage.module.css';
@@ -18,36 +17,37 @@ const PostPage = ({ show, handleClose, postId }) => {
   const currentUser = useCurrentUser();
   const profileImage = currentUser?.profile_image;
 
+  const fetchPostAndComments = useCallback(async () => {
+    try {
+      setHasLoaded(false);
+      const [{ data: post }, { data: comments }] = await Promise.all([
+        axiosReq.get(`/posts/${postId}`),
+        axiosReq.get(`/comments/?post=${postId}`),
+      ]);
+      setPost({ results: [post] });
+      setComments(comments);
+      setHasLoaded(true);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [postId]);
+
   useEffect(() => {
     if (show) {
-      const fetchPostAndComments = async () => {
-        try {
-          setHasLoaded(false);
-          const [{ data: post }, { data: comments }] = await Promise.all([
-            axiosReq.get(`/posts/${postId}`),
-            axiosReq.get(`/comments/?post=${postId}`),
-          ]);
-          setPost({ results: [post] });
-          setComments(comments);
-          setHasLoaded(true);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
       fetchPostAndComments();
     }
-  }, [show, postId]);
+  }, [show, fetchPostAndComments]);
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      {!hasLoaded ? (
+      {!hasLoaded && (
         <LoadingSpinnerToast
           show={true}
-          message="Loading post..."
+          message="Loading post and comments, please wait..."
           duration={5000}
         />
-      ) : (
+      )}
+      {hasLoaded && (
         <>
           <Modal.Header
             closeButton
@@ -77,7 +77,6 @@ const PostPage = ({ show, handleClose, postId }) => {
                       dataLength={comments.results.length}
                       next={() => fetchMoreData(comments, setComments)}
                       hasMore={!!comments.next}
-                      loader={<Asset spinner />}
                     >
                       {comments.results.map((comment) => (
                         <Comment
