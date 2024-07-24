@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form, Alert, Container } from 'react-bootstrap';
+import {
+  Modal,
+  Button,
+  Form,
+  Alert,
+  Container,
+  Spinner,
+} from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosRes } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangePasswordModal = ({ show, handleClose }) => {
@@ -92,21 +98,36 @@ const ChangePasswordModal = ({ show, handleClose }) => {
               ))}
             </Form.Group>
             <div className="d-flex justify-content-between">
-              <Button variant="outline-primary" type="submit">
-                Save Changes
+              <Button
+                variant="outline-primary"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ color: 'white' }}
+                    />{' '}
+                    <span className="text-light">Saving...</span>
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
               </Button>
-              <Button variant="outline-secondary" onClick={handleClose}>
+              <Button
+                variant="outline-secondary"
+                onClick={handleClose}
+                disabled={loading}
+              >
                 Cancel
               </Button>
             </div>
           </Form>
-          {loading && (
-            <LoadingSpinnerToast
-              show={true}
-              message="Processing, please wait..."
-              duration={5000}
-            />
-          )}
         </Container>
       </Modal.Body>
     </Modal>
