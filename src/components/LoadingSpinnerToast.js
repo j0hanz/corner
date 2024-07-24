@@ -27,15 +27,17 @@ const LoadingSpinnerToast = ({ show, message, duration }) => {
         <Oval
           height={80}
           width={80}
-          color="#0d6efd"
+          color="#f8f9fa"
           visible={true}
           ariaLabel="oval-loading"
-          secondaryColor="#0d6efd"
+          secondaryColor="#495057"
           strokeWidth={2}
           strokeWidthSecondary={2}
           className={styles.spinner}
         />
-        {message && <div className={styles.message}>{message}</div>}
+        {message && (
+          <div className={`text-bold ${styles.message}`}>{message}</div>
+        )}
       </Toast.Body>
     </Toast>
   );
