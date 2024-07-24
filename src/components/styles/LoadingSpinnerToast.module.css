@@ -12,6 +12,7 @@
 
 .spinner {
   margin-bottom: 15px;
+  border: none;
 }
 
 .message {
@@ -19,4 +20,5 @@
   font-size: 1.3em;
   text-align: center;
   color: #ffffff;
+  border: none;
 }
