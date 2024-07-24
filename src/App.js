@@ -6,6 +6,7 @@ import NavBar from './components/NavBar';
 import UserPage from './pages/users/UserPage';
 import PostsFeed from './pages/posts/PostsFeed';
 import { useCurrentUser } from './contexts/CurrentUserContext';
+import NotFound from './components/NotFound';
 
 const App = () => {
   const currentUser = useCurrentUser();
@@ -27,6 +28,7 @@ const App = () => {
               />
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>
