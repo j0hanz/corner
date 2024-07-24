@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import Upload from '../../assets/upload.png';
@@ -217,9 +216,20 @@ const PostCreateForm = ({ show, handleClose }) => {
                 variant="outline-primary"
                 className={styles.leftButton}
                 type="submit"
+                disabled={loading}
               >
                 {loading ? (
-                  <Spinner animation="border" size="sm" />
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ color: 'white' }}
+                    />{' '}
+                    <span className="text-light">Creating...</span>
+                  </>
                 ) : (
                   'Create Post'
                 )}
@@ -228,6 +238,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                 variant="outline-secondary"
                 className={styles.rightButton}
                 onClick={handleClose}
+                disabled={loading}
               >
                 Cancel
               </Button>
@@ -239,13 +250,6 @@ const PostCreateForm = ({ show, handleClose }) => {
             )}
           </Container>
         </Form>
-        {loading && (
-          <LoadingSpinnerToast
-            show={true}
-            message="Creating post, please wait..."
-            duration={5000}
-          />
-        )}
       </Modal.Body>
     </Modal>
   );
