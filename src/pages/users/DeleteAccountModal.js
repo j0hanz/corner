@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Button, Alert, Container } from 'react-bootstrap';
+import { Modal, Button, Alert, Container, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const DeleteAccountModal = ({ show, handleClose }) => {
   const { id } = useParams();
@@ -37,7 +36,7 @@ const DeleteAccountModal = ({ show, handleClose }) => {
         <Modal.Body className="bg-dark text-light p-0">
           <Container className={styles.Container}>
             {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
-            <p>
+            <p className="my-2">
               Are you sure you want to delete your account? This action cannot
               be undone.
             </p>
@@ -46,24 +45,33 @@ const DeleteAccountModal = ({ show, handleClose }) => {
                 variant="outline-danger"
                 onClick={handleDelete}
                 className={styles.leftButton}
+                disabled={loading}
               >
-                Delete Account
+                {loading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ color: 'white' }}
+                    />{' '}
+                    <span className="text-light">Deleting...</span>
+                  </>
+                ) : (
+                  'Delete Account'
+                )}
               </Button>
               <Button
                 variant="outline-secondary"
                 onClick={handleClose}
                 className={styles.rightButton}
+                disabled={loading}
               >
                 Cancel
               </Button>
             </div>
-            {loading && (
-              <LoadingSpinnerToast
-                show={true}
-                message="Processing, please wait..."
-                duration={5000}
-              />
-            )}
           </Container>
         </Modal.Body>
       </Modal>
