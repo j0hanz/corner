@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/logo.webp';
 import defaultProfileImage from '../assets/nobody.webp';
@@ -20,7 +20,6 @@ const NavBar = () => {
   const [showLogin, setShowLogin] = useState(true);
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-  const navigate = useNavigate();
 
   const toggleOffcanvas = () => setShowOffcanvas((prevState) => !prevState);
   const closeOffcanvas = () => setShowOffcanvas(false);
@@ -30,7 +29,7 @@ const NavBar = () => {
       await axios.post('/dj-rest-auth/logout/');
       setCurrentUser(null);
       closeOffcanvas();
-      navigate('/');
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }
@@ -112,15 +111,9 @@ const NavBar = () => {
         ) : (
           <>
             {showLogin ? (
-              <Login
-                navigate={navigate}
-                handleSignUp={() => setShowLogin(false)}
-              />
+              <Login handleSignUp={() => setShowLogin(false)} />
             ) : (
-              <Signup
-                navigate={navigate}
-                handleLogin={() => setShowLogin(true)}
-              />
+              <Signup handleLogin={() => setShowLogin(true)} />
             )}
             <hr />
           </>
