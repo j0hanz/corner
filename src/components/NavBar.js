@@ -108,13 +108,6 @@ const NavBar = () => {
             >
               Sign Out
             </Button>
-            <NavLink
-              to="/posts/create"
-              className="btn btn-outline-light mt-2 mx-auto"
-              onClick={closeOffcanvas}
-            >
-              Create Post
-            </NavLink>
           </>
         ) : (
           <>
