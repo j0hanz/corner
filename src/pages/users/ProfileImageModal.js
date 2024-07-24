@@ -1,11 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { Modal, Button, Form, Alert, Container, Image } from 'react-bootstrap';
+import {
+  Modal,
+  Button,
+  Form,
+  Alert,
+  Container,
+  Image,
+  Spinner,
+} from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
 import Upload from '../../assets/upload.png';
 import Asset from '../../components/Asset';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const ProfileImageModal = ({
   show,
@@ -108,25 +115,34 @@ const ProfileImageModal = ({
                   variant="outline-primary text-white"
                   onClick={handleSaveChanges}
                   className={styles.leftButton}
+                  disabled={loading}
                 >
-                  Save Changes
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        style={{ color: 'white' }}
+                      />{' '}
+                      <span className="text-light">Saving...</span>
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
                 </Button>
                 <Button
                   variant="outline-secondary text-white"
                   onClick={handleClose}
                   className={styles.rightButton}
+                  disabled={loading}
                 >
                   Cancel
                 </Button>
               </div>
             </Form>
-            {loading && (
-              <LoadingSpinnerToast
-                show={true}
-                message="Processing, please wait..."
-                duration={5000}
-              />
-            )}
           </Container>
         </Modal.Body>
       </Modal>
