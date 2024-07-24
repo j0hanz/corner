@@ -11,6 +11,7 @@ import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { fetchMoreData } from '../../utils/utils';
 import styles from './styles/PostsFeed.module.css';
+import noResults from '../../assets/noResults.png';
 
 const PostsFeed = ({ message, filter = '' }) => {
   const [posts, setPosts] = useState({ results: [], next: null });
@@ -104,8 +105,14 @@ const PostsFeed = ({ message, filter = '' }) => {
         </InfiniteScroll>
       ) : (
         hasLoaded && (
-          <div>
-            <Alert variant="info">{message}</Alert>
+          <div className="mt-5 d-flex flex-column align-items-center justify-content-center text-white opacity-50">
+            <img
+              src={noResults}
+              alt="No results found"
+              width={75}
+              height={75}
+            />
+            <Alert variant="">{message}</Alert>
           </div>
         )
       )}
