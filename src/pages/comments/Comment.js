@@ -7,6 +7,7 @@ import {
   Alert,
   OverlayTrigger,
   Tooltip,
+  Spinner,
 } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosRes } from '../../api/axiosDefaults';
@@ -35,11 +36,13 @@ const Comment = ({
   const [showEditForm, setShowEditForm] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
   const handleDelete = async () => {
+    setLoading(true);
     try {
       await axiosRes.delete(`/comments/${id}/`);
       setPost((prevPost) => ({
@@ -54,10 +57,12 @@ const Comment = ({
         ...prevComments,
         results: prevComments.results.filter((comment) => comment.id !== id),
       }));
+      handleCloseModal();
     } catch (err) {
       setError('There was an error deleting the comment');
+    } finally {
+      setLoading(false);
     }
-    handleCloseModal();
   };
 
   const handleLike = async () => {
@@ -197,11 +202,26 @@ const Comment = ({
               variant="secondary"
               onClick={handleCloseModal}
               className="me-2"
+              disabled={loading}
             >
               Cancel
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
-              Delete
+            <Button variant="danger" onClick={handleDelete} disabled={loading}>
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    style={{ color: 'white' }}
+                  />{' '}
+                  <span className="text-light">Deleting...</span>
+                </>
+              ) : (
+                'Delete'
+              )}
             </Button>
           </div>
         </Modal.Body>
