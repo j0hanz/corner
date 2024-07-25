@@ -59,7 +59,6 @@ const Post = ({
       toast.success('Post deleted successfully!');
       window.location.reload();
     } catch (err) {
-      console.error(err);
       toast.error('Failed to delete post!');
     } finally {
       setLoading(false);
@@ -115,7 +114,7 @@ const Post = ({
     }
   };
 
-  const handleUnbookmark = async () => {
+  const handleRemoveBookmark = async () => {
     try {
       await axiosRes.delete(`/bookmarks/${bookmark_id}/`);
       setPosts((prevPosts) => ({
@@ -191,7 +190,7 @@ const Post = ({
     } else if (bookmark_id) {
       return (
         <Button
-          onClick={handleUnbookmark}
+          onClick={handleRemoveBookmark}
           className={`${styles.bookmarkButton} ${styles.bookmarked}`}
         >
           <FontAwesomeIcon className="fa-lg" icon={faBookmarkSolid} />
