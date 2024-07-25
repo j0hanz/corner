@@ -5,7 +5,11 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import Post from './Post';
 import { axiosReq } from '../../api/axiosDefaults';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faMagnifyingGlass,
+  faBookmark,
+} from '@fortawesome/free-solid-svg-icons';
 import PostCreateForm from './PostCreateForm';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -46,13 +50,14 @@ const PostsFeed = ({ message, filter = '' }) => {
   return (
     <Container className="px-0">
       <Row className="justify-content-center">
-        <Col xs={12} xl={10} className="text-center">
-          <Button
-            variant="outline-light"
-            className="my-1"
-            onClick={handleShowModal}
-          >
+        <Col xs="auto" className="text-center">
+          <Button variant="outline-light" onClick={handleShowModal}>
             <FontAwesomeIcon icon={faPlus} className="fa-lg" />
+          </Button>
+        </Col>
+        <Col xs="auto" className="text-center">
+          <Button variant="outline-light" onClick={handleShowModal}>
+            <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
           </Button>
         </Col>
       </Row>
