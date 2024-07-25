@@ -2,6 +2,9 @@
   border: none;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  width: 775px;
+  margin: 0 auto;
 }
 
 .PostCard .card-header,
@@ -28,7 +31,8 @@
 }
 
 .likeButton,
-.commentButton {
+.commentButton,
+.bookmarkButton {
   border: none;
   background-color: transparent;
   font-weight: bold;
@@ -36,11 +40,13 @@
   cursor: pointer;
 }
 
-.likeButton.liked {
+.likeButton.liked,
+.bookmarkButton.bookmarked {
   color: #1877f2;
 }
 
-.likeButton.liked:hover {
+.likeButton.liked:hover,
+.bookmarkButton.bookmarked:hover {
   background-color: #1877f2;
   color: white;
 }
