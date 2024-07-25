@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Container, Row, Col, Form, Alert, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import Post from './Post';
 import { axiosReq } from '../../api/axiosDefaults';
@@ -16,14 +16,16 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { fetchMoreData } from '../../utils/utils';
 import styles from './styles/PostsFeed.module.css';
 import noResults from '../../assets/noResults.png';
+import BookmarkPostPage from './BookmarkPostPage';
 
 const PostsFeed = ({ message, filter = '' }) => {
   const [posts, setPosts] = useState({ results: [], next: null });
   const [hasLoaded, setHasLoaded] = useState(false);
-  const { pathname } = useLocation();
   const [query, setQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false);
   const currentUser = useCurrentUser();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -32,7 +34,7 @@ const PostsFeed = ({ message, filter = '' }) => {
         setPosts(data);
         setHasLoaded(true);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching posts:', err);
       }
     };
 
@@ -44,19 +46,19 @@ const PostsFeed = ({ message, filter = '' }) => {
     };
   }, [filter, query, pathname, currentUser]);
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
   return (
     <Container className="px-0">
       <Row className="justify-content-center">
         <Col xs="auto" className="text-center">
-          <Button variant="outline-light" onClick={handleShowModal}>
+          <Button variant="outline-light" onClick={() => setShowModal(true)}>
             <FontAwesomeIcon icon={faPlus} className="fa-lg" />
           </Button>
         </Col>
         <Col xs="auto" className="text-center">
-          <Button variant="outline-light" onClick={handleShowModal}>
+          <Button
+            variant="outline-light"
+            onClick={() => setShowBookmarkModal(true)}
+          >
             <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
           </Button>
         </Col>
@@ -117,11 +119,18 @@ const PostsFeed = ({ message, filter = '' }) => {
               width={75}
               height={75}
             />
-            <Alert variant="">{message}</Alert>
+            <p className="mt-2">{message}</p>
           </div>
         )
       )}
-      <PostCreateForm show={showModal} handleClose={handleCloseModal} />
+      <PostCreateForm
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+      />
+      <BookmarkPostPage
+        show={showBookmarkModal}
+        handleClose={() => setShowBookmarkModal(false)}
+      />
     </Container>
   );
 };
