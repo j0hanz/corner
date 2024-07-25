@@ -18,7 +18,12 @@ import styles from './styles/Post.module.css';
 import defaultProfileImage from '../../assets/nobody.webp';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment } from '@fortawesome/free-solid-svg-icons';
+import {
+  faThumbsUp,
+  faComment,
+  faBookmark,
+  faBookmark as faBookmarkSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import PostPage from './PostPage';
 import PostEditForm from './PostEditForm';
 
@@ -30,6 +35,7 @@ const Post = ({
   comments_count,
   likes_count,
   like_id,
+  bookmark_id,
   content,
   image,
   image_filter,
@@ -94,6 +100,36 @@ const Post = ({
     }
   };
 
+  const handleBookmark = async () => {
+    try {
+      const { data } = await axiosRes.post('/bookmarks/', { post: id });
+      setPosts((prevPosts) => ({
+        ...prevPosts,
+        results: prevPosts.results.map((post) =>
+          post.id === id ? { ...post, bookmark_id: data.id } : post,
+        ),
+      }));
+    } catch (err) {
+      console.error('Error bookmarking the post:', err);
+      setError('There was an error bookmarking the post');
+    }
+  };
+
+  const handleUnbookmark = async () => {
+    try {
+      await axiosRes.delete(`/bookmarks/${bookmark_id}/`);
+      setPosts((prevPosts) => ({
+        ...prevPosts,
+        results: prevPosts.results.map((post) =>
+          post.id === id ? { ...post, bookmark_id: null } : post,
+        ),
+      }));
+    } catch (err) {
+      console.error('Error unbookmarking the post:', err);
+      setError('There was an error unbookmarking the post');
+    }
+  };
+
   const toggleConfirmModal = () => setShowConfirm((prev) => !prev);
   const handleConfirmDelete = () => {
     handleDelete();
@@ -135,6 +171,41 @@ const Post = ({
         >
           <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
           <span>{likes_count}</span>
+        </Button>
+      );
+    }
+  };
+
+  const renderBookmarkButton = () => {
+    if (!currentUser) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Sign in to bookmark</Tooltip>}
+        >
+          <Button className={styles.bookmarkButton}>
+            <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
+          </Button>
+        </OverlayTrigger>
+      );
+    } else if (bookmark_id) {
+      return (
+        <Button
+          onClick={handleUnbookmark}
+          className={`${styles.bookmarkButton} ${styles.bookmarked}`}
+        >
+          <FontAwesomeIcon className="fa-lg" icon={faBookmarkSolid} />
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          className={`${styles.bookmarkButton} ${
+            bookmark_id ? styles.bookmarked : ''
+          }`}
+          onClick={handleBookmark}
+        >
+          <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
         </Button>
       );
     }
@@ -183,6 +254,7 @@ const Post = ({
         <div>
           {renderLikeButton()}
           {renderCommentButton()}
+          {renderBookmarkButton()}
         </div>
         <span className="text-white-50 me-1">{updated_at}</span>
       </Card.Footer>
