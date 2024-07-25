@@ -24,7 +24,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     tags: '',
   });
   const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(false); // Separate loading state for fetching data
+  const [loadingData, setLoadingData] = useState(false);
   const imageInput = useRef(null);
 
   useEffect(() => {
