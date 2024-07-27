@@ -7,7 +7,6 @@ import {
   useCurrentUser,
   useSetCurrentUser,
 } from '../../contexts/CurrentUserContext';
-import nobody from '../../assets/nobody.webp';
 import styles from './styles/UserPage.module.css';
 import ProfileImageModal from './ProfileImageModal';
 import EditProfileModal from './EditProfileModal';
@@ -27,7 +26,7 @@ const UserPage = () => {
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-  const isOwner = currentUser?.username === user?.owner;
+  const is_owner = currentUser?.username === user?.owner;
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -94,17 +93,13 @@ const UserPage = () => {
           <Image
             className={styles.ProfileImage}
             roundedCircle
-            src={currentUser?.profile_image || nobody}
+            src={currentUser?.profile_image}
             alt={`${user?.first_name} ${user?.last_name}`}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = nobody;
-            }}
             onClick={() => setShowProfileImageModal(true)}
           />
           <div className="my-2 text-white">{user?.owner}</div>
 
-          {isOwner && (
+          {is_owner && (
             <ProfileActionsDropdown
               handleEditProfile={() => setShowEditProfileModal(true)}
               handleChangeProfileImage={() => setShowProfileImageModal(true)}
@@ -216,7 +211,7 @@ const UserPage = () => {
         </InfiniteScroll>
       ) : (
         <Asset
-          message={`No results found, ${user?.username} hasn't posted yet.`}
+          message={`No results found, ${user.owner} hasn't posted yet.`}
           className="mt-4"
         />
       )}
