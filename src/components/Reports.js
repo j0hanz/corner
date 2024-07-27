@@ -45,7 +45,7 @@ const Reports = ({ show, handleClose, postId }) => {
       >
         <Modal.Title>Report Post</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
@@ -56,6 +56,7 @@ const Reports = ({ show, handleClose, postId }) => {
                 rows={3}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
+                className={`bg-dark text-light ${styles.FormControl}`}
                 required
               />
             </Form.Group>
