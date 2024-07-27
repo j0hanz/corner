@@ -49,7 +49,7 @@ const Reports = ({ show, handleClose, postId }) => {
         <Container className={styles.Container}>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="reason">
+            <Form.Group className="mt-3" controlId="reason">
               <Form.Label>Reason</Form.Label>
               <Form.Control
                 as="textarea"
