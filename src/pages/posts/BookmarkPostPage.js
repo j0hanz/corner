@@ -12,6 +12,7 @@ import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/BookmarkPostPage.module.css';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Avatar from '../../components/Avatar';
 
 const BookmarkPostPage = ({ show, handleClose }) => {
   const [bookmarks, setBookmarks] = useState([]);
@@ -78,17 +79,24 @@ const BookmarkPostPage = ({ show, handleClose }) => {
                   key={bookmark.id}
                   className="bg-dark text-light d-flex justify-content-between align-items-center"
                 >
-                  <div>
-                    <Link
-                      to={`/posts/${bookmark.post}`}
-                      className="text-light text-decoration-none"
-                      onClick={handleClose}
-                    >
-                      <h5>{bookmark.post_content?.slice(0, 50)}...</h5>
-                    </Link>
-                    <p className="mb-0">
-                      <small>by {bookmark.post_owner}</small>
-                    </p>
+                  <div className="d-flex align-items-center">
+                    <Avatar
+                      src={bookmark.post_owner_profile_image}
+                      height={30}
+                      width={30}
+                    />
+                    <div className="ms-2">
+                      <Link
+                        to={`/posts/${bookmark.post}`}
+                        className="text-light text-decoration-none"
+                        onClick={handleClose}
+                      >
+                        <h5>{bookmark.post_content?.slice(0, 50)}...</h5>
+                      </Link>
+                      <p className="mb-0">
+                        <small>by {bookmark.post_owner}</small>
+                      </p>
+                    </div>
                   </div>
                   <Button
                     variant="outline-danger"
