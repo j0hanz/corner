@@ -16,7 +16,7 @@ const PostPage = ({ show, handleClose, postId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const currentUser = useCurrentUser();
-  const profileImage = currentUser?.profile_image;
+  const profile_image = currentUser?.profile_image;
 
   const fetchPostAndComments = useCallback(async () => {
     setLoading(true);
@@ -84,7 +84,7 @@ const PostPage = ({ show, handleClose, postId }) => {
                     <>
                       <CommentCreateForm
                         profile_id={currentUser.profile_id}
-                        profileImage={profileImage}
+                        profile_image={profile_image}
                         post={postId}
                         setPost={setPost}
                         setComments={setComments}
