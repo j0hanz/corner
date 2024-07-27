@@ -15,7 +15,6 @@ import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import { toast } from 'react-toastify';
 import styles from './styles/Post.module.css';
-import defaultProfileImage from '../../assets/nobody.webp';
 import { EditDeleteDropdown } from '../../components/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -249,11 +248,7 @@ const Post = ({
     <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-1">
         <div className="d-flex align-items-center">
-          <Avatar
-            src={profile_image || defaultProfileImage}
-            height={40}
-            width={40}
-          />
+          <Avatar src={profile_image} height={40} width={40} />
           <Link
             to={`/users/${profile_id}`}
             className="ms-2 text-white text-decoration-none"
