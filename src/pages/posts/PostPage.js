@@ -52,7 +52,7 @@ const PostPage = ({ show, handleClose, postId }) => {
           setComments={setComments}
         />
       )),
-    [comments.results, setPost, setComments],
+    [comments.results, setPost, setComments]
   );
 
   return (

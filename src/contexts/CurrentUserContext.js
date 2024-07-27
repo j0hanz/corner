@@ -43,7 +43,7 @@ export const CurrentUserProvider = ({ children }) => {
         }
         return config;
       },
-      (err) => Promise.reject(err),
+      (err) => Promise.reject(err)
     );
 
     const responseInterceptor = axiosRes.interceptors.response.use(
@@ -59,7 +59,7 @@ export const CurrentUserProvider = ({ children }) => {
           }
         }
         return Promise.reject(err);
-      },
+      }
     );
 
     return () => {

@@ -77,7 +77,7 @@ const Comment = ({
                 likes_count: comment.likes_count + 1,
                 like_id: data.id,
               }
-            : comment,
+            : comment
         ),
       }));
     } catch (err) {
@@ -98,7 +98,7 @@ const Comment = ({
                 likes_count: comment.likes_count - 1,
                 like_id: null,
               }
-            : comment,
+            : comment
         ),
       }));
     } catch (err) {

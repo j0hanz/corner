@@ -81,7 +81,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     formData.append('image_filter', postData.image_filter);
     formData.append(
       'tags',
-      postData.tags.split(',').map((tag) => tag.trim()),
+      postData.tags.split(',').map((tag) => tag.trim())
     );
     if (postData.image && typeof postData.image === 'object') {
       formData.append('image', postData.image);

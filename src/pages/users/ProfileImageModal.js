@@ -23,7 +23,7 @@ const ProfileImageModal = ({
   const { id } = useParams();
   const imageFileRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(
-    currentUser?.profile_image || '',
+    currentUser?.profile_image || ''
   );
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});

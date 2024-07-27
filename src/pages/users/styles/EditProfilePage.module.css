@@ -24,7 +24,9 @@
   white-space: normal;
   word-wrap: break-word;
   max-width: 90%;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .ImageWrapper {
@@ -33,7 +35,9 @@
   text-align: center;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
   border-radius: 10px;
   position: relative;
 }
@@ -58,12 +62,16 @@
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 10px 15px;
   font-size: 1rem;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .FormControl:focus {
   background-color: #3a3f44;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 5px rgba(0, 123, 255, 0.5);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.2),
+    0 0 5px rgba(0, 123, 255, 0.5);
   outline: none;
 }
 

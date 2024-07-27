@@ -42,7 +42,7 @@ const BookmarkPostPage = ({ show, handleClose }) => {
     try {
       await axiosRes.delete(`/bookmarks/${bookmarkId}/`);
       setBookmarks((prevBookmarks) =>
-        prevBookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
+        prevBookmarks.filter((bookmark) => bookmark.id !== bookmarkId)
       );
       toast.success('Bookmark removed successfully!');
     } catch (err) {

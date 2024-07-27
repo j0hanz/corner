@@ -12,7 +12,7 @@ export const fetchMoreData = async (resource, setResource) => {
         ...prevResource.results,
         ...results.filter(
           (cur) =>
-            !prevResource.results.some((accResult) => accResult.id === cur.id),
+            !prevResource.results.some((accResult) => accResult.id === cur.id)
         ),
       ],
     }));

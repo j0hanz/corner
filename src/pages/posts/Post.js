@@ -75,7 +75,7 @@ const Post = ({
         results: prevPosts.results.map((post) =>
           post.id === id
             ? { ...post, likes_count: post.likes_count + 1, like_id: data.id }
-            : post,
+            : post
         ),
       }));
     } catch (err) {
@@ -92,7 +92,7 @@ const Post = ({
         results: prevPosts.results.map((post) =>
           post.id === id
             ? { ...post, likes_count: post.likes_count - 1, like_id: null }
-            : post,
+            : post
         ),
       }));
     } catch (err) {
@@ -107,7 +107,7 @@ const Post = ({
       setPosts((prevPosts) => ({
         ...prevPosts,
         results: prevPosts.results.map((post) =>
-          post.id === id ? { ...post, bookmark_id: data.id } : post,
+          post.id === id ? { ...post, bookmark_id: data.id } : post
         ),
       }));
     } catch (err) {
@@ -122,7 +122,7 @@ const Post = ({
       setPosts((prevPosts) => ({
         ...prevPosts,
         results: prevPosts.results.map((post) =>
-          post.id === id ? { ...post, bookmark_id: null } : post,
+          post.id === id ? { ...post, bookmark_id: null } : post
         ),
       }));
     } catch (err) {

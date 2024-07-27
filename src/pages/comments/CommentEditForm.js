@@ -18,7 +18,7 @@ const CommentEditForm = ({ id, content, setComments, setShowEditForm }) => {
       setComments((prevComments) => ({
         ...prevComments,
         results: prevComments.results.map((comment) =>
-          comment.id === id ? { ...comment, content: formContent } : comment,
+          comment.id === id ? { ...comment, content: formContent } : comment
         ),
       }));
       setShowEditForm(false);

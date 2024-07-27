@@ -17,7 +17,10 @@
   padding-right: 1rem;
   font-size: 1rem;
   border-radius: 4px;
-  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .searchBar::placeholder {
