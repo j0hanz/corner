@@ -23,9 +23,11 @@ import {
   faComment,
   faBookmark,
   faBookmark as faBookmarkSolid,
+  faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import PostPage from './PostPage';
 import PostEditForm from './PostEditForm';
+import Reports from '../../components/Reports';
 
 const Post = ({
   id,
@@ -47,6 +49,7 @@ const Post = ({
   const [showConfirm, setShowConfirm] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -138,6 +141,8 @@ const Post = ({
   const handleShowPostModal = () => setShowPostModal(true);
   const handleClosePostModal = () => setShowPostModal(false);
   const handleCloseEditModal = () => setShowEditModal(false);
+  const handleShowReportModal = () => setShowReportModal(true);
+  const handleCloseReportModal = () => setShowReportModal(false);
 
   const renderLikeButton = () => {
     if (!currentUser) {
@@ -219,6 +224,27 @@ const Post = ({
     );
   };
 
+  const renderReportButton = () => {
+    if (!currentUser) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Sign in to report</Tooltip>}
+        >
+          <Button className={styles.reportButton}>
+            <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+          </Button>
+        </OverlayTrigger>
+      );
+    } else {
+      return (
+        <Button className={styles.reportButton} onClick={handleShowReportModal}>
+          <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+        </Button>
+      );
+    }
+  };
+
   return (
     <Card className={`mb-5 bg-dark text-white ${styles.PostCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-1">
@@ -254,6 +280,7 @@ const Post = ({
           {renderLikeButton()}
           {renderCommentButton()}
           {renderBookmarkButton()}
+          {renderReportButton()}
         </div>
         <span className="text-white-50 me-1">{updated_at}</span>
       </Card.Footer>
@@ -320,7 +347,12 @@ const Post = ({
         show={showEditModal}
         handleClose={handleCloseEditModal}
         postId={id}
-      />{' '}
+      />
+      <Reports
+        show={showReportModal}
+        handleClose={handleCloseReportModal}
+        postId={id}
+      />
     </Card>
   );
 };
