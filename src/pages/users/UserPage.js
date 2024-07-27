@@ -14,9 +14,9 @@ import ChangeUsernameModal from './ChangeUsernameModal';
 import ChangePasswordModal from './ChangePasswordModal';
 import DeleteAccountModal from './DeleteAccountModal';
 import { ProfileActionsDropdown } from '../../components/Dropdown';
-import Asset from '../../components/Asset';
 import Post from '../posts/Post';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
+import noResults from '../../assets/noResults.png';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -210,10 +210,11 @@ const UserPage = () => {
           ))}
         </InfiniteScroll>
       ) : (
-        <Asset
-          message={`No results found, ${user.owner} hasn't posted yet.`}
-          className="mt-4"
-        />
+        <div className="mt-5 d-flex flex-column align-items-center justify-content-center text-white opacity-50">
+          <img src={noResults} alt="No results found" width={75} height={75} />
+          <div className="mt-4">No results found...</div>
+          <p>{user?.owner} hasn't posted yet. </p>
+        </div>
       )}
     </Container>
   );
