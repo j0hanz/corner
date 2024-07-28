@@ -19,7 +19,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     content: '',
-    image: '',
+    filtered_image_url: '',
     image_filter: 'normal',
     tags: '',
   });
@@ -33,11 +33,12 @@ const PostEditForm = ({ show, handleClose, postId }) => {
         setLoadingData(true);
         try {
           const { data } = await axiosReq.get(`/posts/${postId}/`);
-          const { content, image, image_filter, tags, is_owner } = data;
+          const { content, filtered_image_url, image_filter, tags, is_owner } =
+            data;
           if (is_owner) {
             setPostData({
               content,
-              image,
+              filtered_image_url,
               image_filter,
               tags: tags.join(', '),
             });
@@ -65,10 +66,10 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   const handleChangeImage = (event) => {
     const file = event.target.files[0];
     if (file) {
-      URL.revokeObjectURL(postData.image);
+      URL.revokeObjectURL(postData.filtered_image_url);
       setPostData((prevData) => ({
         ...prevData,
-        image: file,
+        filtered_image_url: file,
       }));
     }
   };
@@ -83,8 +84,11 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       'tags',
       postData.tags.split(',').map((tag) => tag.trim())
     );
-    if (postData.image && typeof postData.image === 'object') {
-      formData.append('image', postData.image);
+    if (
+      postData.filtered_image_url &&
+      typeof postData.filtered_image_url === 'object'
+    ) {
+      formData.append('image', postData.filtered_image_url);
     }
     try {
       await axiosReq.put(`/posts/${postId}/`, formData);
@@ -102,15 +106,15 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   };
 
   const renderImagePreview = () => {
-    if (postData.image) {
+    if (postData.filtered_image_url) {
       return (
         <div onClick={() => imageInput.current.click()}>
           <div className={styles.ImageWrapper}>
             <Image
               src={
-                typeof postData.image === 'string'
-                  ? postData.image
-                  : URL.createObjectURL(postData.image)
+                typeof postData.filtered_image_url === 'string'
+                  ? postData.filtered_image_url
+                  : URL.createObjectURL(postData.filtered_image_url)
               }
               rounded
               fluid
