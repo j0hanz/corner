@@ -38,7 +38,7 @@ const Post = ({
   like_id,
   bookmark_id,
   content,
-  image,
+  filtered_image_url,
   image_filter,
   updated_at,
   setPosts,
@@ -267,7 +267,7 @@ const Post = ({
       <Card.Text className={`text-center mb-4 ${styles[image_filter]}`}>
         {content}
       </Card.Text>
-      {image && <Image src={image} fluid />}
+      {filtered_image_url && <Image src={filtered_image_url} fluid />}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
