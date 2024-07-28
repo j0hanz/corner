@@ -96,6 +96,36 @@ const PostCreateForm = ({ show, handleClose }) => {
         return 'brightness(130%)';
       case 'CONTRAST':
         return 'contrast(130%)';
+      case 'SATURATION':
+        return 'saturate(130%)';
+      case 'HUE_ROTATE':
+        return 'hue-rotate(90deg)';
+      case 'BLUR':
+        return 'blur(5px)';
+      case 'SHARPEN':
+        return 'contrast(200%)';
+      case 'VINTAGE':
+        return 'sepia(100%) contrast(80%)';
+      case 'VIGNETTE':
+        return 'brightness(90%) contrast(150%)';
+      case 'CROSS_PROCESS':
+        return 'saturate(150%) contrast(80%) brightness(90%)';
+      case 'HDR':
+        return 'contrast(150%) saturate(150%)';
+      case 'EDGE_DETECT':
+        return 'contrast(200%) brightness(150%) grayscale(100%)';
+      case 'EMBOSS':
+        return 'contrast(200%) brightness(150%) grayscale(100%)';
+      case 'SOLARIZE':
+        return 'invert(100%) brightness(150%)';
+      case 'POSTERIZE':
+        return 'contrast(200%) brightness(150%)';
+      case 'PIXELATE':
+        return 'contrast(200%) brightness(150%)';
+      case 'CARTOON':
+        return 'contrast(200%) brightness(150%) saturate(150%)';
+      case 'DUOTONE':
+        return 'sepia(100%) contrast(80%)';
       default:
         return 'none';
     }
@@ -174,12 +204,29 @@ const PostCreateForm = ({ show, handleClose }) => {
                   'NEGATIVE',
                   'BRIGHTNESS',
                   'CONTRAST',
+                  'SATURATION',
+                  'HUE_ROTATE',
+                  'BLUR',
+                  'SHARPEN',
+                  'VINTAGE',
+                  'VIGNETTE',
+                  'CROSS_PROCESS',
+                  'HDR',
+                  'EDGE_DETECT',
+                  'EMBOSS',
+                  'SOLARIZE',
+                  'POSTERIZE',
+                  'PIXELATE',
+                  'CARTOON',
+                  'DUOTONE',
                 ].map((filter) => (
                   <option key={filter} value={filter}>
-                    {filter.charAt(0) + filter.slice(1).toLowerCase()}
+                    {filter.charAt(0) +
+                      filter.slice(1).toLowerCase().replace('_', ' ')}
                   </option>
                 ))}
               </Form.Control>
+
               <Form.Control.Feedback type="invalid">
                 {errors.image_filter}
               </Form.Control.Feedback>
