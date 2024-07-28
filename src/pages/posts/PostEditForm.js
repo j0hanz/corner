@@ -20,7 +20,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   const [postData, setPostData] = useState({
     content: '',
     filtered_image_url: '',
-    image_filter: 'normal',
+    image_filter: 'NONE',
     tags: '',
   });
   const [loading, setLoading] = useState(false);
@@ -84,12 +84,14 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       'tags',
       postData.tags.split(',').map((tag) => tag.trim())
     );
+
     if (
       postData.filtered_image_url &&
       typeof postData.filtered_image_url === 'object'
     ) {
       formData.append('image', postData.filtered_image_url);
     }
+
     try {
       await axiosReq.put(`/posts/${postId}/`, formData);
       toast.success('Post updated successfully!');
@@ -105,20 +107,38 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
   };
 
+  const getFilterStyle = (filter) => {
+    switch (filter) {
+      case 'GRAYSCALE':
+        return 'grayscale(100%)';
+      case 'SEPIA':
+        return 'sepia(100%)';
+      case 'NEGATIVE':
+        return 'invert(100%)';
+      case 'BRIGHTNESS':
+        return 'brightness(130%)';
+      case 'CONTRAST':
+        return 'contrast(130%)';
+      default:
+        return 'none';
+    }
+  };
+
   const renderImagePreview = () => {
     if (postData.filtered_image_url) {
+      const imageUrl =
+        typeof postData.filtered_image_url === 'string'
+          ? postData.filtered_image_url
+          : URL.createObjectURL(postData.filtered_image_url);
       return (
         <div onClick={() => imageInput.current.click()}>
           <div className={styles.ImageWrapper}>
             <Image
-              src={
-                typeof postData.filtered_image_url === 'string'
-                  ? postData.filtered_image_url
-                  : URL.createObjectURL(postData.filtered_image_url)
-              }
+              src={imageUrl}
               rounded
               fluid
               alt="Post preview"
+              style={{ filter: getFilterStyle(postData.image_filter) }}
             />
             <div className={styles.Placeholder}>Click to change the image</div>
           </div>
@@ -182,23 +202,15 @@ const PostEditForm = ({ show, handleClose, postId }) => {
                   className={`bg-dark text-light ${styles.FormControl}`}
                 >
                   {[
-                    'normal',
-                    '_1977',
-                    'brannan',
-                    'earlybird',
-                    'hudson',
-                    'inkwell',
-                    'lofi',
-                    'kelvin',
-                    'nashville',
-                    'rise',
-                    'toaster',
-                    'valencia',
-                    'walden',
-                    'xpro2',
+                    'NONE',
+                    'GRAYSCALE',
+                    'SEPIA',
+                    'NEGATIVE',
+                    'BRIGHTNESS',
+                    'CONTRAST',
                   ].map((filter) => (
                     <option key={filter} value={filter}>
-                      {filter.replace('_', '')}
+                      {filter.charAt(0) + filter.slice(1).toLowerCase()}
                     </option>
                   ))}
                 </Form.Control>

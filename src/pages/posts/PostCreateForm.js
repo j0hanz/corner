@@ -24,7 +24,7 @@ const PostCreateForm = ({ show, handleClose }) => {
   const [postData, setPostData] = useState({
     content: '',
     image: '',
-    image_filter: 'normal',
+    image_filter: 'NONE',
     tags: '',
   });
   const [errors, setErrors] = useState({});
@@ -84,6 +84,23 @@ const PostCreateForm = ({ show, handleClose }) => {
     }
   };
 
+  const getFilterStyle = (filter) => {
+    switch (filter) {
+      case 'GRAYSCALE':
+        return 'grayscale(100%)';
+      case 'SEPIA':
+        return 'sepia(100%)';
+      case 'NEGATIVE':
+        return 'invert(100%)';
+      case 'BRIGHTNESS':
+        return 'brightness(130%)';
+      case 'CONTRAST':
+        return 'contrast(130%)';
+      default:
+        return 'none';
+    }
+  };
+
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
       <Modal.Header
@@ -105,6 +122,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                       rounded
                       fluid
                       alt="Post preview"
+                      style={{ filter: getFilterStyle(image_filter) }}
                     />
                     <div className={styles.Placeholder}>
                       Click to change the image
@@ -150,23 +168,15 @@ const PostCreateForm = ({ show, handleClose }) => {
                 className={`bg-dark text-light ${styles.FormControl}`}
               >
                 {[
-                  'normal',
-                  '_1977',
-                  'brannan',
-                  'earlybird',
-                  'hudson',
-                  'inkwell',
-                  'lofi',
-                  'kelvin',
-                  'nashville',
-                  'rise',
-                  'toaster',
-                  'valencia',
-                  'walden',
-                  'xpro2',
+                  'NONE',
+                  'GRAYSCALE',
+                  'SEPIA',
+                  'NEGATIVE',
+                  'BRIGHTNESS',
+                  'CONTRAST',
                 ].map((filter) => (
                   <option key={filter} value={filter}>
-                    {filter.replace('_', '')}
+                    {filter.charAt(0) + filter.slice(1).toLowerCase()}
                   </option>
                 ))}
               </Form.Control>

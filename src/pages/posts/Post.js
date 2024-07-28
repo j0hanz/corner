@@ -143,6 +143,23 @@ const Post = ({
   const handleShowReportModal = () => setShowReportModal(true);
   const handleCloseReportModal = () => setShowReportModal(false);
 
+  const getFilterStyle = (filter) => {
+    switch (filter) {
+      case 'GRAYSCALE':
+        return 'grayscale(100%)';
+      case 'SEPIA':
+        return 'sepia(100%)';
+      case 'NEGATIVE':
+        return 'invert(100%)';
+      case 'BRIGHTNESS':
+        return 'brightness(130%)';
+      case 'CONTRAST':
+        return 'contrast(130%)';
+      default:
+        return 'none';
+    }
+  };
+
   const renderLikeButton = () => {
     if (!currentUser) {
       return (
@@ -267,7 +284,13 @@ const Post = ({
       <Card.Text className={`text-center mb-4 ${styles[image_filter]}`}>
         {content}
       </Card.Text>
-      {filtered_image_url && <Image src={filtered_image_url} fluid />}
+      {filtered_image_url && (
+        <Image
+          src={filtered_image_url}
+          fluid
+          style={{ filter: getFilterStyle(image_filter) }}
+        />
+      )}
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
