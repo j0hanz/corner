@@ -97,9 +97,9 @@ const PostCreateForm = ({ show, handleClose }) => {
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
             <Form.Group className="text-center mb-3">
-              <div onClick={() => imageInput.current.click()}>
-                {image ? (
-                  <div className={styles.ImageWrapper}>
+              {image ? (
+                <div className={styles.ImageWrapper}>
+                  <figure>
                     <Image
                       src={URL.createObjectURL(image)}
                       rounded
@@ -109,24 +109,24 @@ const PostCreateForm = ({ show, handleClose }) => {
                     <div className={styles.Placeholder}>
                       Click to change the image
                     </div>
-                  </div>
-                ) : (
-                  <Form.Label
-                    className="d-flex justify-content-center"
-                    htmlFor="image-upload"
-                  >
-                    <Asset src={Upload} message="Click to upload an image" />
-                  </Form.Label>
-                )}
-                <Form.Control
-                  type="file"
-                  id="image-upload"
-                  accept="image/*"
-                  className="d-none"
-                  ref={imageInput}
-                  onChange={handleChangeImage}
-                />
-              </div>
+                  </figure>
+                </div>
+              ) : (
+                <Form.Label
+                  className="d-flex justify-content-center"
+                  htmlFor="image-upload"
+                >
+                  <Asset src={Upload} message="Click to upload an image" />
+                </Form.Label>
+              )}
+              <Form.Control
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                className="d-none"
+                ref={imageInput}
+                onChange={handleChangeImage}
+              />
               {image && (
                 <div className="d-flex justify-content-center my-4">
                   <Button variant="outline-danger" onClick={handleRemoveImage}>
