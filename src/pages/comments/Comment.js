@@ -14,9 +14,10 @@ import { axiosRes } from '../../api/axiosDefaults';
 import Avatar from '../../components/Avatar';
 import CommentEditForm from './CommentEditForm';
 import { EditDeleteDropdown } from '../../components/Dropdown';
+import Reports from '../../components/Reports'; // Import the Reports component
 import styles from './styles/Comment.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faFlag } from '@fortawesome/free-solid-svg-icons';
 
 const Comment = ({
   profile_id,
@@ -36,10 +37,13 @@ const Comment = ({
   const [showEditForm, setShowEditForm] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
+  const handleShowReportModal = () => setShowReportModal(true);
+  const handleCloseReportModal = () => setShowReportModal(false);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -143,6 +147,27 @@ const Comment = ({
     }
   };
 
+  const renderReportButton = () => {
+    if (!currentUser) {
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Sign in to report</Tooltip>}
+        >
+          <Button className={styles.reportButton}>
+            <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+          </Button>
+        </OverlayTrigger>
+      );
+    } else {
+      return (
+        <Button className={styles.reportButton} onClick={handleShowReportModal}>
+          <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+        </Button>
+      );
+    }
+  };
+
   return (
     <Card className={`mb-5 text-white ${styles.CommentCard}`}>
       <Card.Body className="d-flex justify-content-between align-items-center p-2">
@@ -179,7 +204,10 @@ const Comment = ({
       <Card.Footer
         className={`d-flex justify-content-between align-items-center ${styles.greyFooter}`}
       >
-        <div>{renderLikeButton()}</div>
+        <div>
+          {renderLikeButton()}
+          {renderReportButton()}
+        </div>
         <span className="text-white-50 mx-1">{updated_at}</span>
       </Card.Footer>
       {error && (
@@ -226,6 +254,11 @@ const Comment = ({
           </div>
         </Modal.Body>
       </Modal>
+      <Reports
+        show={showReportModal}
+        handleClose={handleCloseReportModal}
+        commentId={id}
+      />
     </Card>
   );
 };

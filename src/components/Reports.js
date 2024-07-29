@@ -11,7 +11,7 @@ import { axiosRes } from '../api/axiosDefaults';
 import { toast } from 'react-toastify';
 import styles from './styles/Reports.module.css';
 
-const Reports = ({ show, handleClose, postId }) => {
+const Reports = ({ show, handleClose, postId, commentId }) => {
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,6 +24,7 @@ const Reports = ({ show, handleClose, postId }) => {
     try {
       await axiosRes.post('/reports/', {
         post: postId,
+        comment: commentId,
         reason,
       });
       toast.success('Report submitted successfully!');
@@ -43,7 +44,7 @@ const Reports = ({ show, handleClose, postId }) => {
         closeVariant="white"
         className="bg-dark text-light"
       >
-        <Modal.Title>Report Post</Modal.Title>
+        <Modal.Title>Report {postId ? 'Post' : 'Comment'}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>

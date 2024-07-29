@@ -41,6 +41,7 @@
   padding: 0;
 }
 
+.reportButton,
 .likeButton {
   border: none;
   background-color: transparent;
