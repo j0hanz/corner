@@ -56,28 +56,28 @@ const PostPage = ({ show, handleClose, postId }) => {
   );
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
-      {loading ? (
-        <LoadingSpinnerToast
-          show={true}
-          message="Loading post and comments, please wait..."
-          duration={5000}
-        />
-      ) : error ? (
-        <div className="d-none">Failed to load post and comments.</div>
-      ) : (
-        <>
-          <Modal.Header
-            closeButton
-            closeVariant="white"
-            className="bg-dark text-light"
-          >
-            <Modal.Title>Post</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="bg-dark text-light p-0">
-            <Container fluid className={`${styles.Container} p-1`}>
+    <Container fluid className={`${styles.Container} p-1`}>
+      <Modal show={show} onHide={handleClose} centered>
+        {loading ? (
+          <LoadingSpinnerToast
+            show={true}
+            message="Loading post and comments, please wait..."
+            duration={5000}
+          />
+        ) : error ? (
+          <div className="d-none">Failed to load post and comments.</div>
+        ) : (
+          <>
+            <Modal.Header
+              closeButton
+              closeVariant="white"
+              className="bg-dark text-light"
+            >
+              <Modal.Title>Post</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bg-dark text-light p-3">
               <Row className="justify-content-center">
-                <Col xs={12} xl={10}>
+                <Col xs="auto">
                   <Post {...post.results[0]} setPosts={setPost} postPage />
                   <hr />
                   {currentUser && (
@@ -111,11 +111,11 @@ const PostPage = ({ show, handleClose, postId }) => {
                   )}
                 </Col>
               </Row>
-            </Container>
-          </Modal.Body>
-        </>
-      )}
-    </Modal>
+            </Modal.Body>
+          </>
+        )}
+      </Modal>
+    </Container>
   );
 };
 
