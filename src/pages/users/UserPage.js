@@ -37,16 +37,15 @@ const UserPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const [{ data: userData }, { data: userPosts }] = await Promise.all([
+        const [userResponse, userPostsResponse] = await Promise.all([
           axios.get(`/users/${id}/`),
           axios.get(`/posts/?owner__profile=${id}`),
         ]);
-        setUser(userData);
-        setPosts(userPosts);
-        setLoading(false);
+        setUser(userResponse.data);
+        setPosts(userPostsResponse.data);
       } catch (err) {
         setError('User not found or an error occurred');
+      } finally {
         setLoading(false);
       }
     };

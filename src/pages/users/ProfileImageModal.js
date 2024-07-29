@@ -14,58 +14,56 @@ import styles from './styles/EditProfilePage.module.css';
 import Upload from '../../assets/upload.png';
 import Asset from '../../components/Asset';
 
-const ProfileImageModal = ({
-  show,
-  handleClose,
-  setCurrentUser,
-  currentUser,
-}) => {
-  const { id } = useParams();
-  const imageFileRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState(
-    currentUser?.profile_image || ''
-  );
-  const [imageFile, setImageFile] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+const ProfileImageModal = React.memo(
+  ({ show, handleClose, setCurrentUser, currentUser }) => {
+    const { id } = useParams();
+    const imageFileRef = useRef(null);
+    const [imagePreview, setImagePreview] = useState(
+      currentUser?.profile_image || ''
+    );
+    const [imageFile, setImageFile] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      URL.revokeObjectURL(imagePreview);
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+    const handleImageChange = React.useCallback(
+      (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          URL.revokeObjectURL(imagePreview);
+          setImageFile(file);
+          setImagePreview(URL.createObjectURL(file));
+        }
+      },
+      [imagePreview]
+    );
 
-  const handleSaveChanges = async () => {
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append('image', imageFile);
+    const handleSaveChanges = React.useCallback(async () => {
+      if (imageFile) {
+        setLoading(true);
+        try {
+          const formData = new FormData();
+          formData.append('image', imageFile);
 
-      setLoading(true);
-      try {
-        const { data } = await axios.put(`/users/${id}/`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        setCurrentUser((prevUser) => ({
-          ...prevUser,
-          profile_image: data.image,
-        }));
+          const { data } = await axios.put(`/users/${id}/`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          setCurrentUser((prevUser) => ({
+            ...prevUser,
+            profile_image: data.image,
+          }));
+          handleClose();
+          window.location.reload();
+        } catch (error) {
+          setErrors(error.response?.data || {});
+        } finally {
+          setLoading(false);
+        }
+      } else {
         handleClose();
-        window.location.reload();
-      } catch (error) {
-        setErrors(error.response?.data || {});
-      } finally {
-        setLoading(false);
       }
-    } else {
-      handleClose();
-    }
-  };
+    }, [handleClose, imageFile, id, setCurrentUser]);
 
-  return (
-    <>
+    return (
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header
           closeButton
@@ -144,8 +142,8 @@ const ProfileImageModal = ({
           </Container>
         </Modal.Body>
       </Modal>
-    </>
-  );
-};
+    );
+  }
+);
 
 export default ProfileImageModal;
