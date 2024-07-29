@@ -11,23 +11,17 @@ import { axiosRes, axiosReq } from '../api/axiosDefaults';
 
 export const CurrentUserContext = createContext(null);
 export const SetCurrentUserContext = createContext(null);
-
 export const useCurrentUser = () => useContext(CurrentUserContext);
 export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
-
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const fetchCurrentUser = useCallback(async () => {
-    setLoading(true);
     try {
       const { data } = await axiosRes.get('/dj-rest-auth/user/');
       setCurrentUser(data);
     } catch (err) {
       console.error('Error fetching current user:', err);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -77,10 +71,7 @@ export const CurrentUserProvider = ({ children }) => {
     return cleanupInterceptors;
   }, [setupInterceptors]);
 
-  const contextValue = useMemo(
-    () => ({ currentUser, loading }),
-    [currentUser, loading]
-  );
+  const contextValue = useMemo(() => currentUser, [currentUser]);
   const setContextValue = useMemo(() => setCurrentUser, []);
 
   return (
