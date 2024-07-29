@@ -13,10 +13,11 @@ import {
   useSetCurrentUser,
 } from '../contexts/CurrentUserContext';
 import Avatar from './Avatar';
-
+import ContactForm from '../pages/contact/ContactForm';
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
+  const [showContactForm, setShowContactForm] = useState(false);
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
 
@@ -98,6 +99,14 @@ const NavBar = () => {
             >
               Sign Out
             </Button>
+            <hr />
+            <Button
+              variant="outline-light"
+              onClick={() => setShowContactForm(true)}
+              className="mx-auto"
+            >
+              Contact Us
+            </Button>
           </>
         ) : (
           <>
@@ -110,6 +119,11 @@ const NavBar = () => {
           </>
         )}
       </Offcanvas>
+
+      <ContactForm
+        show={showContactForm}
+        handleClose={() => setShowContactForm(false)}
+      />
     </>
   );
 };
