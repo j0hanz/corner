@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Modal,
   Button,
@@ -13,62 +13,46 @@ import { useParams } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
 import Upload from '../../assets/upload.png';
 import Asset from '../../components/Asset';
-import {
-  useCurrentUser,
-  useSetCurrentUser,
-} from '../../contexts/CurrentUserContext';
+import { useCurrentUser } from '../../contexts/CurrentUserContext';
 
 const ProfileImageModal = React.memo(({ show, handleClose }) => {
   const { id } = useParams();
   const currentUser = useCurrentUser();
-  const setCurrentUser = useSetCurrentUser();
   const imageFileRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(
     currentUser?.profile_image || ''
   );
-  const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleImageChange = useCallback((e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
-  }, []);
+  };
 
-  const handleSaveChanges = useCallback(async () => {
-    if (imageFile) {
-      setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      try {
-        const formData = new FormData();
-        formData.append('image', imageFile);
+    setLoading(true);
 
-        const { data } = await axios.put(`/users/${id}/`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        if (typeof setCurrentUser === 'function') {
-          setCurrentUser((prevUser) => ({
-            ...prevUser,
-            profile_image: data.image,
-          }));
-        } else {
-          console.error('setCurrentUser is not a function');
-        }
-        window.location.reload();
-        handleClose();
-      } catch (error) {
-        setErrors(error.response?.data || {});
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
+    try {
+      const formData = new FormData(e.target);
+
+      await axios.put(`/users/${id}/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
       handleClose();
+      window.location.reload();
+    } catch (error) {
+      setErrors(error.response?.data || {});
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }, [handleClose, imageFile, id, setCurrentUser]);
+  };
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -78,7 +62,7 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
       <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group className="text-center mb-5 m-5">
               <div onClick={() => imageFileRef.current.click()}>
                 {imagePreview ? (
@@ -103,6 +87,7 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
                   className="d-none"
                   ref={imageFileRef}
                   onChange={handleImageChange}
+                  name="image"
                 />
               </div>
             </Form.Group>
@@ -114,7 +99,7 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
             <div className={styles.buttonWrapper}>
               <Button
                 variant="outline-primary text-white"
-                onClick={handleSaveChanges}
+                type="submit"
                 disabled={loading}
               >
                 {loading ? (
