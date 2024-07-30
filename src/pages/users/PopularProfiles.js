@@ -7,11 +7,11 @@ import styles from './styles/PopularProfiles.module.css';
 
 /* PopularProfiles component to display a list of popular profiles */
 const PopularProfiles = () => {
-  const { profiles } = useProfileData();
+  const { popularProfiles } = useProfileData();
 
   return (
     <Container>
-      {profiles.length ? (
+      {popularProfiles.results.length ? (
         <>
           <div className={styles.ProfilesSection}>
             <hr />
@@ -21,7 +21,7 @@ const PopularProfiles = () => {
             <div
               className={`d-flex flex-wrap justify-content-around bg-dark py-4 ${styles.PopularProfilesBorder}`}
             >
-              {profiles.slice(0, 4).map((profile) => (
+              {popularProfiles.results.slice(0, 4).map((profile) => (
                 <Profile key={profile.id} profile={profile} />
               ))}
             </div>
