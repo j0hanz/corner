@@ -13,14 +13,6 @@ const Profile = (props) => {
 
   const { followUser, unfollowUser } = useSetProfileData();
 
-  const handleFollow = () => {
-    if (following_id) {
-      unfollowUser(following_id); // Pass the following_id directly
-    } else {
-      followUser(id);
-    }
-  };
-
   return (
     <div className="d-flex align-items-center">
       <div className="d-flex flex-column align-items-center">
@@ -34,14 +26,23 @@ const Profile = (props) => {
         </Link>
         <strong className={`my-1 ${styles.WordBreak}`}>{owner}</strong>
         <div className="d-flex"></div>
-        {currentUser && !is_owner && (
-          <Button
-            variant="outline-primary text-white btn-sm"
-            onClick={handleFollow}
-          >
-            {following_id ? 'Unfollow' : 'Follow'}
-          </Button>
-        )}
+        {currentUser &&
+          !is_owner &&
+          (following_id ? (
+            <Button
+              variant="outline-primary text-white btn-sm"
+              onClick={() => unfollowUser(profile)}
+            >
+              unfollow
+            </Button>
+          ) : (
+            <Button
+              variant="outline-primary text-white btn-sm"
+              onClick={() => followUser(profile)}
+            >
+              follow
+            </Button>
+          ))}
       </div>
     </div>
   );
