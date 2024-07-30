@@ -17,6 +17,7 @@ import { fetchMoreData } from '../../utils/utils';
 import styles from './styles/PostsFeed.module.css';
 import noResults from '../../assets/noResults.png';
 import BookmarkPostPage from './BookmarkPostPage';
+import PopularProfiles from '../users/PopularProfiles';
 
 const PostsFeed = ({ message, filter = '' }) => {
   const [posts, setPosts] = useState({ results: [], next: null });
@@ -84,6 +85,7 @@ const PostsFeed = ({ message, filter = '' }) => {
           </Form>
         </Col>
       </Row>
+      <PopularProfiles />
       {!hasLoaded && (
         <LoadingSpinnerToast
           show={true}
