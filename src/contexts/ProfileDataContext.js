@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { axiosReq } from '../api/axiosDefaults';
+import { axiosRes, axiosReq } from '../api/axiosDefaults';
 import { followHelper, unfollowHelper } from '../utils/utils';
+import { useCurrentUser } from './CurrentUserContext';
 
 const ProfileDataContext = createContext();
 const SetProfileDataContext = createContext();
@@ -9,56 +10,57 @@ export const useProfileData = () => useContext(ProfileDataContext);
 export const useSetProfileData = () => useContext(SetProfileDataContext);
 
 export const ProfileDataProvider = ({ children }) => {
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState({
+    pageProfile: { results: [] },
+    popularProfiles: { results: [] },
+  });
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-        const { data } = await axiosReq.get('/users/');
-        setProfiles(data);
-      } catch (err) {
-        console.error('Error fetching profiles:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const currentUser = useCurrentUser();
 
-    fetchProfiles();
-  }, []);
-
-  const followUser = async (userId) => {
+  const followUser = async (clickedProfile) => {
     try {
-      const { data } = await axiosReq.post('/followers/', {
-        followed_user: userId,
+      const { data } = await axiosRes.post('/followers/', {
+        followed: clickedProfile.id,
       });
-      setProfiles((prevProfiles) =>
-        prevProfiles.map((profile) =>
-          followHelper(profile, { id: userId }, data.id)
-        )
-      );
+
+      setProfileData((prevState) => ({
+        ...prevState,
+        pageProfile: {
+          results: prevState.pageProfile.results.map((profile) =>
+            followHelper(profile, clickedProfile, data.id)
+          ),
+        },
+        popularProfiles: {
+          ...prevState.popularProfiles,
+          results: prevState.popularProfiles.results.map((profile) =>
+            followHelper(profile, clickedProfile, data.id)
+          ),
+        },
+      }));
     } catch (err) {
-      if (err.response?.data?.detail === 'possible duplicate') {
-        console.log('User is already following this profile.');
-      } else {
-        console.error(
-          'Error following user:',
-          err.response?.data || err.message
-        );
-      }
+      console.error('Failed to follow the profile:', err);
     }
   };
 
-  const unfollowUser = async (followerId) => {
+  const unfollowUser = async (clickedProfile) => {
     try {
-      await axiosReq.delete(`/followers/${followerId}/`);
-      setProfiles((prevProfiles) =>
-        prevProfiles.map((profile) =>
-          unfollowHelper(profile, { id: followerId })
-        )
-      );
+      await axiosRes.delete(`/followers/${clickedProfile.following_id}/`);
+      setProfileData((prevState) => ({
+        ...prevState,
+        pageProfile: {
+          results: prevState.pageProfile.results.map((profile) =>
+            unfollowHelper(profile, clickedProfile)
+          ),
+        },
+        popularProfiles: {
+          ...prevState.popularProfiles,
+          results: prevState.popularProfiles.results.map((profile) =>
+            unfollowHelper(profile, clickedProfile)
+          ),
+        },
+      }));
     } catch (err) {
-      console.error('Error unfollowing user:', err);
+      console.error('Failed to unfollow the profile:', err);
     }
   };
 
@@ -68,17 +70,20 @@ export const ProfileDataProvider = ({ children }) => {
         const { data } = await axiosReq.get(
           '/users/?ordering=-followers_count'
         );
-        setProfiles(data.results);
+        setProfileData((prevState) => ({
+          ...prevState,
+          popularProfiles: data,
+        }));
       } catch (err) {
-        console.error('Error fetching popular profiles:', err);
+        console.error(err);
       }
     };
 
     fetchPopularProfiles();
-  }, []);
+  }, [currentUser]);
 
   return (
-    <ProfileDataContext.Provider value={{ profiles, loading }}>
+    <ProfileDataContext.Provider value={profileData}>
       <SetProfileDataContext.Provider value={{ followUser, unfollowUser }}>
         {children}
       </SetProfileDataContext.Provider>
