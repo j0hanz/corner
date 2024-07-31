@@ -25,8 +25,8 @@ const LoadingSpinnerToast = ({ show, message, duration }) => {
     >
       <Toast.Body className="d-flex flex-column align-items-center">
         <Oval
-          height={80}
-          width={80}
+          height={60}
+          width={60}
           color="#f8f9fa"
           visible={true}
           ariaLabel="oval-loading"
