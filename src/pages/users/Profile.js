@@ -25,7 +25,9 @@ const Profile = (props) => {
             className={styles.ProfileImage}
           />
         </Link>
-        <strong className={`my-1 text-white-50 ${styles.WordBreak}`}>{owner}</strong>
+        <strong className={`my-1 text-white-50 ${styles.WordBreak}`}>
+          {owner}
+        </strong>
         <div className="d-flex"></div>
         {currentUser &&
           !is_owner &&
