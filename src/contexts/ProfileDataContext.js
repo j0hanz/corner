@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { axiosRes, axiosReq } from '../api/axiosDefaults';
-import { followHelper, unfollowHelper } from '../utils/utils';
+import { updateProfileOnFollow, updateProfileOnUnfollow } from '../utils/utils';
 import { useCurrentUser } from './CurrentUserContext';
 
 const ProfileDataContext = createContext();
@@ -27,13 +27,13 @@ export const ProfileDataProvider = ({ children }) => {
         ...prevState,
         pageProfile: {
           results: prevState.pageProfile.results.map((profile) =>
-            followHelper(profile, clickedProfile, data.id)
+            updateProfileOnFollow(profile, clickedProfile, data.id)
           ),
         },
         popularProfiles: {
           ...prevState.popularProfiles,
           results: prevState.popularProfiles.results.map((profile) =>
-            followHelper(profile, clickedProfile, data.id)
+            updateProfileOnFollow(profile, clickedProfile, data.id)
           ),
         },
       }));
@@ -49,13 +49,13 @@ export const ProfileDataProvider = ({ children }) => {
         ...prevState,
         pageProfile: {
           results: prevState.pageProfile.results.map((profile) =>
-            unfollowHelper(profile, clickedProfile)
+            updateProfileOnUnfollow(profile, clickedProfile)
           ),
         },
         popularProfiles: {
           ...prevState.popularProfiles,
           results: prevState.popularProfiles.results.map((profile) =>
-            unfollowHelper(profile, clickedProfile)
+            updateProfileOnUnfollow(profile, clickedProfile)
           ),
         },
       }));
