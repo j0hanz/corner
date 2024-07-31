@@ -49,7 +49,7 @@ const PostsFeed = ({ message, filter = '' }) => {
 
   return (
     <Container className="px-0">
-      <Row className="justify-content-center">
+      <Row className="justify-content-center mx-auto">
         <Col xs="auto" className="text-center">
           <Button variant="outline-light" onClick={() => setShowModal(true)}>
             <FontAwesomeIcon icon={faPlus} className="fa-lg" />
