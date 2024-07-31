@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Navbar, Container, Offcanvas, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +14,71 @@ import {
 } from '../contexts/CurrentUserContext';
 import Avatar from './Avatar';
 import ContactForm from '../pages/contact/ContactForm';
+
+const OffcanvasContent = ({
+  currentUser,
+  handleLogout,
+  closeOffcanvas,
+  setShowContactForm,
+  showLogin,
+  setShowLogin,
+}) => (
+  <>
+    <Offcanvas.Header
+      closeButton
+      closeVariant="white"
+      className="d-flex align-items-center justify-content-between w-100 pb-1"
+    >
+      {!currentUser ? (
+        <img src={logo} alt="Logo" className={styles.logoCanvas} />
+      ) : (
+        <NavLink
+          to={`/users/${currentUser?.pk}/`}
+          className="d-flex align-items-center"
+          onClick={closeOffcanvas}
+        >
+          <Avatar src={currentUser?.profile_image} height={40} width={40} />
+          <span className={`ms-2 ${styles.username}`}>
+            {currentUser?.username}
+          </span>
+        </NavLink>
+      )}
+    </Offcanvas.Header>
+    <hr />
+    {currentUser ? (
+      <>
+        <Button
+          variant="outline-light"
+          onClick={handleLogout}
+          className="mx-auto"
+        >
+          Sign Out
+        </Button>
+        <hr />
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setShowContactForm(true);
+            closeOffcanvas();
+          }}
+          className="mx-auto"
+        >
+          Contact Us
+        </Button>
+      </>
+    ) : (
+      <>
+        {showLogin ? (
+          <Login handleSignUp={() => setShowLogin(false)} />
+        ) : (
+          <Signup handleLogin={() => setShowLogin(true)} />
+        )}
+        <hr />
+      </>
+    )}
+  </>
+);
+
 const NavBar = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
@@ -21,8 +86,11 @@ const NavBar = () => {
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
 
-  const toggleOffcanvas = () => setShowOffcanvas((prevState) => !prevState);
-  const closeOffcanvas = () => setShowOffcanvas(false);
+  const toggleOffcanvas = useCallback(
+    () => setShowOffcanvas((prevState) => !prevState),
+    []
+  );
+  const closeOffcanvas = useCallback(() => setShowOffcanvas(false), []);
 
   const handleLogout = async () => {
     try {
@@ -69,55 +137,14 @@ const NavBar = () => {
         placement="end"
         className="bg-dark text-light"
       >
-        <Offcanvas.Header
-          closeButton
-          closeVariant="white"
-          className="d-flex align-items-center justify-content-between w-100 pb-1"
-        >
-          {!currentUser ? (
-            <img src={logo} alt="Logo" className={styles.logoCanvas} />
-          ) : (
-            <NavLink
-              to={`/users/${currentUser?.pk}/`}
-              className="d-flex align-items-center"
-              onClick={closeOffcanvas}
-            >
-              <Avatar src={currentUser?.profile_image} height={40} width={40} />
-              <span className={`ms-2 ${styles.username}`}>
-                {currentUser?.username}
-              </span>
-            </NavLink>
-          )}
-        </Offcanvas.Header>
-        <hr />
-        {currentUser ? (
-          <>
-            <Button
-              variant="outline-light"
-              onClick={handleLogout}
-              className="mx-auto"
-            >
-              Sign Out
-            </Button>
-            <hr />
-            <Button
-              variant="outline-light"
-              onClick={() => setShowContactForm(true)}
-              className="mx-auto"
-            >
-              Contact Us
-            </Button>
-          </>
-        ) : (
-          <>
-            {showLogin ? (
-              <Login handleSignUp={() => setShowLogin(false)} />
-            ) : (
-              <Signup handleLogin={() => setShowLogin(true)} />
-            )}
-            <hr />
-          </>
-        )}
+        <OffcanvasContent
+          currentUser={currentUser}
+          handleLogout={handleLogout}
+          closeOffcanvas={closeOffcanvas}
+          setShowContactForm={setShowContactForm}
+          showLogin={showLogin}
+          setShowLogin={setShowLogin}
+        />
       </Offcanvas>
 
       <ContactForm
