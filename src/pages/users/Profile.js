@@ -4,6 +4,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { useSetProfileData } from '../../contexts/ProfileDataContext';
 import { Button } from 'react-bootstrap';
 import styles from './styles/Profile.module.css';
+import Avatar from '../../components/Avatar';
 
 const Profile = (props) => {
   const { profile, imageSize = 45 } = props;
@@ -14,17 +15,17 @@ const Profile = (props) => {
   const { followUser, unfollowUser } = useSetProfileData();
 
   return (
-    <div className="d-flex align-items-center">
+    <div className="d-flex ">
       <div className="d-flex flex-column align-items-center">
-        <Link className="align-self-center" to={`/profiles/${id}`}>
-          <img
+        <Link className="align-self-center mb-1" to={`/profiles/${id}`}>
+          <Avatar
             src={image_url}
             alt={`${owner}'s profile`}
             height={imageSize}
             className={styles.ProfileImage}
           />
         </Link>
-        <strong className={`my-1 ${styles.WordBreak}`}>{owner}</strong>
+        <strong className={`my-1 text-white-50 ${styles.WordBreak}`}>{owner}</strong>
         <div className="d-flex"></div>
         {currentUser &&
           !is_owner &&
