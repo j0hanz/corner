@@ -30,7 +30,7 @@
 }
 
 .navIcon:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .logoCanvas {
@@ -50,8 +50,14 @@
   font-weight: bold;
   font-size: 1.1rem;
   color: #ffffffcb;
+  transition: all 0.3s ease;
 }
 
 a {
   text-decoration: none;
+}
+
+.username:hover {
+  text-decoration: none;
+  color: #ffffff85;
 }
