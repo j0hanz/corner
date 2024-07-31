@@ -1,11 +1,17 @@
 .WordBreak {
   word-break: break-all;
+  font-size: 15px;
+}
+
+.ProfileImage {
+  object-fit: cover;
 }
 
 .Button {
+  display: flex;
+  justify-content: center;
   width: 65px;
   max-width: 100%;
-  margin: 0 auto;
   transition:
     background-color 0.3s ease,
     transform 0.2s ease;
