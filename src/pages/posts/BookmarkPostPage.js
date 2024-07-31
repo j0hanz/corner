@@ -60,7 +60,7 @@ const BookmarkPostPage = ({ show, handleClose }) => {
       >
         <Modal.Title>Your Bookmarks</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light">
+      <Modal.Body className="bg-dark text-light p-2">
         <Container className={styles.Container}>
           {loading && (
             <div className="text-center">
