@@ -46,7 +46,7 @@ const Reports = ({ show, handleClose, postId, commentId }) => {
       >
         <Modal.Title>Report {postId ? 'Post' : 'Comment'}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-0">
+      <Modal.Body className="bg-dark text-light p-2">
         <Container className={styles.Container}>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
