@@ -33,7 +33,7 @@ const DeleteAccountModal = ({ show, handleClose }) => {
         >
           <Modal.Title>Delete Account</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-light p-0">
+        <Modal.Body className="bg-dark text-light p-2">
           <Container className={styles.Container}>
             {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
             <p className="my-2">
