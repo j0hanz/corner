@@ -123,7 +123,7 @@ const NavBar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <div onClick={toggleOffcanvas} className={styles.navIcon}>
             {currentUser ? (
-              <Avatar src={currentUser?.profile_image} height={25} width={25} />
+              <Avatar src={currentUser?.profile_image} height={30} width={30} />
             ) : (
               <FontAwesomeIcon className="fa-xl" icon={faRightToBracket} />
             )}
