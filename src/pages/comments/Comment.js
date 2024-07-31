@@ -223,7 +223,7 @@ const Comment = ({
         >
           <Modal.Title>Delete Comment</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-white">
+        <Modal.Body className="bg-dark text-white p-2">
           <p>Are you sure you want to delete this comment?</p>
           <div className="d-flex justify-content-end">
             <Button
