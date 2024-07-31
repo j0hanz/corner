@@ -61,7 +61,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
       >
         <Modal.Title>Change Password</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-0">
+      <Modal.Body className="bg-dark text-light p-2">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form onSubmit={handleSubmit}>
