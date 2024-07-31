@@ -71,7 +71,7 @@ const UserPage = () => {
     return (
       <LoadingSpinnerToast
         show={true}
-        message="Loading user data, please wait..."
+        message="Loading user, please wait..."
         duration={5000}
       />
     );
@@ -87,7 +87,7 @@ const UserPage = () => {
 
   return (
     <Container className="px-1">
-      <Row className="justify-content-center">
+      <Row className="justify-content-center mx-auto">
         <Col lg={3} className="d-flex flex-column align-items-center">
           <Image
             className={styles.ProfileImage}
