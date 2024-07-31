@@ -61,7 +61,7 @@ const ContactForm = ({ show, handleClose }) => {
       >
         <Modal.Title>Contact Us</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-0">
+      <Modal.Body className="bg-dark text-light p-2">
         <Container className={styles.Container}>
           {isSubmitted && (
             <Alert variant="success">
