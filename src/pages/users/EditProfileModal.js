@@ -98,7 +98,7 @@ const EditProfileModal = ({ show, handleClose }) => {
         >
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-light p-0">
+        <Modal.Body className="bg-dark text-light p-2">
           <Form onSubmit={handleSubmit}>
             <Container className={styles.Container}>
               {Object.entries(profileData).map(([field, value]) => (
