@@ -3,10 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {
-  useCurrentUser,
-  useSetCurrentUser,
-} from '../../contexts/CurrentUserContext';
+import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import styles from './styles/UserPage.module.css';
 import ProfileImageModal from './ProfileImageModal';
 import EditProfileModal from './EditProfileModal';
@@ -25,7 +22,6 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
-  const setCurrentUser = useSetCurrentUser();
   const is_owner = currentUser?.username === user?.owner;
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
@@ -164,8 +160,6 @@ const UserPage = () => {
       <ProfileImageModal
         show={showProfileImageModal}
         handleClose={() => setShowProfileImageModal(false)}
-        setCurrentUser={setCurrentUser}
-        currentUser={currentUser}
       />
       <ChangeUsernameModal
         show={showChangeUsernameModal}
