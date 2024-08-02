@@ -10,15 +10,30 @@ import {
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/BookmarkPostPage.module.css';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import Avatar from '../../components/Avatar';
+import PostPage from './PostPage';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const BookmarkPostPage = ({ show, handleClose }) => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
+
+  const [showPostPage, setShowPostPage] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
+  const handleShowPostPage = (postId) => {
+    setSelectedPostId(postId);
+    setShowPostPage(true);
+    handleClose();
+  };
+
+  const handleClosePostPage = () => {
+    setShowPostPage(false);
+    setSelectedPostId(null);
+  };
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -52,66 +67,79 @@ const BookmarkPostPage = ({ show, handleClose }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered className="text-light">
-      <Modal.Header
-        closeButton
-        closeVariant="white"
-        className="bg-dark text-light"
-      >
-        <Modal.Title>Your Bookmarks</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-2">
-        <Container className={styles.Container}>
-          {loading && (
-            <div className="text-center">
-              <Spinner animation="border" role="status" />
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          )}
-          {error && <Alert variant="danger">{error}</Alert>}
-          {!loading && !error && bookmarks.length === 0 && (
-            <p>You have no bookmarks.</p>
-          )}
-          {!loading && bookmarks.length > 0 && (
-            <ListGroup variant="flush">
-              {bookmarks.map((bookmark) => (
-                <ListGroup.Item
-                  key={bookmark.id}
-                  className="bg-dark text-light d-flex justify-content-between align-items-center"
-                >
-                  <div className="d-flex align-items-center">
-                    <Avatar
-                      src={bookmark.post_owner_profile_image}
-                      height={30}
-                      width={30}
-                    />
-                    <div className="ms-2">
+    <>
+      <Modal show={show} onHide={handleClose} centered className="text-light">
+        <Modal.Header
+          closeButton
+          closeVariant="white"
+          className="bg-dark text-light"
+        >
+          <Modal.Title>Your Bookmarks</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-light p-2">
+          <Container className={styles.Container}>
+            {loading && (
+              <div className="text-center">
+                <Spinner animation="border" role="status" />
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
+            {error && <Alert variant="danger">{error}</Alert>}
+            {!loading && !error && bookmarks.length === 0 && (
+              <p>You have no bookmarks.</p>
+            )}
+            {!loading && bookmarks.length > 0 && (
+              <ListGroup variant="flush">
+                {bookmarks.map((bookmark) => (
+                  <ListGroup.Item
+                    key={bookmark.id}
+                    className="bg-dark text-light d-flex justify-content-between align-items-center"
+                  >
+                    <div className="d-flex align-items-center">
                       <Link
-                        to={`/posts/${bookmark.post}`}
-                        className="text-light text-decoration-none"
-                        onClick={handleClose}
+                        className="text-decoration-none"
+                        to={`/users/${bookmark.post_owner_profile_id}`}
+                      >
+                        <Avatar
+                          src={bookmark.post_owner_profile_image}
+                          height={30}
+                          width={30}
+                        />
+                        <div className="text-center">
+                          <em>
+                            <small className="text-white-50">
+                              {bookmark.post_owner}
+                            </small>
+                          </em>
+                        </div>
+                      </Link>
+                      <button
+                        className="btn btn-link text-light text-decoration-none p-0 ms-2"
+                        onClick={() => handleShowPostPage(bookmark.post)}
                       >
                         <h5>{bookmark.post_content?.slice(0, 50)}...</h5>
-                      </Link>
-                      <p className="mb-0">
-                        <small>by {bookmark.post_owner}</small>
-                      </p>
+                      </button>
                     </div>
-                  </div>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handleRemove(bookmark.id)}
-                  >
-                    Remove
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
-        </Container>
-      </Modal.Body>
-    </Modal>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleRemove(bookmark.id)}
+                    >
+                      Remove
+                    </Button>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+          </Container>
+        </Modal.Body>
+      </Modal>
+      <PostPage
+        show={showPostPage}
+        handleClose={handleClosePostPage}
+        postId={selectedPostId}
+      />
+    </>
   );
 };
 
