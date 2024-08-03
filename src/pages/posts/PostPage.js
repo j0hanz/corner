@@ -11,28 +11,30 @@ import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/PostPage.module.css';
 
 const PostPage = ({ show, handleClose, postId }) => {
-  const [post, setPost] = useState({ results: [] });
+  const [postData, setPostData] = useState({ results: [] });
   const [comments, setComments] = useState({ results: [] });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const currentUser = useCurrentUser();
-  const profile_image = currentUser?.profile_image;
+  const profileImage = currentUser?.profile_image;
 
   const fetchPostAndComments = useCallback(async () => {
-    setLoading(true);
-    setError(false);
+    setIsLoading(true);
+    setHasError(false);
+
     try {
-      const [{ data: post }, { data: comments }] = await Promise.all([
+      const [postResponse, commentsResponse] = await Promise.all([
         axiosReq.get(`/posts/${postId}`),
         axiosReq.get(`/comments/?post=${postId}`),
       ]);
-      setPost({ results: [post] });
-      setComments(comments);
-    } catch (err) {
-      setError(true);
-      console.error(err);
+
+      setPostData({ results: [postResponse.data] });
+      setComments(commentsResponse.data);
+    } catch (error) {
+      setHasError(true);
+      console.error('Error fetching post and comments:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [postId]);
 
@@ -42,29 +44,29 @@ const PostPage = ({ show, handleClose, postId }) => {
     }
   }, [show, fetchPostAndComments]);
 
-  const memoizedComments = useMemo(
+  const renderedComments = useMemo(
     () =>
       comments.results.map((comment) => (
         <Comment
           key={comment.id}
           {...comment}
-          setPost={setPost}
+          setPost={setPostData}
           setComments={setComments}
         />
       )),
-    [comments.results, setPost, setComments]
+    [comments.results, setPostData, setComments]
   );
 
   return (
     <Container fluid className={`${styles.Container} p-1`}>
       <Modal show={show} onHide={handleClose} centered>
-        {loading ? (
+        {isLoading ? (
           <LoadingSpinnerToast
-            show={true}
+            show
             message="Loading post and comments, please wait..."
             duration={5000}
           />
-        ) : error ? (
+        ) : hasError ? (
           <div className="d-none">Failed to load post and comments.</div>
         ) : (
           <>
@@ -78,15 +80,19 @@ const PostPage = ({ show, handleClose, postId }) => {
             <Modal.Body className="bg-dark text-light p-3">
               <Row className="justify-content-center">
                 <Col xs="auto">
-                  <Post {...post.results[0]} setPosts={setPost} postPage />
+                  <Post
+                    {...postData.results[0]}
+                    setPosts={setPostData}
+                    postPage
+                  />
                   <hr />
                   {currentUser && (
                     <>
                       <CommentCreateForm
                         profile_id={currentUser.profile_id}
-                        profile_image={profile_image}
+                        profile_image={profileImage}
                         post={postId}
-                        setPost={setPost}
+                        setPost={setPostData}
                         setComments={setComments}
                       />
                       <hr />
@@ -97,14 +103,14 @@ const PostPage = ({ show, handleClose, postId }) => {
                       dataLength={comments.results.length}
                       next={() => fetchMoreData(comments, setComments)}
                       hasMore={!!comments.next}
-                      loader={<LoadingSpinnerToast show={true} />}
+                      loader={<LoadingSpinnerToast show />}
                       endMessage={
                         <p className="text-center text-white-50 my-4">
                           No more comments
                         </p>
                       }
                     >
-                      {memoizedComments}
+                      {renderedComments}
                     </InfiniteScroll>
                   ) : (
                     <div className="text-center my-4">No comments yet.</div>
