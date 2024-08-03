@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import styles from './styles/UserPage.module.css';
 import ProfileImageModal from './ProfileImageModal';
 import EditProfileModal from './EditProfileModal';
@@ -17,11 +17,11 @@ import { axiosReq } from '../../api/axiosDefaults';
 
 const UserPage = () => {
   const { id } = useParams();
+  const currentUser = useContext(CurrentUserContext);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState({ results: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === user?.owner;
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
@@ -47,7 +47,7 @@ const UserPage = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, currentUser]);
 
   const fetchMoreData = async () => {
     if (posts.next) {
