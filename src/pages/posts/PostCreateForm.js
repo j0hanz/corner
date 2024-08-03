@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Modal,
   Form,
@@ -14,7 +14,7 @@ import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import Upload from '../../assets/upload.png';
 
-const PostCreateForm = ({ show, handleClose }) => {
+const PostCreateForm = ({ show, handleClose, addPost }) => {
   const imageInput = useRef(null);
 
   const [postData, setPostData] = useState({
@@ -57,10 +57,11 @@ const PostCreateForm = ({ show, handleClose }) => {
 
       setLoading(true);
       try {
-        await axiosReq.post('/posts/', formData, {
+        const { data } = await axiosReq.post('/posts/', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         toast.success('Post created successfully!');
+        addPost(data);
         handleClose();
       } catch (err) {
         if (err.response?.status !== 401) {
@@ -71,7 +72,7 @@ const PostCreateForm = ({ show, handleClose }) => {
         setLoading(false);
       }
     },
-    [postData, image, handleClose]
+    [postData, image, handleClose, addPost]
   );
 
   const getFilterStyle = useCallback((filter) => {
@@ -100,6 +101,21 @@ const PostCreateForm = ({ show, handleClose }) => {
     return filters[filter] || 'none';
   }, []);
 
+  useEffect(() => {
+    if (!show) {
+      setPostData({
+        content: '',
+        image: '',
+        image_filter: 'NONE',
+        tags: '',
+      });
+      setErrors({});
+      if (imageInput.current) {
+        imageInput.current.value = '';
+      }
+    }
+  }, [show]);
+
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
       <Modal.Header
@@ -122,6 +138,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                       fluid
                       alt="Post preview"
                       style={{ filter: getFilterStyle(image_filter) }}
+                      onClick={() => imageInput.current.click()}
                     />
                     <div className={styles.Placeholder}>
                       Click to change the image
