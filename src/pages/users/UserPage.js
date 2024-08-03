@@ -37,8 +37,8 @@ const UserPage = () => {
           axiosReq.get(`/users/${id}/`),
           axiosReq.get(`/posts/?owner__profile=${id}`),
         ]);
-        setUser(userResponse.data);
-        setPosts(userPostsResponse.data);
+        setUser(userResponse.data || null);
+        setPosts(userPostsResponse.data || { results: [] });
       } catch (err) {
         setError('User not found or an error occurred');
       } finally {
@@ -55,7 +55,7 @@ const UserPage = () => {
         const { data } = await axiosReq.get(posts.next);
         setPosts((prevPosts) => ({
           ...data,
-          results: [...prevPosts.results, ...data.results],
+          results: [...(prevPosts?.results || []), ...(data?.results || [])],
         }));
       } catch (err) {
         console.error(err);
@@ -77,6 +77,14 @@ const UserPage = () => {
     return (
       <Container className="d-flex justify-content-center align-items-center vh-100">
         <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
+  }
+
+  if (!user || !user.id) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Alert variant="danger">User not found</Alert>
       </Container>
     );
   }
