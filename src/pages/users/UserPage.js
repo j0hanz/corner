@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
@@ -14,6 +13,7 @@ import { ProfileActionsDropdown } from '../../components/Dropdown';
 import Post from '../posts/Post';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import noResults from '../../assets/noResults.png';
+import { axiosReq } from '../../api/axiosDefaults';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -34,8 +34,8 @@ const UserPage = () => {
     const fetchData = async () => {
       try {
         const [userResponse, userPostsResponse] = await Promise.all([
-          axios.get(`/users/${id}/`),
-          axios.get(`/posts/?owner__profile=${id}`),
+          axiosReq.get(`/users/${id}/`),
+          axiosReq.get(`/posts/?owner__profile=${id}`),
         ]);
         setUser(userResponse.data);
         setPosts(userPostsResponse.data);
@@ -52,7 +52,7 @@ const UserPage = () => {
   const fetchMoreData = async () => {
     if (posts.next) {
       try {
-        const { data } = await axios.get(posts.next);
+        const { data } = await axiosReq.get(posts.next);
         setPosts((prevPosts) => ({
           ...data,
           results: [...prevPosts.results, ...data.results],
