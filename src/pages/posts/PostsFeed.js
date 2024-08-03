@@ -47,6 +47,13 @@ const PostsFeed = ({ message, filter = '' }) => {
     };
   }, [filter, query, pathname, currentUser]);
 
+  const addPost = (newPost) => {
+    setPosts((prevPosts) => ({
+      ...prevPosts,
+      results: [newPost, ...prevPosts.results],
+    }));
+  };
+
   return (
     <Container className="px-0">
       <Row className="justify-content-center mx-auto">
@@ -128,6 +135,7 @@ const PostsFeed = ({ message, filter = '' }) => {
       <PostCreateForm
         show={showModal}
         handleClose={() => setShowModal(false)}
+        addPost={addPost}
       />
       <BookmarkPostPage
         show={showBookmarkModal}
