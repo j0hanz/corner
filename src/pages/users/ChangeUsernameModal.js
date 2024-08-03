@@ -15,31 +15,46 @@ import {
 } from '../../contexts/CurrentUserContext';
 import styles from './styles/EditProfilePage.module.css';
 
-const ChangeUsernameModal = ({ show, handleClose }) => {
-  const [username, setUsername] = useState('');
+const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
+  const [formData, setFormData] = useState({
+    username: '',
+  });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { id } = useParams();
 
+  const { id } = useParams();
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
 
   useEffect(() => {
     if (currentUser?.pk?.toString() === id) {
-      setUsername(currentUser.username);
+      setFormData((prevState) => ({
+        ...prevState,
+        username: currentUser.username,
+      }));
     } else {
-      setUsername('');
+      setFormData((prevState) => ({ ...prevState, username: '' }));
     }
   }, [currentUser, id]);
 
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     try {
-      setLoading(true);
-      await axiosRes.put('/dj-rest-auth/user/', { username });
-      setCurrentUser((prevUser) => ({ ...prevUser, username }));
+      await axiosRes.put('/dj-rest-auth/user/', formData);
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        username: formData.username,
+      }));
       handleClose();
-      window.location.reload();
     } catch (err) {
       setErrors(err.response?.data || {});
     } finally {
@@ -65,8 +80,9 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
               <Form.Control
                 type="text"
                 placeholder="Enter new username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
                 className="bg-dark text-light"
               />
               {errors?.username?.map((message, idx) => (
@@ -110,6 +126,8 @@ const ChangeUsernameModal = ({ show, handleClose }) => {
       </Modal.Body>
     </Modal>
   );
-};
+});
+
+ChangeUsernameModal.whyDidYouRender = true;
 
 export default ChangeUsernameModal;
