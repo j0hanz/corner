@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Modal,
   Button,
@@ -12,7 +12,7 @@ import { axiosRes } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import styles from './styles/EditProfilePage.module.css';
 
-const ChangePasswordModal = ({ show, handleClose }) => {
+const ChangePasswordModal = React.memo(({ show, handleClose }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const currentUser = useCurrentUser();
@@ -25,12 +25,13 @@ const ChangePasswordModal = ({ show, handleClose }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (event) => {
-    setUserData({
-      ...userData,
-      [event.target.name]: event.target.value,
-    });
-  };
+  const handleChange = useCallback((event) => {
+    const { name, value } = event.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
   useEffect(() => {
     if (currentUser?.pk?.toString() !== id) {
@@ -38,19 +39,21 @@ const ChangePasswordModal = ({ show, handleClose }) => {
     }
   }, [currentUser, navigate, id]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    try {
-      await axiosRes.post('/dj-rest-auth/password/change/', userData);
-      handleClose();
-      window.location.reload();
-    } catch (err) {
-      setErrors(err.response?.data || {});
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setLoading(true);
+      try {
+        await axiosRes.post('/dj-rest-auth/password/change/', userData);
+        handleClose();
+      } catch (err) {
+        setErrors(err.response?.data || {});
+      } finally {
+        setLoading(false);
+      }
+    },
+    [handleClose, userData]
+  );
 
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
@@ -132,6 +135,6 @@ const ChangePasswordModal = ({ show, handleClose }) => {
       </Modal.Body>
     </Modal>
   );
-};
+});
 
 export default ChangePasswordModal;
