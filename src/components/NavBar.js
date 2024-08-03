@@ -69,7 +69,10 @@ const OffcanvasContent = ({
     ) : (
       <>
         {showLogin ? (
-          <Login handleSignUp={() => setShowLogin(false)} />
+          <Login
+            handleSignUp={() => setShowLogin(false)}
+            closeOffcanvas={closeOffcanvas}
+          />
         ) : (
           <Signup handleLogin={() => setShowLogin(true)} />
         )}
@@ -97,7 +100,6 @@ const NavBar = () => {
       await axios.post('/dj-rest-auth/logout/');
       setCurrentUser(null);
       closeOffcanvas();
-      window.location.reload();
     } catch (err) {
       console.error(err);
     }
