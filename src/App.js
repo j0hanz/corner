@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React from 'react';
+import './api/axiosDefaults';
 import { Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './App.module.css';
@@ -10,7 +11,7 @@ import NotFound from './components/NotFound';
 
 const App = () => {
   const currentUser = useCurrentUser();
-  const profileId = useMemo(() => currentUser?.pk || '', [currentUser]);
+  const profile_id = currentUser?.pk || '';
 
   return (
     <div className={styles.App}>
@@ -24,7 +25,7 @@ const App = () => {
             element={
               <PostsFeed
                 message="No posts found."
-                filter={`likes__owner__profile=${profileId}&ordering=-likes__created_at&`}
+                filter={`likes__owner__profile=${profile_id}&ordering=-likes__created_at&`}
               />
             }
           />
