@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Modal,
   Form,
@@ -8,17 +8,13 @@ import {
   Container,
   Image,
 } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import { axiosReq } from '../../api/axiosDefaults';
-import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { toast } from 'react-toastify';
 import styles from './styles/PostCreateForm.module.css';
 import Asset from '../../components/Asset';
 import Upload from '../../assets/upload.png';
 
 const PostCreateForm = ({ show, handleClose }) => {
-  const currentUser = useCurrentUser();
-  const navigate = useNavigate();
   const imageInput = useRef(null);
 
   const [postData, setPostData] = useState({
@@ -31,105 +27,78 @@ const PostCreateForm = ({ show, handleClose }) => {
   const [loading, setLoading] = useState(false);
   const { content, image, image_filter, tags } = postData;
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/');
-    }
-  }, [currentUser, navigate]);
-
-  const handleChange = ({ target: { name, value } }) => {
+  const handleChange = useCallback(({ target: { name, value } }) => {
     setPostData((prev) => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleChangeImage = ({ target: { files } }) => {
-    if (files.length) {
+  const handleChangeImage = useCallback(() => {
+    if (imageInput.current?.files?.length) {
       URL.revokeObjectURL(image);
-      setPostData((prev) => ({ ...prev, image: files[0] }));
+      setPostData((prev) => ({ ...prev, image: imageInput.current.files[0] }));
     }
-  };
+  }, [image]);
 
-  const handleRemoveImage = () => {
+  const handleRemoveImage = useCallback(() => {
     URL.revokeObjectURL(image);
     setPostData((prev) => ({ ...prev, image: '' }));
     if (imageInput.current) {
       imageInput.current.value = '';
     }
-  };
+  }, [image]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('content', content);
-    formData.append('image_filter', image_filter);
-    formData.append('tags', tags);
-    if (image) {
-      formData.append('image', image);
-    }
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const formData = new FormData();
+      ['content', 'image_filter', 'tags'].forEach((key) =>
+        formData.append(key, postData[key])
+      );
+      if (image) formData.append('image', image);
 
-    setLoading(true);
-    try {
-      await axiosReq.post('/posts/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      toast.success('Post created successfully!');
-      window.location.reload();
-      handleClose();
-    } catch (err) {
-      if (err.response?.status !== 401) {
-        setErrors(err.response?.data || {});
-        toast.error('Failed to create post. Please try again.');
+      setLoading(true);
+      try {
+        await axiosReq.post('/posts/', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        toast.success('Post created successfully!');
+        handleClose();
+      } catch (err) {
+        if (err.response?.status !== 401) {
+          setErrors(err.response?.data || {});
+          toast.error('Failed to create post. Please try again.');
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [postData, image, handleClose]
+  );
 
-  const getFilterStyle = (filter) => {
-    switch (filter) {
-      case 'GRAYSCALE':
-        return 'grayscale(100%)';
-      case 'SEPIA':
-        return 'sepia(100%)';
-      case 'NEGATIVE':
-        return 'invert(100%)';
-      case 'BRIGHTNESS':
-        return 'brightness(130%)';
-      case 'CONTRAST':
-        return 'contrast(130%)';
-      case 'SATURATION':
-        return 'saturate(130%)';
-      case 'HUE_ROTATE':
-        return 'hue-rotate(90deg)';
-      case 'BLUR':
-        return 'blur(5px)';
-      case 'SHARPEN':
-        return 'contrast(200%)';
-      case 'VINTAGE':
-        return 'sepia(100%) contrast(80%)';
-      case 'VIGNETTE':
-        return 'brightness(90%) contrast(150%)';
-      case 'CROSS_PROCESS':
-        return 'saturate(150%) contrast(80%) brightness(90%)';
-      case 'HDR':
-        return 'contrast(150%) saturate(150%)';
-      case 'EDGE_DETECT':
-        return 'contrast(200%) brightness(150%) grayscale(100%)';
-      case 'EMBOSS':
-        return 'contrast(200%) brightness(150%) grayscale(100%)';
-      case 'SOLARIZE':
-        return 'invert(100%) brightness(150%)';
-      case 'POSTERIZE':
-        return 'contrast(200%) brightness(150%)';
-      case 'PIXELATE':
-        return 'contrast(200%) brightness(150%)';
-      case 'CARTOON':
-        return 'contrast(200%) brightness(150%) saturate(150%)';
-      case 'DUOTONE':
-        return 'sepia(100%) contrast(80%)';
-      default:
-        return 'none';
-    }
-  };
+  const getFilterStyle = useCallback((filter) => {
+    const filters = {
+      GRAYSCALE: 'grayscale(100%)',
+      SEPIA: 'sepia(100%)',
+      NEGATIVE: 'invert(100%)',
+      BRIGHTNESS: 'brightness(130%)',
+      CONTRAST: 'contrast(130%)',
+      SATURATION: 'saturate(130%)',
+      HUE_ROTATE: 'hue-rotate(90deg)',
+      BLUR: 'blur(5px)',
+      SHARPEN: 'contrast(200%)',
+      VINTAGE: 'sepia(100%) contrast(80%)',
+      VIGNETTE: 'brightness(90%) contrast(150%)',
+      CROSS_PROCESS: 'saturate(150%) contrast(80%) brightness(90%)',
+      HDR: 'contrast(150%) saturate(150%)',
+      EDGE_DETECT: 'contrast(200%) brightness(150%) grayscale(100%)',
+      EMBOSS: 'contrast(200%) brightness(150%) grayscale(100%)',
+      SOLARIZE: 'invert(100%) brightness(150%)',
+      POSTERIZE: 'contrast(200%) brightness(150%)',
+      PIXELATE: 'contrast(200%) brightness(150%)',
+      CARTOON: 'contrast(200%) brightness(150%) saturate(150%)',
+      DUOTONE: 'sepia(100%) contrast(80%)',
+    };
+    return filters[filter] || 'none';
+  }, []);
 
   return (
     <Modal show={show} onHide={handleClose} centered className="text-light">
@@ -183,7 +152,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                 </div>
               )}
               <Form.Control.Feedback type="invalid">
-                {errors.image}
+                {errors.image || ''}
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -228,7 +197,7 @@ const PostCreateForm = ({ show, handleClose }) => {
               </Form.Control>
 
               <Form.Control.Feedback type="invalid">
-                {errors.image_filter}
+                {errors.image_filter || ''}
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -245,7 +214,7 @@ const PostCreateForm = ({ show, handleClose }) => {
                 className={`bg-dark text-light ${styles.FormControl}`}
               />
               <Form.Control.Feedback type="invalid">
-                {errors.content}
+                {errors.content || ''}
               </Form.Control.Feedback>
             </Form.Group>
 
