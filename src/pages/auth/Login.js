@@ -4,8 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import styles from './styles/Login.module.css';
+import { useSetCurrentUser } from '../../contexts/CurrentUserContext';
 
-const Login = ({ handleSignUp }) => {
+const Login = ({ handleSignUp, closeOffcanvas }) => {
+  const setCurrentUser = useSetCurrentUser();
+
   const [signInData, setSignInData] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({});
 
@@ -16,9 +19,11 @@ const Login = ({ handleSignUp }) => {
 
   const handleSignInSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      await axios.post('/dj-rest-auth/login/', signInData);
-      window.location.reload();
+      const { data } = await axios.post('/dj-rest-auth/login/', signInData);
+      setCurrentUser(data.user);
+      closeOffcanvas();
     } catch (err) {
       setErrors(err.response?.data || {});
     }
