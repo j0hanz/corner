@@ -40,15 +40,13 @@ const EditProfileModal = ({ show, handleClose }) => {
 
     try {
       const { data } = await axiosReq.get(`/users/${id}/`);
-      const { first_name, last_name, bio, location, url_link, contact_email } =
-        data;
       setProfileData({
-        first_name,
-        last_name,
-        bio,
-        location,
-        url_link,
-        contact_email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        bio: data.bio,
+        location: data.location,
+        url_link: data.url_link,
+        contact_email: data.contact_email,
       });
     } catch (error) {
       console.error('Error fetching profile:', error);
