@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   Button,
@@ -33,36 +33,31 @@ const EditProfileModal = ({ show, handleClose }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (currentUser?.pk?.toString() !== id) {
-        return;
-      }
+  const fetchProfile = useCallback(async () => {
+    if (currentUser?.pk?.toString() !== id) {
+      return;
+    }
 
-      try {
-        const { data } = await axiosReq.get(`/users/${id}/`);
-        const {
-          first_name,
-          last_name,
-          bio,
-          location,
-          url_link,
-          contact_email,
-        } = data;
-        setProfileData({
-          first_name,
-          last_name,
-          bio,
-          location,
-          url_link,
-          contact_email,
-        });
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    fetchProfile();
+    try {
+      const { data } = await axiosReq.get(`/users/${id}/`);
+      const { first_name, last_name, bio, location, url_link, contact_email } =
+        data;
+      setProfileData({
+        first_name,
+        last_name,
+        bio,
+        location,
+        url_link,
+        contact_email,
+      });
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
   }, [currentUser, id]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,7 +74,6 @@ const EditProfileModal = ({ show, handleClose }) => {
       setLoading(true);
       const { data } = await axiosReq.put(`/users/${id}/`, formData);
       setCurrentUser((prevUser) => ({ ...prevUser, ...data }));
-      window.location.reload();
       handleClose();
     } catch (error) {
       setErrors(error.response?.data || {});
@@ -88,79 +82,77 @@ const EditProfileModal = ({ show, handleClose }) => {
     }
   };
 
+  const renderFormGroup = (field, value) => (
+    <Form.Group controlId={`form${field}`} className="mb-3" key={field}>
+      <Form.Label>{field.replace('_', ' ')}</Form.Label>
+      <Form.Control
+        type={field.includes('email') ? 'email' : 'text'}
+        as={field === 'bio' ? 'textarea' : 'input'}
+        rows={field === 'bio' ? 6 : undefined}
+        placeholder={field.replace('_', ' ')}
+        name={field}
+        value={value}
+        onChange={handleChange}
+        className="bg-dark text-light"
+      />
+      {errors?.[field]?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+    </Form.Group>
+  );
+
   return (
-    <>
-      <Modal show={show} onHide={handleClose} centered className="text-light">
-        <Modal.Header
-          closeButton
-          closeVariant="white"
-          className="bg-dark text-light"
-        >
-          <Modal.Title>Edit Profile</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="bg-dark text-light p-2">
-          <Form onSubmit={handleSubmit}>
-            <Container className={styles.Container}>
-              {Object.entries(profileData).map(([field, value]) => (
-                <Form.Group
-                  controlId={`form${field}`}
-                  className="mb-3"
-                  key={field}
-                >
-                  <Form.Label>{field.replace('_', ' ')}</Form.Label>
-                  <Form.Control
-                    type={field.includes('email') ? 'email' : 'text'}
-                    as={field === 'bio' ? 'textarea' : 'input'}
-                    rows={field === 'bio' ? 6 : undefined}
-                    placeholder={field.replace('_', ' ')}
-                    name={field}
-                    value={value}
-                    onChange={handleChange}
-                    className="bg-dark text-light"
-                  />
-                  {errors?.[field]?.map((message, idx) => (
-                    <Alert variant="warning" key={idx}>
-                      {message}
-                    </Alert>
-                  ))}
-                </Form.Group>
-              ))}
-              <div className={styles.buttonWrapper}>
-                <Button
-                  variant="outline-primary"
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                        variant="light"
-                      />{' '}
-                      <span className="text-light">Saving...</span>
-                    </>
-                  ) : (
-                    'Save Changes'
-                  )}
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleClose}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </Container>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    </>
+    <Modal show={show} onHide={handleClose} centered className="text-light">
+      <Modal.Header
+        closeButton
+        closeVariant="white"
+        className="bg-dark text-light"
+      >
+        <Modal.Title>Edit Profile</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="bg-dark text-light p-2">
+        <Form onSubmit={handleSubmit}>
+          <Container className={styles.Container}>
+            {Object.entries(profileData).map(([field, value]) =>
+              renderFormGroup(field, value)
+            )}
+            <div className={styles.buttonWrapper}>
+              <Button
+                variant="outline-primary"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      variant="light"
+                    />{' '}
+                    <span className="text-light">Saving...</span>
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </Button>
+              <Button
+                variant="outline-secondary"
+                onClick={handleClose}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+            </div>
+          </Container>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 
-export default EditProfileModal;
+export default React.memo(EditProfileModal);
