@@ -59,7 +59,10 @@ const Post = ({
     try {
       await axiosRes.delete(`/posts/${id}/`);
       toast.success('Post deleted successfully!');
-      window.location.reload();
+      setPosts((prevPosts) => ({
+        ...prevPosts,
+        results: prevPosts.results.filter((post) => post.id !== id),
+      }));
     } catch (err) {
       toast.error('Failed to delete post!');
     } finally {
