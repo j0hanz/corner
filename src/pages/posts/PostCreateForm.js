@@ -130,7 +130,10 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
           <Container className={styles.Container}>
             <Form.Group className="text-center mb-3">
               {image ? (
-                <div className={styles.ImageWrapper}>
+                <div
+                  className={styles.ImageWrapper}
+                  onClick={() => imageInput.current.click()}
+                >
                   <figure>
                     <Image
                       src={URL.createObjectURL(image)}
@@ -138,7 +141,6 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
                       fluid
                       alt="Post preview"
                       style={{ filter: getFilterStyle(image_filter) }}
-                      onClick={() => imageInput.current.click()}
                     />
                     <div className={styles.Placeholder}>
                       Click to change the image
