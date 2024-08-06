@@ -34,7 +34,7 @@ const EditProfileModal = ({ show, handleClose }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchProfile = useCallback(async () => {
-    if (currentUser?.pk?.toString() !== id) {
+    if (currentUser?.profile_id?.toString() !== id) {
       return;
     }
 
