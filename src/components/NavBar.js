@@ -33,7 +33,7 @@ const OffcanvasContent = ({
         <img src={logo} alt="Logo" className={styles.logoCanvas} />
       ) : (
         <NavLink
-          to={`/users/${currentUser?.pk}/`}
+          to={`/users/${currentUser?.profile_id}/`}
           className="d-flex align-items-center"
           onClick={closeOffcanvas}
         >
