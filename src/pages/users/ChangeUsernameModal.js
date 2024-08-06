@@ -27,7 +27,7 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
   const setCurrentUser = useSetCurrentUser();
 
   useEffect(() => {
-    if (currentUser?.pk?.toString() === id) {
+    if (currentUser?.profile_id?.toString() === id) {
       setFormData((prevState) => ({
         ...prevState,
         username: currentUser.username,
