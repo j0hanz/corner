@@ -9,33 +9,32 @@ import styles from './styles/PopularProfiles.module.css';
 const PopularProfiles = () => {
   const { popularProfiles } = useProfileData();
   const { results } = popularProfiles;
-
-  const renderProfiles = () => (
-    <div className={styles.ProfilesSection}>
-      <hr />
-      <div className={`text-center py-3 ${styles.Header}`}>
-        <h3>Most Followed Profiles</h3>
-      </div>
-      <div
-        className={`d-flex flex-wrap justify-content-around bg-dark py-4 ${styles.PopularProfilesBorder}`}
-      >
-        {results.slice(0, 4).map((profile) => (
-          <Profile key={profile.id} profile={profile} />
-        ))}
-      </div>
-      <hr />
-    </div>
-  );
+  const firstFourProfiles = results.slice(0, 4);
 
   return (
     <Container className="px-0">
-      {results.length ? (
-        renderProfiles()
-      ) : (
-        <div className="d-flex justify-content-center">
-          <Asset spinner />
-        </div>
-      )}
+      <div className={styles.ProfilesSection}>
+        {firstFourProfiles.length ? (
+          <>
+            <hr />
+            <div className={`text-center py-3 ${styles.Header}`}>
+              <h3>Most Followed Profiles</h3>
+            </div>
+            <div
+              className={`d-flex flex-wrap justify-content-around bg-dark py-4 ${styles.PopularProfilesBorder}`}
+            >
+              {firstFourProfiles.map((profile) => (
+                <Profile key={profile.id} profile={profile} />
+              ))}
+            </div>
+            <hr />
+          </>
+        ) : (
+          <div className="d-flex justify-content-center">
+            <Asset spinner />
+          </div>
+        )}
+      </div>
     </Container>
   );
 };
