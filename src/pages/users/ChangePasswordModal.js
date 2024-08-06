@@ -34,7 +34,7 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
   }, []);
 
   useEffect(() => {
-    if (currentUser?.pk?.toString() !== id) {
+    if (currentUser?.profile_id?.toString() !== id) {
       navigate('/');
     }
   }, [currentUser, navigate, id]);
