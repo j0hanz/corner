@@ -11,7 +11,7 @@ import NotFound from './components/NotFound';
 
 const App = () => {
   const currentUser = useCurrentUser();
-  const profile_id = currentUser?.pk || '';
+  const profile_id = currentUser?.profile_id;
 
   return (
     <div className={styles.App}>
@@ -23,10 +23,14 @@ const App = () => {
           <Route
             path="/liked-posts"
             element={
-              <PostsFeed
-                message="No posts found."
-                filter={`likes__owner__profile=${profile_id}&ordering=-likes__created_at&`}
-              />
+              currentUser ? (
+                <PostsFeed
+                  message="No posts found."
+                  filter={`likes__owner__profile=${profile_id}&ordering=-likes__created_at&`}
+                />
+              ) : (
+                <NotFound />
+              )
             }
           />
           <Route path="*" element={<NotFound />} />
