@@ -11,13 +11,11 @@ import { axiosRes } from '../api/axiosDefaults';
 import { toast } from 'react-toastify';
 import styles from './styles/Reports.module.css';
 
-// Reports component to handle reporting posts or comments
 const Reports = ({ show, handleClose, postId, commentId }) => {
-  const [reason, setReason] = useState(''); // State to manage the reason for reporting
-  const [loading, setLoading] = useState(false); // State to manage loading state
-  const [error, setError] = useState(null); // State to manage error state
+  const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Handle form submission for reporting
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -29,13 +27,13 @@ const Reports = ({ show, handleClose, postId, commentId }) => {
         comment: commentId,
         reason,
       });
-      toast.success('Report submitted successfully!'); // Show success message
-      handleClose(); // Close the modal
+      toast.success('Report submitted successfully!');
+      handleClose();
     } catch (err) {
       console.error(err);
-      setError('There was an error submitting the report.'); // Set error message
+      setError('There was an error submitting the report.');
     } finally {
-      setLoading(false); // Set loading state to false
+      setLoading(false);
     }
   };
 

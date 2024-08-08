@@ -52,10 +52,8 @@ const Post = ({
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle showing the edit modal
   const handleEdit = () => setShowEditModal(true);
 
-  // Handle deleting a post
   const handleDelete = async () => {
     setLoading(true);
     try {
@@ -72,7 +70,6 @@ const Post = ({
     }
   };
 
-  // Handle liking a post
   const handleLike = async () => {
     try {
       const { data } = await axiosRes.post('/likes/', { post: id });
@@ -90,7 +87,6 @@ const Post = ({
     }
   };
 
-  // Handle unliking a post
   const handleUnlike = async () => {
     try {
       await axiosRes.delete(`/likes/${like_id}/`);
@@ -108,7 +104,6 @@ const Post = ({
     }
   };
 
-  // Handle bookmarking a post
   const handleBookmark = async () => {
     try {
       const { data } = await axiosRes.post('/bookmarks/', { post: id });
@@ -124,7 +119,6 @@ const Post = ({
     }
   };
 
-  // Handle removing a bookmark from a post
   const handleRemoveBookmark = async () => {
     try {
       await axiosRes.delete(`/bookmarks/${bookmark_id}/`);
@@ -140,27 +134,18 @@ const Post = ({
     }
   };
 
-  // Toggle the confirm delete modal
   const toggleConfirmModal = () => setShowConfirm((prev) => !prev);
-
-  // Handle confirming the deletion of a post
   const handleConfirmDelete = () => {
     handleDelete();
     setShowConfirm(false);
   };
 
-  // Handle showing and closing the post modal
   const handleShowPostModal = () => setShowPostModal(true);
   const handleClosePostModal = () => setShowPostModal(false);
-
-  // Handle closing the edit modal
   const handleCloseEditModal = () => setShowEditModal(false);
-
-  // Handle showing and closing the report modal
   const handleShowReportModal = () => setShowReportModal(true);
   const handleCloseReportModal = () => setShowReportModal(false);
 
-  // Get the filter style based on the image filter type
   const getFilterStyle = (filter) => {
     switch (filter) {
       case 'GRAYSCALE':
@@ -208,7 +193,6 @@ const Post = ({
     }
   };
 
-  // Render the like button based on the current user's like status
   const renderLikeButton = () => {
     if (!currentUser) {
       return (
@@ -245,7 +229,6 @@ const Post = ({
     }
   };
 
-  // Render the bookmark button based on the current user's bookmark status
   const renderBookmarkButton = () => {
     if (!currentUser) {
       return (
@@ -281,7 +264,6 @@ const Post = ({
     }
   };
 
-  // Render the comment button
   const renderCommentButton = () => {
     return (
       <Button className={styles.commentButton} onClick={handleShowPostModal}>
@@ -291,7 +273,6 @@ const Post = ({
     );
   };
 
-  // Render the report button based on the current user's authentication status
   const renderReportButton = () => {
     if (!currentUser) {
       return (

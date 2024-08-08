@@ -17,7 +17,6 @@ import Upload from '../../assets/upload.png';
 const PostCreateForm = ({ show, handleClose, addPost }) => {
   const imageInput = useRef(null);
 
-  // State to manage the post data, errors, and loading state
   const [postData, setPostData] = useState({
     content: '',
     image: '',
@@ -28,12 +27,10 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
   const [loading, setLoading] = useState(false);
   const { content, image, image_filter, tags } = postData;
 
-  // Handle input changes and update the state
   const handleChange = useCallback(({ target: { name, value } }) => {
     setPostData((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // Handle image input changes and update the state
   const handleChangeImage = useCallback(() => {
     if (imageInput.current?.files?.length) {
       URL.revokeObjectURL(image);
@@ -41,7 +38,6 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
     }
   }, [image]);
 
-  // Handle removing the image from the post data
   const handleRemoveImage = useCallback(() => {
     URL.revokeObjectURL(image);
     setPostData((prev) => ({ ...prev, image: '' }));
@@ -50,7 +46,6 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
     }
   }, [image]);
 
-  // Handle form submission for creating a post
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -80,7 +75,6 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
     [postData, image, handleClose, addPost]
   );
 
-  // Get the filter style based on the image filter type
   const getFilterStyle = useCallback((filter) => {
     const filters = {
       GRAYSCALE: 'grayscale(100%)',
@@ -107,7 +101,6 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
     return filters[filter] || 'none';
   }, []);
 
-  // Reset the form data and errors when the modal is closed
   useEffect(() => {
     if (!show) {
       setPostData({

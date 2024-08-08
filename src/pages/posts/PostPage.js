@@ -11,7 +11,6 @@ import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import styles from './styles/PostPage.module.css';
 
 const PostPage = ({ show, handleClose, postId }) => {
-  // State to manage post data, comments, loading state, and error state
   const [postData, setPostData] = useState({ results: [] });
   const [comments, setComments] = useState({ results: [] });
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +18,6 @@ const PostPage = ({ show, handleClose, postId }) => {
   const currentUser = useCurrentUser();
   const profileImage = currentUser?.profile_image;
 
-  // Fetch post and comments data when the component mounts or when postId changes
   const fetchPostAndComments = useCallback(async () => {
     setIsLoading(true);
     setHasError(false);
@@ -46,7 +44,6 @@ const PostPage = ({ show, handleClose, postId }) => {
     }
   }, [show, fetchPostAndComments]);
 
-  // Memoize the rendered comments to avoid unnecessary re-renders
   const renderedComments = useMemo(
     () =>
       comments.results.map((comment) => (

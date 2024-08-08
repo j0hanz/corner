@@ -3,9 +3,8 @@ import { Toast } from 'react-bootstrap';
 import { Oval } from 'react-loader-spinner';
 import styles from './styles/LoadingSpinnerToast.module.css';
 
-// LoadingSpinnerToast component to display a loading spinner with a message
 const LoadingSpinnerToast = ({ show, message, duration }) => {
-  const [visible, setVisible] = useState(show); // State to manage visibility of the toast
+  const [visible, setVisible] = useState(show);
 
   useEffect(() => {
     if (show) {
@@ -14,7 +13,7 @@ const LoadingSpinnerToast = ({ show, message, duration }) => {
         setVisible(false);
       }, duration);
 
-      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+      return () => clearTimeout(timer);
     }
   }, [show, duration]);
 

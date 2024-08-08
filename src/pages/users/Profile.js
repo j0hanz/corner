@@ -7,15 +7,15 @@ import styles from './styles/Profile.module.css';
 import Avatar from '../../components/Avatar';
 
 const Profile = (props) => {
-  const { profile, imageSize = 45 } = props; // Destructure profile and imageSize from props
-  const { id, following_id, image_url, owner } = profile; // Destructure fields from profile
-  const currentUser = useCurrentUser(); // Get the current user from context
-  const is_owner = currentUser?.username === owner; // Check if the current user is the owner of the profile
+  const { profile, imageSize = 45 } = props;
+  const { id, following_id, image_url, owner } = profile;
+  const currentUser = useCurrentUser();
+  const is_owner = currentUser?.username === owner;
 
-  const { followUser, unfollowUser } = useSetProfileData(); // Get follow and unfollow functions from context
+  const { followUser, unfollowUser } = useSetProfileData();
 
   return (
-    <div className="d-flex">
+    <div className="d-flex ">
       <div className="d-flex flex-column align-items-center">
         <Link className="align-self-center mb-1" to={`/users/${id}`}>
           <Avatar

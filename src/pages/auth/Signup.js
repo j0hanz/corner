@@ -6,7 +6,6 @@ import axios from 'axios';
 import styles from './styles/Signup.module.css';
 
 const Signup = ({ handleLogin }) => {
-  // State to manage the signup form data and errors
   const [signUpData, setSignUpData] = useState({
     username: '',
     password1: '',
@@ -14,27 +13,21 @@ const Signup = ({ handleLogin }) => {
   });
   const [errors, setErrors] = useState({});
 
-  // Handle input changes and update the state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setSignUpData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handle form submission for signup
   const handleSignUpSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Send signup request to the server
       await axios.post('/dj-rest-auth/registration/', signUpData);
-      // Automatically log in the user after successful signup
       await axios.post('/dj-rest-auth/login/', {
         username: signUpData.username,
         password: signUpData.password1,
       });
-      // Reload the page to reflect the changes
       window.location.reload();
     } catch (err) {
-      // Set errors if the signup request fails
       setErrors(err.response?.data || {});
     }
   };

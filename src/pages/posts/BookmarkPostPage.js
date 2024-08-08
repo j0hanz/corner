@@ -16,7 +16,6 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 const BookmarkPostPage = ({ show, handleClose }) => {
-  // State to manage bookmarks, loading state, error state, and post page visibility
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,20 +24,17 @@ const BookmarkPostPage = ({ show, handleClose }) => {
   const [showPostPage, setShowPostPage] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
-  // Handle showing the post page modal
   const handleShowPostPage = (postId) => {
     setSelectedPostId(postId);
     setShowPostPage(true);
     handleClose();
   };
 
-  // Handle closing the post page modal
   const handleClosePostPage = () => {
     setShowPostPage(false);
     setSelectedPostId(null);
   };
 
-  // Fetch bookmarks when the component mounts or when the modal is shown
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
@@ -57,7 +53,6 @@ const BookmarkPostPage = ({ show, handleClose }) => {
     }
   }, [show, currentUser]);
 
-  // Handle removing a bookmark
   const handleRemove = async (bookmarkId) => {
     try {
       await axiosRes.delete(`/bookmarks/${bookmarkId}/`);

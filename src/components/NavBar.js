@@ -15,7 +15,6 @@ import {
 import Avatar from './Avatar';
 import ContactForm from '../pages/contact/ContactForm';
 
-// Component for the content inside the offcanvas menu
 const OffcanvasContent = ({
   currentUser,
   handleLogout,
@@ -84,20 +83,18 @@ const OffcanvasContent = ({
 );
 
 const NavBar = () => {
-  const [showOffcanvas, setShowOffcanvas] = useState(false); // State to manage offcanvas visibility
-  const [showLogin, setShowLogin] = useState(true); // State to toggle between login and signup forms
-  const [showContactForm, setShowContactForm] = useState(false); // State to manage contact form visibility
-  const currentUser = useCurrentUser(); // Get the current user from context
-  const setCurrentUser = useSetCurrentUser(); // Function to update the current user in context
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
 
-  // Toggle the offcanvas visibility
   const toggleOffcanvas = useCallback(
     () => setShowOffcanvas((prevState) => !prevState),
     []
   );
   const closeOffcanvas = useCallback(() => setShowOffcanvas(false), []);
 
-  // Handle user logout
   const handleLogout = async () => {
     try {
       await axios.post('/dj-rest-auth/logout/');

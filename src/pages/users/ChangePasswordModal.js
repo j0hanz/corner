@@ -17,7 +17,6 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
   const { id } = useParams();
   const currentUser = useCurrentUser();
 
-  // State to manage user data, errors, and loading state
   const [userData, setUserData] = useState({
     new_password1: '',
     new_password2: '',
@@ -26,7 +25,6 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // Handle input changes and update the state
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
     setUserData((prevState) => ({
@@ -35,14 +33,12 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
     }));
   }, []);
 
-  // Redirect to home if the current user is not the owner of the profile
   useEffect(() => {
     if (currentUser?.profile_id?.toString() !== id) {
       navigate('/');
     }
   }, [currentUser, navigate, id]);
 
-  // Handle form submission for changing the password
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();

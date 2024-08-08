@@ -16,22 +16,20 @@ import noResults from '../../assets/noResults.png';
 import { axiosReq } from '../../api/axiosDefaults';
 
 const UserPage = () => {
-  const { id } = useParams(); // Get the user ID from the URL parameters
-  const currentUser = useContext(CurrentUserContext); // Get the current user from context
-  const [user, setUser] = useState(null); // State to manage user data
-  const [posts, setPosts] = useState({ results: [] }); // State to manage posts data
-  const [loading, setLoading] = useState(true); // State to manage loading state
-  const [error, setError] = useState(null); // State to manage error state
-  const is_owner = currentUser?.username === user?.owner; // Check if the current user is the owner of the profile
+  const { id } = useParams();
+  const currentUser = useContext(CurrentUserContext);
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState({ results: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const is_owner = currentUser?.username === user?.owner;
 
-  // State to manage the visibility of various modals
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
-  // Fetch user and posts data when the component mounts or when the user ID changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,7 +49,6 @@ const UserPage = () => {
     fetchData();
   }, [id, currentUser]);
 
-  // Fetch more posts data for infinite scrolling
   const fetchMoreData = async () => {
     if (posts.next) {
       try {

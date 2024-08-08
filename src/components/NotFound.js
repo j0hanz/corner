@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './styles/NotFound.module.css';
 import noResults from '../assets/noResults.png';
 
-// NotFound component to display a 404 error page
 const NotFound = () => (
   <Container className={styles.notFound}>
     <Image

@@ -34,25 +34,21 @@ const Comment = ({
   const currentUser = useCurrentUser();
   const isOwner = currentUser?.username === owner;
 
-  // State to manage the visibility of edit form, modals, and loading/error states
   const [showEditForm, setShowEditForm] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Handlers to show and hide modals
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
   const handleShowReportModal = () => setShowReportModal(true);
   const handleCloseReportModal = () => setShowReportModal(false);
 
-  // Handle comment deletion
   const handleDelete = async () => {
     setLoading(true);
     try {
       await axiosRes.delete(`/comments/${id}/`);
-      // Update the post and comments state after deletion
       setPost((prevPost) => ({
         results: [
           {
@@ -73,11 +69,9 @@ const Comment = ({
     }
   };
 
-  // Handle liking a comment
   const handleLike = async () => {
     try {
       const { data } = await axiosRes.post('/likes/', { comment: id });
-      // Update the comments state after liking
       setComments((prevComments) => ({
         ...prevComments,
         results: prevComments.results.map((comment) =>
@@ -96,11 +90,9 @@ const Comment = ({
     }
   };
 
-  // Handle unliking a comment
   const handleUnlike = async () => {
     try {
       await axiosRes.delete(`/likes/${like_id}/`);
-      // Update the comments state after unliking
       setComments((prevComments) => ({
         ...prevComments,
         results: prevComments.results.map((comment) =>
@@ -119,7 +111,6 @@ const Comment = ({
     }
   };
 
-  // Render the like button based on the current user's like status
   const renderLikeButton = () => {
     if (!currentUser) {
       return (
@@ -156,7 +147,6 @@ const Comment = ({
     }
   };
 
-  // Render the report button based on the current user's authentication status
   const renderReportButton = () => {
     if (!currentUser) {
       return (

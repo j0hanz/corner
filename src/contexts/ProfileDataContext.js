@@ -3,11 +3,9 @@ import { axiosRes, axiosReq } from '../api/axiosDefaults';
 import { updateProfileOnFollow, updateProfileOnUnfollow } from '../utils/utils';
 import { useCurrentUser } from './CurrentUserContext';
 
-// Create contexts for profile data and setter functions
 const ProfileDataContext = createContext();
 const SetProfileDataContext = createContext();
 
-// Custom hooks to use the profile data and setter functions
 export const useProfileData = () => useContext(ProfileDataContext);
 export const useSetProfileData = () => useContext(SetProfileDataContext);
 
@@ -19,14 +17,12 @@ export const ProfileDataProvider = ({ children }) => {
 
   const currentUser = useCurrentUser();
 
-  // Function to follow a user
   const followUser = async (clickedProfile) => {
     try {
       const { data } = await axiosRes.post('/followers/', {
         followed: clickedProfile.id,
       });
 
-      // Update the profile data state after following a user
       setProfileData((prevState) => ({
         ...prevState,
         pageProfile: {
@@ -46,12 +42,9 @@ export const ProfileDataProvider = ({ children }) => {
     }
   };
 
-  // Function to unfollow a user
   const unfollowUser = async (clickedProfile) => {
     try {
       await axiosRes.delete(`/followers/${clickedProfile.following_id}/`);
-
-      // Update the profile data state after unfollowing a user
       setProfileData((prevState) => ({
         ...prevState,
         pageProfile: {
@@ -71,7 +64,6 @@ export const ProfileDataProvider = ({ children }) => {
     }
   };
 
-  // Fetch popular profiles when the component mounts or currentUser changes
   useEffect(() => {
     const fetchPopularProfiles = async () => {
       try {

@@ -9,29 +9,22 @@ import { useSetCurrentUser } from '../../contexts/CurrentUserContext';
 const Login = ({ handleSignUp, closeOffcanvas }) => {
   const setCurrentUser = useSetCurrentUser();
 
-  // State to manage the login form data and errors
   const [signInData, setSignInData] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({});
 
-  // Handle input changes and update the state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setSignInData({ ...signInData, [name]: value });
   };
 
-  // Handle form submission for login
   const handleSignInSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      // Send login request to the server
       const { data } = await axios.post('/dj-rest-auth/login/', signInData);
-      // Set the current user context with the response data
       setCurrentUser(data.user);
-      // Close the offcanvas (sidebar) after successful login
       closeOffcanvas();
     } catch (err) {
-      // Set errors if the login request fails
       setErrors(err.response?.data || {});
     }
   };

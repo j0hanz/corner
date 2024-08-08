@@ -11,18 +11,17 @@ import axios from 'axios';
 import styles from './styles/ContactFormModal.module.css';
 
 const ContactForm = ({ show, handleClose }) => {
-  // State to manage the form data, errors, loading state, and submission status
   const [formData, setFormData] = useState({
     category: '',
     email: '',
     subject: '',
     message: '',
   });
+
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Handle input changes and update the state
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -30,14 +29,11 @@ const ContactForm = ({ show, handleClose }) => {
     });
   };
 
-  // Handle form submission for sending a contact message
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      // Send a request to create a new contact message
       await axios.post('/contact/create/', formData);
-      // Set the submission status to true and reset the form data
       setIsSubmitted(true);
       setFormData({
         category: '',
@@ -45,13 +41,11 @@ const ContactForm = ({ show, handleClose }) => {
         subject: '',
         message: '',
       });
-      // Close the modal after a short delay
       setTimeout(() => {
         setIsSubmitted(false);
         handleClose();
       }, 2000);
     } catch (error) {
-      // Set errors if the request fails
       setErrors(error.response?.data || {});
     } finally {
       setIsLoading(false);

@@ -9,18 +9,13 @@ import React, {
 import axios from 'axios';
 import { axiosRes, axiosReq } from '../api/axiosDefaults';
 
-// Create contexts for current user and setter function
 export const CurrentUserContext = createContext(null);
 export const SetCurrentUserContext = createContext(null);
-
-// Custom hooks to use the current user and setter function
 export const useCurrentUser = () => useContext(CurrentUserContext);
 export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
-
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Fetch the current user from the API
   const fetchCurrentUser = useCallback(async () => {
     try {
       const response = await axiosRes.get('/dj-rest-auth/user/');
@@ -30,12 +25,10 @@ export const CurrentUserProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch the current user when the component mounts
   useEffect(() => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  // Setup interceptors for axios requests and responses
   const setupInterceptors = useCallback(() => {
     const requestInterceptor = axiosReq.interceptors.request.use(
       async (config) => {
@@ -68,20 +61,17 @@ export const CurrentUserProvider = ({ children }) => {
       }
     );
 
-    // Cleanup function to eject interceptors
     return () => {
       axiosReq.interceptors.request.eject(requestInterceptor);
       axiosRes.interceptors.response.eject(responseInterceptor);
     };
   }, [currentUser]);
 
-  // Setup interceptors when the component mounts
   useEffect(() => {
     const cleanupInterceptors = setupInterceptors();
     return cleanupInterceptors;
   }, [setupInterceptors]);
 
-  // Memoize context values to avoid unnecessary re-renders
   const contextValue = useMemo(() => currentUser, [currentUser]);
   const setContextValue = useMemo(() => setCurrentUser, []);
 
