@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles/Dropdown.module.css';
 
+// Custom component for the three dots icon used in dropdown toggles
 const ThreeDots = React.forwardRef(({ onClick }, ref) => (
   <FontAwesomeIcon
     className="btn btn-outline-light p-1"
@@ -25,6 +26,7 @@ const ThreeDots = React.forwardRef(({ onClick }, ref) => (
   />
 ));
 
+// Dropdown component for edit and delete actions
 const EditDeleteDropdown = ({ handleEdit, handleDelete }) => (
   <Dropdown drop="start" className="ms-auto">
     <Dropdown.Toggle as={ThreeDots} id="edit-delete-dropdown" />
@@ -42,6 +44,7 @@ const EditDeleteDropdown = ({ handleEdit, handleDelete }) => (
   </Dropdown>
 );
 
+// Dropdown component for profile actions
 const ProfileActionsDropdown = ({
   handleEditProfile,
   handleChangeProfileImage,

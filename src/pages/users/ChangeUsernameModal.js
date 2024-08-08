@@ -16,6 +16,7 @@ import {
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
+  // State to manage form data, errors, and loading state
   const [formData, setFormData] = useState({
     username: '',
   });
@@ -26,6 +27,7 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
 
+  // Set the initial form data when the component mounts or when the current user changes
   useEffect(() => {
     if (currentUser?.profile_id?.toString() === id) {
       setFormData((prevState) => ({
@@ -37,6 +39,7 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
     }
   }, [currentUser, id]);
 
+  // Handle input changes and update the state
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -44,6 +47,7 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
     });
   };
 
+  // Handle form submission for changing the username
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);

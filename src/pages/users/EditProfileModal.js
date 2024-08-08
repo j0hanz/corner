@@ -16,10 +16,11 @@ import {
 import styles from './styles/EditProfilePage.module.css';
 
 const EditProfileModal = ({ show, handleClose }) => {
-  const { id } = useParams();
-  const currentUser = useCurrentUser();
-  const setCurrentUser = useSetCurrentUser();
+  const { id } = useParams(); // Get the user ID from the URL parameters
+  const currentUser = useCurrentUser(); // Get the current user from context
+  const setCurrentUser = useSetCurrentUser(); // Function to update the current user in context
 
+  // Initial profile data structure
   const initialProfileData = {
     first_name: '',
     last_name: '',
@@ -29,10 +30,12 @@ const EditProfileModal = ({ show, handleClose }) => {
     contact_email: '',
   };
 
+  // State to manage profile data, errors, and loading state
   const [profileData, setProfileData] = useState(initialProfileData);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // Fetch profile data when the component mounts or when the user ID changes
   const fetchProfile = useCallback(async () => {
     if (currentUser?.profile_id?.toString() !== id) {
       return;
@@ -57,11 +60,13 @@ const EditProfileModal = ({ show, handleClose }) => {
     fetchProfile();
   }, [fetchProfile]);
 
+  // Handle input changes and update the state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // Handle form submission for editing the profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -80,6 +85,7 @@ const EditProfileModal = ({ show, handleClose }) => {
     }
   };
 
+  // Render a form group for each field in the profile data
   const renderFormGroup = (field, value) => (
     <Form.Group controlId={`form${field}`} className="mb-3" key={field}>
       <Form.Label>{field.replace('_', ' ')}</Form.Label>

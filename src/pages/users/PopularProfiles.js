@@ -7,9 +7,9 @@ import styles from './styles/PopularProfiles.module.css';
 
 /* PopularProfiles component to display a list of popular profiles */
 const PopularProfiles = () => {
-  const { popularProfiles } = useProfileData();
-  const { results } = popularProfiles;
-  const firstFourProfiles = results.slice(0, 4);
+  const { popularProfiles } = useProfileData(); // Get popular profiles from context
+  const { results } = popularProfiles; // Destructure results from popularProfiles
+  const firstFourProfiles = results.slice(0, 4); // Get the first four profiles
 
   return (
     <Container className="px-0">

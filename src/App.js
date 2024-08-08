@@ -10,14 +10,15 @@ import { useCurrentUser } from './contexts/CurrentUserContext';
 import NotFound from './components/NotFound';
 
 const App = () => {
-  const currentUser = useCurrentUser();
-  const profile_id = currentUser?.profile_id;
+  const currentUser = useCurrentUser(); // Get the current user from context
+  const profile_id = currentUser?.profile_id; // Get the profile ID of the current user
 
   return (
     <div className={styles.App}>
-      <NavBar />
+      <NavBar /> {/* Render the NavBar component */}
       <main className={styles.main}>
         <Routes>
+          {/* Define routes for the application */}
           <Route path="/" element={<PostsFeed message="No results found." />} />
           <Route path="/users/:id" element={<UserPage />} />
           <Route
@@ -33,7 +34,8 @@ const App = () => {
               )
             }
           />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />{' '}
+          {/* Catch-all route for undefined paths */}
         </Routes>
       </main>
     </div>

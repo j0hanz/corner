@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
 const PostEditForm = ({ show, handleClose, postId }) => {
+  // State to manage errors, post data, and loading states
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     content: '',
@@ -27,6 +28,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
   const [loadingData, setLoadingData] = useState(false);
   const imageInput = useRef(null);
 
+  // Fetch post data when the component mounts or when the postId changes
   useEffect(() => {
     const fetchPostData = async () => {
       if (show && postId) {
@@ -56,6 +58,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     fetchPostData();
   }, [show, postId, handleClose]);
 
+  // Handle input changes and update the state
   const handleChange = ({ target: { name, value } }) => {
     setPostData((prevData) => ({
       ...prevData,
@@ -63,6 +66,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }));
   };
 
+  // Handle image input changes and update the state
   const handleChangeImage = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -74,6 +78,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
   };
 
+  // Handle form submission for editing a post
   const handleSubmit = async (event) => {
     setLoading(true);
     event.preventDefault();
@@ -107,6 +112,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
   };
 
+  // Get the filter style based on the image filter type
   const getFilterStyle = (filter) => {
     switch (filter) {
       case 'GRAYSCALE':
@@ -154,6 +160,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
   };
 
+  // Render the image preview based on the current image state
   const renderImagePreview = () => {
     if (postData.filtered_image_url) {
       const imageUrl =

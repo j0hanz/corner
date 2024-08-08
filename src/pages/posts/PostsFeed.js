@@ -20,6 +20,7 @@ import BookmarkPostPage from './BookmarkPostPage';
 import PopularProfiles from '../users/PopularProfiles';
 
 const PostsFeed = ({ message, filter = '' }) => {
+  // State to manage posts, loading state, search query, and modal visibility
   const [posts, setPosts] = useState({ results: [], next: null });
   const [hasLoaded, setHasLoaded] = useState(false);
   const [query, setQuery] = useState('');
@@ -28,6 +29,7 @@ const PostsFeed = ({ message, filter = '' }) => {
   const currentUser = useCurrentUser();
   const { pathname } = useLocation();
 
+  // Fetch posts when the component mounts or when the filter, query, or pathname changes
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -47,6 +49,7 @@ const PostsFeed = ({ message, filter = '' }) => {
     };
   }, [filter, query, pathname, currentUser]);
 
+  // Add a new post to the posts state
   const addPost = (newPost) => {
     setPosts((prevPosts) => ({
       ...prevPosts,

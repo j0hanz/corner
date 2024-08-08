@@ -7,6 +7,7 @@ const FOLLOWERS_COUNT = 'followers_count';
 const FOLLOWING_COUNT = 'following_count';
 const IS_OWNER = 'is_owner';
 
+// Function to fetch more data for infinite scrolling
 export const fetchMoreData = async (resource, setResource) => {
   if (!resource || !setResource || !resource.next) {
     return;

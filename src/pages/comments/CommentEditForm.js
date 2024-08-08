@@ -4,25 +4,32 @@ import { axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/CommentCreateForm.module.css';
 
 const CommentEditForm = ({ id, content, setComments, setShowEditForm }) => {
+  // State to manage the content of the comment and error state
   const [formContent, setFormContent] = useState(content);
   const [error, setError] = useState(null);
 
+  // Handle input changes and update the state
   const handleChange = (event) => {
     setFormContent(event.target.value);
   };
 
+  // Handle form submission for editing a comment
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Send a request to update the comment
       await axiosRes.put(`/comments/${id}/`, { content: formContent });
+      // Update the comments state with the edited comment
       setComments((prevComments) => ({
         ...prevComments,
         results: prevComments.results.map((comment) =>
           comment.id === id ? { ...comment, content: formContent } : comment
         ),
       }));
+      // Close the edit form
       setShowEditForm(false);
     } catch (err) {
+      // Set error state if the request fails
       setError('There was an error updating the comment');
     }
   };

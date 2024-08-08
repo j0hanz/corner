@@ -4,26 +4,32 @@ import { axiosRes } from '../../api/axiosDefaults';
 import styles from './styles/CommentCreateForm.module.css';
 
 const CommentCreateForm = ({ post, setPost, setComments }) => {
+  // State to manage the content of the comment, error, and loading state
   const [content, setContent] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Handle input changes and update the state
   const handleChange = (event) => {
     setContent(event.target.value);
   };
 
+  // Handle form submission for creating a comment
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     try {
+      // Send a request to create a new comment
       const { data } = await axiosRes.post('/comments/', {
         content,
         post,
       });
+      // Update the comments state with the new comment
       setComments((prevComments) => ({
         ...prevComments,
         results: [data, ...prevComments.results],
       }));
+      // Update the post state to increment the comments count
       setPost((prevPost) => ({
         results: [
           {
@@ -32,9 +38,11 @@ const CommentCreateForm = ({ post, setPost, setComments }) => {
           },
         ],
       }));
+      // Clear the comment input field and reset error state
       setContent('');
       setError(false);
     } catch (err) {
+      // Set error state if the request fails
       setError(true);
     } finally {
       setLoading(false);

@@ -5,21 +5,22 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './styles/EditProfilePage.module.css';
 
 const DeleteAccountModal = ({ show, handleClose }) => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const { id } = useParams(); // Get the user ID from the URL parameters
+  const navigate = useNavigate(); // Hook to navigate programmatically
+  const [errors, setErrors] = useState({}); // State to manage errors
+  const [loading, setLoading] = useState(false); // State to manage loading state
 
+  // Handle the account deletion process
   const handleDelete = async () => {
-    setLoading(true);
+    setLoading(true); // Set loading state to true
     try {
-      await axios.delete(`/users/${id}/`);
-      handleClose();
-      navigate('/');
+      await axios.delete(`/users/${id}/`); // Send a request to delete the user account
+      handleClose(); // Close the modal
+      navigate('/'); // Navigate to the home page
     } catch (error) {
-      setErrors(error.response?.data || {});
+      setErrors(error.response?.data || {}); // Set errors if the request fails
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading state to false
     }
   };
 

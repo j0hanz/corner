@@ -16,15 +16,16 @@ import Asset from '../../components/Asset';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 
 const ProfileImageModal = React.memo(({ show, handleClose }) => {
-  const { id } = useParams();
-  const currentUser = useCurrentUser();
-  const imageFileRef = useRef(null);
+  const { id } = useParams(); // Get the user ID from the URL parameters
+  const currentUser = useCurrentUser(); // Get the current user from context
+  const imageFileRef = useRef(null); // Reference to the image file input
   const [imagePreview, setImagePreview] = useState(
     currentUser?.profile_image || ''
-  );
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  ); // State to manage image preview
+  const [errors, setErrors] = useState({}); // State to manage errors
+  const [loading, setLoading] = useState(false); // State to manage loading state
 
+  // Handle image input changes and update the image preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -32,6 +33,7 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
     }
   };
 
+  // Handle form submission for changing the profile image
   const handleSubmit = async (e) => {
     e.preventDefault();
 
