@@ -58,15 +58,13 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
-      >
-        <Modal.Title>Change Profile Image</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-2">
+        className="bg-dark text-light border-0"
+      ></Modal.Header>
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="text-center mb-5 m-5">
+            <Form.Group className="text-center">
               <div onClick={() => imageFileRef.current.click()}>
                 {imagePreview ? (
                   <div className={styles.ImageWrapper}>
