@@ -15,7 +15,7 @@ import { axiosReq } from '../../api/axiosDefaults';
 import { toast } from 'react-toastify';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 
-const PostEditForm = ({ show, handleClose, postId }) => {
+const PostEditForm = ({ show, handleClose, postId, updatePostData }) => {
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     content: '',
@@ -78,6 +78,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     setLoading(true);
     event.preventDefault();
     const formData = new FormData();
+
     formData.append('content', postData.content);
     formData.append('image_filter', postData.image_filter);
     formData.append(
@@ -95,10 +96,10 @@ const PostEditForm = ({ show, handleClose, postId }) => {
     }
 
     try {
-      await axiosReq.put(`/posts/${postId}/`, formData);
+      const { data } = await axiosReq.put(`/posts/${postId}/`, formData);
       toast.success('Post updated successfully!');
-      window.location.reload();
-      handleClose();
+      updatePostData(data); // Call the update function to update the post in the parent component
+      handleClose(); // Close the modal after a successful update
     } catch (error) {
       if (error.response?.status !== 401) {
         setErrors(error.response?.data || {});
