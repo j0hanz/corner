@@ -72,11 +72,11 @@ const BookmarkPostPage = ({ show, handleClose }) => {
         <Modal.Header
           closeButton
           closeVariant="white"
-          className="bg-dark text-light"
+          className="bg-dark text-light border-0"
         >
           <Modal.Title>Your Bookmarks</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-light p-2">
+        <Modal.Body className="bg-dark text-light p-0">
           <Container className={styles.Container}>
             {loading && (
               <div className="text-center">
@@ -114,7 +114,7 @@ const BookmarkPostPage = ({ show, handleClose }) => {
                         </div>
                       </Link>
                       <button
-                        className="btn btn-link text-light text-decoration-none p-0 ms-2"
+                        className="btn btn-link text-light text-decoration-none ms-2"
                         onClick={() => handleShowPostPage(bookmark.post)}
                       >
                         <h5>{bookmark.post_content?.slice(0, 50)}...</h5>
