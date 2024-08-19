@@ -126,23 +126,27 @@ const Comment = ({
       );
     } else if (like_id) {
       return (
-        <Button
-          onClick={handleUnlike}
-          className={`${styles.likeButton} ${styles.liked}`}
-        >
-          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
-          <span>{likes_count}</span>
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Unlike</Tooltip>}>
+          <Button
+            onClick={handleUnlike}
+            className={`${styles.likeButton} ${styles.liked}`}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
+          </Button>
+        </OverlayTrigger>
       );
     } else {
       return (
-        <Button
-          className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
-          onClick={handleLike}
-        >
-          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
-          <span>{likes_count}</span>
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Like</Tooltip>}>
+          <Button
+            className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
+            onClick={handleLike}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
+          </Button>
+        </OverlayTrigger>
       );
     }
   };
@@ -161,9 +165,14 @@ const Comment = ({
       );
     } else {
       return (
-        <Button className={styles.reportButton} onClick={handleShowReportModal}>
-          <FontAwesomeIcon className="fa-lg" icon={faFlag} />
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Report</Tooltip>}>
+          <Button
+            className={styles.reportButton}
+            onClick={handleShowReportModal}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+          </Button>
+        </OverlayTrigger>
       );
     }
   };
