@@ -67,16 +67,16 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
+        className="bg-dark text-light border-0"
       >
         <Modal.Title>Change Username</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-2">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formUsername" className="mb-3">
-              <Form.Label>New Username</Form.Label>
+              <Form.Label className="d-none">New Username</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter new username"
