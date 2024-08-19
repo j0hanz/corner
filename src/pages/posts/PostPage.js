@@ -73,11 +73,9 @@ const PostPage = ({ show, handleClose, postId }) => {
             <Modal.Header
               closeButton
               closeVariant="white"
-              className="bg-dark text-light"
-            >
-              <Modal.Title>Post</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="bg-dark text-light p-3">
+              className="bg-dark text-light border-0"
+            ></Modal.Header>
+            <Modal.Body className="bg-dark text-light p-0">
               <Row className="justify-content-center">
                 <Col xs="auto">
                   <Post
