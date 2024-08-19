@@ -60,16 +60,16 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
+        className="bg-dark text-light border-0"
       >
         <Modal.Title>Change Password</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-2">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {errors.detail && <Alert variant="danger">{errors.detail}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formNewPassword1" className="mb-3">
-              <Form.Label>New Password</Form.Label>
+              <Form.Label className="d-none">New Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Enter new password"
@@ -85,7 +85,7 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
               ))}
             </Form.Group>
             <Form.Group controlId="formNewPassword2" className="mb-3">
-              <Form.Label>Confirm New Password</Form.Label>
+              <Form.Label className="d-none">Confirm New Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Confirm new password"
