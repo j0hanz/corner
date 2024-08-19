@@ -82,7 +82,7 @@ const EditProfileModal = ({ show, handleClose }) => {
 
   const renderFormGroup = (field, value) => (
     <Form.Group controlId={`form${field}`} className="mb-3" key={field}>
-      <Form.Label>{field.replace('_', ' ')}</Form.Label>
+      <Form.Label className="d-none">{field.replace('_', ' ')}</Form.Label>
       <Form.Control
         type={field.includes('email') ? 'email' : 'text'}
         as={field === 'bio' ? 'textarea' : 'input'}
@@ -106,10 +106,8 @@ const EditProfileModal = ({ show, handleClose }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
-      >
-        <Modal.Title>Edit Profile</Modal.Title>
-      </Modal.Header>
+        className="bg-dark text-light border-0"
+      ></Modal.Header>
       <Modal.Body className="bg-dark text-light p-2">
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
