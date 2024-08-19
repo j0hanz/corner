@@ -217,23 +217,27 @@ const Post = ({
       );
     } else if (like_id) {
       return (
-        <Button
-          onClick={handleUnlike}
-          className={`${styles.likeButton} ${styles.liked}`}
-        >
-          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
-          <span>{likes_count}</span>
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Unlike</Tooltip>}>
+          <Button
+            onClick={handleUnlike}
+            className={`${styles.likeButton} ${styles.liked}`}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
+          </Button>
+        </OverlayTrigger>
       );
     } else {
       return (
-        <Button
-          className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
-          onClick={handleLike}
-        >
-          <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
-          <span>{likes_count}</span>
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Like</Tooltip>}>
+          <Button
+            className={`${styles.likeButton} ${like_id ? styles.liked : ''}`}
+            onClick={handleLike}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faThumbsUp} />{' '}
+            <span>{likes_count}</span>
+          </Button>
+        </OverlayTrigger>
       );
     }
   };
@@ -252,33 +256,42 @@ const Post = ({
       );
     } else if (bookmark_id) {
       return (
-        <Button
-          onClick={handleRemoveBookmark}
-          className={`${styles.bookmarkButton} ${styles.bookmarked}`}
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Remove Bookmark</Tooltip>}
         >
-          <FontAwesomeIcon className="fa-lg" icon={faBookmarkSolid} />
-        </Button>
+          <Button
+            onClick={handleRemoveBookmark}
+            className={`${styles.bookmarkButton} ${styles.bookmarked}`}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faBookmarkSolid} />
+          </Button>
+        </OverlayTrigger>
       );
     } else {
       return (
-        <Button
-          className={`${styles.bookmarkButton} ${
-            bookmark_id ? styles.bookmarked : ''
-          }`}
-          onClick={handleBookmark}
-        >
-          <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Bookmark</Tooltip>}>
+          <Button
+            className={`${styles.bookmarkButton} ${
+              bookmark_id ? styles.bookmarked : ''
+            }`}
+            onClick={handleBookmark}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faBookmark} />
+          </Button>
+        </OverlayTrigger>
       );
     }
   };
 
   const renderCommentButton = () => {
     return (
-      <Button className={styles.commentButton} onClick={handleShowPostModal}>
-        <FontAwesomeIcon className="fa-lg" icon={faComment} />{' '}
-        <span>{comments_count}</span>
-      </Button>
+      <OverlayTrigger placement="top" overlay={<Tooltip>Comment</Tooltip>}>
+        <Button className={styles.commentButton} onClick={handleShowPostModal}>
+          <FontAwesomeIcon className="fa-lg" icon={faComment} />{' '}
+          <span>{comments_count}</span>
+        </Button>
+      </OverlayTrigger>
     );
   };
 
@@ -296,9 +309,14 @@ const Post = ({
       );
     } else {
       return (
-        <Button className={styles.reportButton} onClick={handleShowReportModal}>
-          <FontAwesomeIcon className="fa-lg" icon={faFlag} />
-        </Button>
+        <OverlayTrigger placement="top" overlay={<Tooltip>Report</Tooltip>}>
+          <Button
+            className={styles.reportButton}
+            onClick={handleShowReportModal}
+          >
+            <FontAwesomeIcon className="fa-lg" icon={faFlag} />
+          </Button>
+        </OverlayTrigger>
       );
     }
   };
