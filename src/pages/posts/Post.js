@@ -376,7 +376,7 @@ const Post = ({
         onHide={toggleConfirmModal}
       >
         <Modal.Header
-          className="bg-dark text-white"
+          className="bg-dark text-white border-0"
           closeButton
           closeVariant="white"
         >
