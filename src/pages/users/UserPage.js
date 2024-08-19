@@ -22,11 +22,13 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showProfileImageModal, setShowProfileImageModal] = useState(false);
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
-  const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [modals, setModals] = useState({
+    profileImage: false,
+    editProfile: false,
+    changeUsername: false,
+    changePassword: false,
+    deleteAccount: false,
+  });
 
   const is_owner = currentUser?.username === user?.owner;
 
@@ -63,6 +65,13 @@ const UserPage = () => {
     }
   };
 
+  const handleModalToggle = (modalName, value) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: value,
+    }));
+  };
+
   if (loading) {
     return (
       <Container className="d-flex justify-content-center align-items-center vh-100">
@@ -96,17 +105,27 @@ const UserPage = () => {
             roundedCircle
             src={user?.image_url}
             alt={`${user?.first_name} ${user?.last_name}`}
-            onClick={is_owner ? () => setShowProfileImageModal(true) : null}
+            onClick={
+              is_owner ? () => handleModalToggle('profileImage', true) : null
+            }
           />
           <div className="my-2 text-white">{user?.owner}</div>
 
           {is_owner && (
             <ProfileActionsDropdown
-              handleEditProfile={() => setShowEditProfileModal(true)}
-              handleChangeProfileImage={() => setShowProfileImageModal(true)}
-              handleChangeUsername={() => setShowChangeUsernameModal(true)}
-              handleChangePassword={() => setShowChangePasswordModal(true)}
-              handleDeleteAccount={() => setShowDeleteAccountModal(true)}
+              handleEditProfile={() => handleModalToggle('editProfile', true)}
+              handleChangeProfileImage={() =>
+                handleModalToggle('profileImage', true)
+              }
+              handleChangeUsername={() =>
+                handleModalToggle('changeUsername', true)
+              }
+              handleChangePassword={() =>
+                handleModalToggle('changePassword', true)
+              }
+              handleDeleteAccount={() =>
+                handleModalToggle('deleteAccount', true)
+              }
             />
           )}
 
@@ -162,24 +181,24 @@ const UserPage = () => {
       {is_owner && (
         <>
           <EditProfileModal
-            show={showEditProfileModal}
-            handleClose={() => setShowEditProfileModal(false)}
+            show={modals.editProfile}
+            handleClose={() => handleModalToggle('editProfile', false)}
           />
           <ProfileImageModal
-            show={showProfileImageModal}
-            handleClose={() => setShowProfileImageModal(false)}
+            show={modals.profileImage}
+            handleClose={() => handleModalToggle('profileImage', false)}
           />
           <ChangeUsernameModal
-            show={showChangeUsernameModal}
-            handleClose={() => setShowChangeUsernameModal(false)}
+            show={modals.changeUsername}
+            handleClose={() => handleModalToggle('changeUsername', false)}
           />
           <ChangePasswordModal
-            show={showChangePasswordModal}
-            handleClose={() => setShowChangePasswordModal(false)}
+            show={modals.changePassword}
+            handleClose={() => handleModalToggle('changePassword', false)}
           />
           <DeleteAccountModal
-            show={showDeleteAccountModal}
-            handleClose={() => setShowDeleteAccountModal(false)}
+            show={modals.deleteAccount}
+            handleClose={() => handleModalToggle('deleteAccount', false)}
           />
         </>
       )}
@@ -217,7 +236,7 @@ const UserPage = () => {
         <div className="mt-5 d-flex flex-column align-items-center justify-content-center text-white opacity-50">
           <img src={noResults} alt="No results found" width={75} height={75} />
           <div className="mt-4">No results found...</div>
-          <p>{user?.owner} hasn't posted yet. </p>
+          <p>{user?.owner} hasn't posted yet.</p>
         </div>
       )}
     </Container>
