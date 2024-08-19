@@ -45,7 +45,6 @@ const ProfileImageModal = React.memo(({ show, handleClose }) => {
       });
 
       handleClose();
-      window.location.reload();
     } catch (error) {
       setErrors(error.response?.data || {});
       console.error(error);
