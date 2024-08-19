@@ -29,7 +29,7 @@ const DeleteAccountModal = ({ show, handleClose }) => {
         <Modal.Header
           closeButton
           closeVariant="white"
-          className="bg-dark text-light"
+          className="bg-dark text-light border-0"
         >
           <Modal.Title>Delete Account</Modal.Title>
         </Modal.Header>
