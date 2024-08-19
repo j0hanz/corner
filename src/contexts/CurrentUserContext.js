@@ -29,15 +29,21 @@ export const CurrentUserProvider = ({ children }) => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
+  const refreshAuthToken = async () => {
+    try {
+      await axios.post('/dj-rest-auth/token/refresh/');
+    } catch (err) {
+      console.error('Error refreshing token:', err);
+      setCurrentUser(null);
+      throw err;
+    }
+  };
+
   const setupInterceptors = useCallback(() => {
     const requestInterceptor = axiosReq.interceptors.request.use(
       async (config) => {
-        if (!currentUser) return config;
-        try {
-          await axios.post('/dj-rest-auth/token/refresh/');
-        } catch (err) {
-          console.error('Error refreshing token on request:', err);
-          setCurrentUser(null);
+        if (currentUser) {
+          await refreshAuthToken();
         }
         return config;
       },
@@ -49,11 +55,10 @@ export const CurrentUserProvider = ({ children }) => {
       async (err) => {
         if (err.response?.status === 401 && currentUser) {
           try {
-            await axios.post('/dj-rest-auth/token/refresh/');
+            await refreshAuthToken();
             return axios(err.config);
           } catch (error) {
-            console.error('Error refreshing token on response:', error);
-            setCurrentUser(null);
+            console.error('Error refreshing token:', error);
           }
         }
         return Promise.reject(err);
