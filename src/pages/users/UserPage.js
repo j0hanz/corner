@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { axiosReq } from '../../api/axiosDefaults';
 import styles from './styles/UserPage.module.css';
 import ProfileImageModal from './ProfileImageModal';
 import EditProfileModal from './EditProfileModal';
@@ -11,9 +12,7 @@ import ChangePasswordModal from './ChangePasswordModal';
 import DeleteAccountModal from './DeleteAccountModal';
 import { ProfileActionsDropdown } from '../../components/Dropdown';
 import Post from '../posts/Post';
-import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
 import noResults from '../../assets/noResults.png';
-import { axiosReq } from '../../api/axiosDefaults';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -22,13 +21,14 @@ const UserPage = () => {
   const [posts, setPosts] = useState({ results: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const is_owner = currentUser?.username === user?.owner;
 
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+
+  const is_owner = currentUser?.username === user?.owner;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +47,7 @@ const UserPage = () => {
     };
 
     fetchData();
-  }, [id, currentUser]);
+  }, [id]);
 
   const fetchMoreData = async () => {
     if (posts.next) {
@@ -65,11 +65,9 @@ const UserPage = () => {
 
   if (loading) {
     return (
-      <LoadingSpinnerToast
-        show={true}
-        message="Loading user, please wait..."
-        duration={5000}
-      />
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+      </Container>
     );
   }
 
@@ -96,9 +94,9 @@ const UserPage = () => {
           <Image
             className={styles.ProfileImage}
             roundedCircle
-            src={currentUser?.profile_image}
+            src={user?.image_url}
             alt={`${user?.first_name} ${user?.last_name}`}
-            onClick={() => setShowProfileImageModal(true)}
+            onClick={is_owner ? () => setShowProfileImageModal(true) : null}
           />
           <div className="my-2 text-white">{user?.owner}</div>
 
@@ -161,26 +159,31 @@ const UserPage = () => {
         </Col>
       </Row>
 
-      <EditProfileModal
-        show={showEditProfileModal}
-        handleClose={() => setShowEditProfileModal(false)}
-      />
-      <ProfileImageModal
-        show={showProfileImageModal}
-        handleClose={() => setShowProfileImageModal(false)}
-      />
-      <ChangeUsernameModal
-        show={showChangeUsernameModal}
-        handleClose={() => setShowChangeUsernameModal(false)}
-      />
-      <ChangePasswordModal
-        show={showChangePasswordModal}
-        handleClose={() => setShowChangePasswordModal(false)}
-      />
-      <DeleteAccountModal
-        show={showDeleteAccountModal}
-        handleClose={() => setShowDeleteAccountModal(false)}
-      />
+      {is_owner && (
+        <>
+          <EditProfileModal
+            show={showEditProfileModal}
+            handleClose={() => setShowEditProfileModal(false)}
+          />
+          <ProfileImageModal
+            show={showProfileImageModal}
+            handleClose={() => setShowProfileImageModal(false)}
+          />
+          <ChangeUsernameModal
+            show={showChangeUsernameModal}
+            handleClose={() => setShowChangeUsernameModal(false)}
+          />
+          <ChangePasswordModal
+            show={showChangePasswordModal}
+            handleClose={() => setShowChangePasswordModal(false)}
+          />
+          <DeleteAccountModal
+            show={showDeleteAccountModal}
+            handleClose={() => setShowDeleteAccountModal(false)}
+          />
+        </>
+      )}
+
       <Row className="mt-4">
         <Col className="d-flex text-center justify-content-center">
           <strong className="text-center text-white py-2 mb-0">
