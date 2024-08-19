@@ -72,6 +72,15 @@ const UserPage = () => {
     }));
   };
 
+  const handleProfileUpdate = async () => {
+    try {
+      const { data: updatedUser } = await axiosReq.get(`/users/${id}/`);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Failed to update user profile', error);
+    }
+  };
+
   if (loading) {
     return (
       <Container className="d-flex justify-content-center align-items-center vh-100">
@@ -182,19 +191,32 @@ const UserPage = () => {
         <>
           <EditProfileModal
             show={modals.editProfile}
-            handleClose={() => handleModalToggle('editProfile', false)}
+            handleClose={() => {
+              handleModalToggle('editProfile', false);
+              handleProfileUpdate();
+            }}
           />
           <ProfileImageModal
             show={modals.profileImage}
-            handleClose={() => handleModalToggle('profileImage', false)}
+            handleClose={() => {
+              handleModalToggle('profileImage', false);
+              handleProfileUpdate();
+            }}
+            setUser={setUser}
           />
           <ChangeUsernameModal
             show={modals.changeUsername}
-            handleClose={() => handleModalToggle('changeUsername', false)}
+            handleClose={() => {
+              handleModalToggle('changeUsername', false);
+              handleProfileUpdate();
+            }}
           />
           <ChangePasswordModal
             show={modals.changePassword}
-            handleClose={() => handleModalToggle('changePassword', false)}
+            handleClose={() => {
+              handleModalToggle('changePassword', false);
+              handleProfileUpdate();
+            }}
           />
           <DeleteAccountModal
             show={modals.deleteAccount}
