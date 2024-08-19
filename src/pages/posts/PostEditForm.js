@@ -90,6 +90,8 @@ const PostEditForm = ({ show, handleClose, postId }) => {
       typeof postData.filtered_image_url === 'object'
     ) {
       formData.append('image', postData.filtered_image_url);
+    } else if (typeof postData.filtered_image_url === 'string') {
+      formData.append('existing_image_url', postData.filtered_image_url);
     }
 
     try {
@@ -199,7 +201,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
         <Modal.Header
           closeButton
           closeVariant="white"
-          className="bg-dark text-light"
+          className="bg-dark text-light border-0"
         >
           <Modal.Title>Edit Post</Modal.Title>
         </Modal.Header>
@@ -265,7 +267,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
               </Form.Group>
 
               <Form.Group controlId="formContent" className="mt-3">
-                <Form.Label>Content</Form.Label>
+                <Form.Label className="d-none">Content</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
@@ -282,7 +284,7 @@ const PostEditForm = ({ show, handleClose, postId }) => {
               </Form.Group>
 
               <Form.Group controlId="formTags" className="mt-3">
-                <Form.Label>Tags</Form.Label>
+                <Form.Label className="d-none">Tags</Form.Label>
                 <Form.Control
                   type="text"
                   name="tags"

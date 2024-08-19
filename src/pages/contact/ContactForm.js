@@ -57,7 +57,7 @@ const ContactForm = ({ show, handleClose }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
+        className="bg-dark text-light border-0"
       >
         <Modal.Title>Contact Us</Modal.Title>
       </Modal.Header>
@@ -70,7 +70,7 @@ const ContactForm = ({ show, handleClose }) => {
           )}
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formCategory" className="mb-3">
-              <Form.Label>Category</Form.Label>
+              <Form.Label className="d-none">Category</Form.Label>
               <Form.Control
                 as="select"
                 name="category"
@@ -91,7 +91,7 @@ const ContactForm = ({ show, handleClose }) => {
               ))}
             </Form.Group>
             <Form.Group controlId="formEmail" className="mb-3">
-              <Form.Label>Email</Form.Label>
+              <Form.Label className="d-none">Email</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Enter email"
@@ -108,7 +108,7 @@ const ContactForm = ({ show, handleClose }) => {
               ))}
             </Form.Group>
             <Form.Group controlId="formSubject" className="mb-3">
-              <Form.Label>Subject</Form.Label>
+              <Form.Label className="d-none">Subject</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter subject"
@@ -125,7 +125,7 @@ const ContactForm = ({ show, handleClose }) => {
               ))}
             </Form.Group>
             <Form.Group controlId="formMessage" className="mb-3">
-              <Form.Label>Message</Form.Label>
+              <Form.Label className="d-none">Message</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}

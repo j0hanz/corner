@@ -121,7 +121,7 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
+        className="bg-dark text-light border-0"
       >
         <Modal.Title>Create Post</Modal.Title>
       </Modal.Header>
@@ -221,7 +221,7 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
             </Form.Group>
 
             <Form.Group controlId="formContent" className="mt-3">
-              <Form.Label>Content</Form.Label>
+              <Form.Label className="d-none">Content</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -238,7 +238,7 @@ const PostCreateForm = ({ show, handleClose, addPost }) => {
             </Form.Group>
 
             <Form.Group controlId="formTags" className="mt-3">
-              <Form.Label>Tags</Form.Label>
+              <Form.Label className="d-none">Tags</Form.Label>
               <Form.Control
                 type="text"
                 name="tags"
