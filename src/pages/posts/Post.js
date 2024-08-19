@@ -306,12 +306,14 @@ const Post = ({
             {owner}
           </Link>
         </div>
-        {isOwner && (
-          <EditDeleteDropdown
-            handleEdit={handleEdit}
-            handleDelete={toggleConfirmModal}
-          />
-        )}
+        <div className="me-1">
+          {isOwner && (
+            <EditDeleteDropdown
+              handleEdit={handleEdit}
+              handleDelete={toggleConfirmModal}
+            />
+          )}
+        </div>
       </Card.Body>
       <hr />
       <Card.Text className={`text-center mb-4 ${styles[image_filter]}`}>
@@ -333,7 +335,7 @@ const Post = ({
           {renderBookmarkButton()}
           {renderReportButton()}
         </div>
-        <span className="text-white-50 me-1">{updated_at}</span>
+        <span className="text-white-50 me-2">{updated_at}</span>
       </Card.Footer>
       {error && (
         <Alert variant="danger" className="mt-3">
