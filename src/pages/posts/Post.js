@@ -193,6 +193,15 @@ const Post = ({
     }
   };
 
+  const updatePostData = (updatedPost) => {
+    setPosts((prevPosts) => ({
+      ...prevPosts,
+      results: prevPosts.results.map((post) =>
+        post.id === updatedPost.id ? updatedPost : post
+      ),
+    }));
+  };
+
   const renderLikeButton = () => {
     if (!currentUser) {
       return (
@@ -400,6 +409,7 @@ const Post = ({
         show={showEditModal}
         handleClose={handleCloseEditModal}
         postId={id}
+        updatePostData={updatePostData}
       />
       <Reports
         show={showReportModal}
