@@ -18,10 +18,10 @@ export const CurrentUserProvider = ({ children }) => {
 
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const response = await axiosRes.get('/dj-rest-auth/user/');
-      setCurrentUser(response.data);
-    } catch (error) {
-      console.error('Error fetching current user:', error);
+      const { data } = await axiosRes.get('/dj-rest-auth/user/');
+      setCurrentUser(data);
+    } catch (err) {
+      console.error('Error fetching current user:', err);
     }
   }, []);
 
@@ -32,32 +32,31 @@ export const CurrentUserProvider = ({ children }) => {
   const setupInterceptors = useCallback(() => {
     const requestInterceptor = axiosReq.interceptors.request.use(
       async (config) => {
-        if (currentUser) {
-          try {
-            await axios.post('/dj-rest-auth/token/refresh/');
-          } catch (error) {
-            console.error('Error refreshing token on request:', error);
-            setCurrentUser(null);
-          }
+        if (!currentUser) return config;
+        try {
+          await axios.post('/dj-rest-auth/token/refresh/');
+        } catch (err) {
+          console.error('Error refreshing token on request:', err);
+          setCurrentUser(null);
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (err) => Promise.reject(err)
     );
 
     const responseInterceptor = axiosRes.interceptors.response.use(
       (response) => response,
-      async (error) => {
-        if (error.response?.status === 401 && currentUser && error.config) {
+      async (err) => {
+        if (err.response?.status === 401 && currentUser) {
           try {
             await axios.post('/dj-rest-auth/token/refresh/');
-            return axios(error.config);
+            return axios(err.config);
           } catch (error) {
             console.error('Error refreshing token on response:', error);
             setCurrentUser(null);
           }
         }
-        return Promise.reject(error);
+        return Promise.reject(err);
       }
     );
 
@@ -77,11 +76,9 @@ export const CurrentUserProvider = ({ children }) => {
 
   return (
     <CurrentUserContext.Provider value={contextValue}>
-      {contextValue === null ? null : (
-        <SetCurrentUserContext.Provider value={setContextValue}>
-          {children}
-        </SetCurrentUserContext.Provider>
-      )}
+      <SetCurrentUserContext.Provider value={setContextValue}>
+        {children}
+      </SetCurrentUserContext.Provider>
     </CurrentUserContext.Provider>
   );
 };
