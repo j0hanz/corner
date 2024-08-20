@@ -45,14 +45,14 @@ const Reports = ({ show, handleClose, postId, commentId }) => {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className="bg-dark text-light"
+        className="bg-dark text-light border-0"
       >
         <Modal.Title>Report {postId ? 'Post' : 'Comment'}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark text-light p-2">
+      <Modal.Body className="bg-dark text-light p-0">
         <Container className={styles.Container}>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className="m-1">
             <Form.Group className="mt-3" controlId="reason">
               <Form.Label>Reason</Form.Label>
               <InputGroup>
