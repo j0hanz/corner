@@ -36,3 +36,10 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.InputGroupIcon {
+  width: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

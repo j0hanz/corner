@@ -6,9 +6,12 @@ import {
   Alert,
   Form,
   Container,
+  InputGroup,
 } from 'react-bootstrap';
 import { axiosRes } from '../api/axiosDefaults';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles/Reports.module.css';
 
 const Reports = ({ show, handleClose, postId, commentId }) => {
@@ -52,14 +55,21 @@ const Reports = ({ show, handleClose, postId, commentId }) => {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mt-3" controlId="reason">
               <Form.Label>Reason</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className={`bg-dark text-light ${styles.FormControl}`}
-                required
-              />
+              <InputGroup>
+                <InputGroup.Text
+                  className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                >
+                  <FontAwesomeIcon icon={faExclamationTriangle} />
+                </InputGroup.Text>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className={`bg-dark text-light ${styles.FormControl}`}
+                  required
+                />
+              </InputGroup>
             </Form.Group>
             <div className={styles.buttonWrapper}>
               <Button
