@@ -7,6 +7,7 @@ import {
   Container,
   Image,
   Spinner,
+  InputGroup,
 } from 'react-bootstrap';
 import Upload from '../../assets/upload.png';
 import styles from './styles/PostCreateForm.module.css';
@@ -14,6 +15,8 @@ import Asset from '../../components/Asset';
 import { axiosReq } from '../../api/axiosDefaults';
 import { toast } from 'react-toastify';
 import LoadingSpinnerToast from '../../components/LoadingSpinnerToast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTags, faImage } from '@fortawesome/free-solid-svg-icons';
 
 const PostEditForm = ({ show, handleClose, postId, updatePostData }) => {
   const [errors, setErrors] = useState({});
@@ -226,42 +229,49 @@ const PostEditForm = ({ show, handleClose, postId, updatePostData }) => {
 
               <Form.Group controlId="formImageFilter" className="mt-3">
                 <Form.Label>Image Filter</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="image_filter"
-                  value={postData.image_filter}
-                  onChange={handleChange}
-                  isInvalid={!!errors.image_filter}
-                  className={`bg-dark text-light ${styles.FormControl}`}
-                >
-                  {[
-                    'NONE',
-                    'GRAYSCALE',
-                    'SEPIA',
-                    'NEGATIVE',
-                    'BRIGHTNESS',
-                    'CONTRAST',
-                    'SATURATION',
-                    'HUE_ROTATE',
-                    'BLUR',
-                    'SHARPEN',
-                    'VINTAGE',
-                    'VIGNETTE',
-                    'CROSS_PROCESS',
-                    'HDR',
-                    'EDGE_DETECT',
-                    'EMBOSS',
-                    'SOLARIZE',
-                    'POSTERIZE',
-                    'PIXELATE',
-                    'CARTOON',
-                    'DUOTONE',
-                  ].map((filter) => (
-                    <option key={filter} value={filter}>
-                      {filter.charAt(0) + filter.slice(1).toLowerCase()}
-                    </option>
-                  ))}
-                </Form.Control>
+                <InputGroup>
+                  <InputGroup.Text
+                    className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                  >
+                    <FontAwesomeIcon icon={faImage} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    as="select"
+                    name="image_filter"
+                    value={postData.image_filter}
+                    onChange={handleChange}
+                    isInvalid={!!errors.image_filter}
+                    className={`bg-dark text-light ${styles.FormControl}`}
+                  >
+                    {[
+                      'NONE',
+                      'GRAYSCALE',
+                      'SEPIA',
+                      'NEGATIVE',
+                      'BRIGHTNESS',
+                      'CONTRAST',
+                      'SATURATION',
+                      'HUE_ROTATE',
+                      'BLUR',
+                      'SHARPEN',
+                      'VINTAGE',
+                      'VIGNETTE',
+                      'CROSS_PROCESS',
+                      'HDR',
+                      'EDGE_DETECT',
+                      'EMBOSS',
+                      'SOLARIZE',
+                      'POSTERIZE',
+                      'PIXELATE',
+                      'CARTOON',
+                      'DUOTONE',
+                    ].map((filter) => (
+                      <option key={filter} value={filter}>
+                        {filter.charAt(0) + filter.slice(1).toLowerCase()}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </InputGroup>
                 <Form.Control.Feedback type="invalid">
                   {errors.image_filter}
                 </Form.Control.Feedback>
@@ -269,16 +279,23 @@ const PostEditForm = ({ show, handleClose, postId, updatePostData }) => {
 
               <Form.Group controlId="formContent" className="mt-3">
                 <Form.Label className="d-none">Content</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  name="content"
-                  value={postData.content}
-                  onChange={handleChange}
-                  isInvalid={!!errors.content}
-                  placeholder="Write your post content here..."
-                  className={`bg-dark text-light ${styles.FormControl}`}
-                />
+                <InputGroup>
+                  <InputGroup.Text
+                    className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="content"
+                    value={postData.content}
+                    onChange={handleChange}
+                    isInvalid={!!errors.content}
+                    placeholder="Write your post content here..."
+                    className={`bg-dark text-light ${styles.FormControl}`}
+                  />
+                </InputGroup>
                 <Form.Control.Feedback type="invalid">
                   {errors.content}
                 </Form.Control.Feedback>
@@ -286,15 +303,22 @@ const PostEditForm = ({ show, handleClose, postId, updatePostData }) => {
 
               <Form.Group controlId="formTags" className="mt-3">
                 <Form.Label className="d-none">Tags</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="tags"
-                  value={postData.tags}
-                  onChange={handleChange}
-                  isInvalid={!!errors.tags}
-                  placeholder="Add some tags..."
-                  className={`bg-dark text-light ${styles.FormControl}`}
-                />
+                <InputGroup>
+                  <InputGroup.Text
+                    className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                  >
+                    <FontAwesomeIcon icon={faTags} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    name="tags"
+                    value={postData.tags}
+                    onChange={handleChange}
+                    isInvalid={!!errors.tags}
+                    placeholder="Add some tags..."
+                    className={`bg-dark text-light ${styles.FormControl}`}
+                  />
+                </InputGroup>
                 <Form.Control.Feedback type="invalid">
                   {errors.tags}
                 </Form.Control.Feedback>

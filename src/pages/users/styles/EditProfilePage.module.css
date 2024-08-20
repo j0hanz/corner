@@ -67,6 +67,13 @@
     box-shadow 0.3s;
 }
 
+.InputGroupIcon {
+  width: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .FormControl:focus {
   background-color: #3a3f44;
   box-shadow:

@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { Form, Button, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Alert,
+  Spinner,
+  InputGroup,
+} from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles/CommentCreateForm.module.css';
 
 const CommentCreateForm = ({ post, setPost, setComments }) => {
@@ -45,22 +55,29 @@ const CommentCreateForm = ({ post, setPost, setComments }) => {
     <>
       <Row className="mb-3">
         <Col className="d-flex align-items-center">
-          <Form onSubmit={handleSubmit} className="flex-grow-1 ms-2">
+          <Form onSubmit={handleSubmit} className="flex-grow-1 m-1">
             <Form.Group controlId="comment">
               <Form.Label visuallyHidden>Leave your comment here</Form.Label>
-              <Form.Control
-                className={styles.CommentContent}
-                as="textarea"
-                placeholder="Leave your comment here"
-                rows={2}
-                value={content}
-                onChange={handleChange}
-              />
+              <InputGroup>
+                <InputGroup.Text
+                  className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                >
+                  <FontAwesomeIcon icon={faCommentDots} />
+                </InputGroup.Text>
+                <Form.Control
+                  className={`bg-dark ${styles.CommentContent}`}
+                  as="textarea"
+                  placeholder="Leave your comment here"
+                  rows={2}
+                  value={content}
+                  onChange={handleChange}
+                />
+              </InputGroup>
             </Form.Group>
             <Button
               type="submit"
               variant="outline-light"
-              className="float-end"
+              className="float-end mt-2"
               disabled={loading}
             >
               {loading ? (

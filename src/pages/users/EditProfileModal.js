@@ -6,6 +6,7 @@ import {
   Alert,
   Container,
   Spinner,
+  InputGroup,
 } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useParams } from 'react-router-dom';
@@ -13,6 +14,14 @@ import {
   useCurrentUser,
   useSetCurrentUser,
 } from '../../contexts/CurrentUserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faUser,
+  faLocationArrow,
+  faLink,
+  faEnvelope,
+  faInfoCircle,
+} from '@fortawesome/free-solid-svg-icons'; // Import the icons
 import styles from './styles/EditProfilePage.module.css';
 
 const EditProfileModal = ({ show, handleClose }) => {
@@ -80,19 +89,26 @@ const EditProfileModal = ({ show, handleClose }) => {
     }
   };
 
-  const renderFormGroup = (field, value) => (
+  const renderFormGroup = (field, value, icon) => (
     <Form.Group controlId={`form${field}`} className="mb-3" key={field}>
       <Form.Label className="d-none">{field.replace('_', ' ')}</Form.Label>
-      <Form.Control
-        type={field.includes('email') ? 'email' : 'text'}
-        as={field === 'bio' ? 'textarea' : 'input'}
-        rows={field === 'bio' ? 6 : undefined}
-        placeholder={field.replace('_', ' ')}
-        name={field}
-        value={value}
-        onChange={handleChange}
-        className="bg-dark text-light"
-      />
+      <InputGroup>
+        <InputGroup.Text
+          className={`bg-dark text-light ${styles.InputGroupIcon}`}
+        >
+          <FontAwesomeIcon icon={icon} />
+        </InputGroup.Text>
+        <Form.Control
+          type={field.includes('email') ? 'email' : 'text'}
+          as={field === 'bio' ? 'textarea' : 'input'}
+          rows={field === 'bio' ? 6 : undefined}
+          placeholder={field.replace('_', ' ')}
+          name={field}
+          value={value}
+          onChange={handleChange}
+          className="bg-dark text-light"
+        />
+      </InputGroup>
       {errors?.[field]?.map((message, idx) => (
         <Alert variant="warning" key={idx}>
           {message}
@@ -111,8 +127,15 @@ const EditProfileModal = ({ show, handleClose }) => {
       <Modal.Body className="bg-dark text-light p-2">
         <Form onSubmit={handleSubmit}>
           <Container className={styles.Container}>
-            {Object.entries(profileData).map(([field, value]) =>
-              renderFormGroup(field, value)
+            {renderFormGroup('first_name', profileData.first_name, faUser)}
+            {renderFormGroup('last_name', profileData.last_name, faUser)}
+            {renderFormGroup('bio', profileData.bio, faInfoCircle)}
+            {renderFormGroup('location', profileData.location, faLocationArrow)}
+            {renderFormGroup('url_link', profileData.url_link, faLink)}
+            {renderFormGroup(
+              'contact_email',
+              profileData.contact_email,
+              faEnvelope
             )}
             <div className={styles.buttonWrapper}>
               <Button

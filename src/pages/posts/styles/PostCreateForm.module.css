@@ -84,6 +84,13 @@
   width: 100%;
 }
 
+.InputGroupIcon {
+  width: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .Placeholder {
     font-size: 0.875rem;

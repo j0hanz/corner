@@ -7,12 +7,15 @@ import {
   Alert,
   Container,
   Spinner,
+  InputGroup,
 } from 'react-bootstrap';
 import { axiosRes } from '../../api/axiosDefaults';
 import {
   useCurrentUser,
   useSetCurrentUser,
 } from '../../contexts/CurrentUserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons'; // Importing the user icon
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
@@ -77,14 +80,21 @@ const ChangeUsernameModal = React.memo(({ show, handleClose }) => {
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formUsername" className="mb-3">
               <Form.Label className="d-none">New Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter new username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="bg-dark text-light"
-              />
+              <InputGroup>
+                <InputGroup.Text
+                  className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                >
+                  <FontAwesomeIcon icon={faUser} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter new username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="bg-dark text-light"
+                />
+              </InputGroup>
               {errors?.username?.map((message, idx) => (
                 <Alert variant="warning" key={idx}>
                   {message}

@@ -6,10 +6,13 @@ import {
   Alert,
   Container,
   Spinner,
+  InputGroup,
 } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosRes } from '../../api/axiosDefaults';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons'; // Importing lock icon
 import styles from './styles/EditProfilePage.module.css';
 
 const ChangePasswordModal = React.memo(({ show, handleClose }) => {
@@ -70,14 +73,21 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formNewPassword1" className="mb-3">
               <Form.Label className="d-none">New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter new password"
-                name="new_password1"
-                value={new_password1}
-                onChange={handleChange}
-                className="bg-dark text-light"
-              />
+              <InputGroup>
+                <InputGroup.Text
+                  className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                >
+                  <FontAwesomeIcon icon={faLock} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter new password"
+                  name="new_password1"
+                  value={new_password1}
+                  onChange={handleChange}
+                  className="bg-dark text-light"
+                />
+              </InputGroup>
               {errors?.new_password1?.map((message, idx) => (
                 <Alert variant="warning" key={idx}>
                   {message}
@@ -86,14 +96,21 @@ const ChangePasswordModal = React.memo(({ show, handleClose }) => {
             </Form.Group>
             <Form.Group controlId="formNewPassword2" className="mb-3">
               <Form.Label className="d-none">Confirm New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm new password"
-                name="new_password2"
-                value={new_password2}
-                onChange={handleChange}
-                className="bg-dark text-light"
-              />
+              <InputGroup>
+                <InputGroup.Text
+                  className={`bg-dark text-light ${styles.InputGroupIcon}`}
+                >
+                  <FontAwesomeIcon icon={faLock} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm new password"
+                  name="new_password2"
+                  value={new_password2}
+                  onChange={handleChange}
+                  className="bg-dark text-light"
+                />
+              </InputGroup>
               {errors?.new_password2?.map((message, idx) => (
                 <Alert variant="warning" key={idx}>
                   {message}

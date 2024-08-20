@@ -28,10 +28,10 @@ const CommentEditForm = ({ id, content, setComments, setShowEditForm }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="m-1">
       <Form.Group controlId="content">
         <Form.Control
-          className={styles.CommentContent}
+          className={`bg-dark ${styles.CommentContent}`}
           as="textarea"
           rows={3}
           value={formContent}
